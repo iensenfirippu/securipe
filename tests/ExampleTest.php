@@ -1,5 +1,5 @@
 <?php
-include_once('src/classes/Example.php');
+include_once('src/Classes/Example.php');
 
 class ExampleTest extends PHPUnit_Framework_TestCase
 {
