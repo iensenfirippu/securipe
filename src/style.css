@@ -64,15 +64,15 @@ a:focus, .hiddenlink a, input:focus {
 
 a:focus, .hiddenlink a {
 	color: #ffffff !important;
-	border-color: #3eb0cc;
-	background-color: #3ea0cc;
+	border-color: #555577;
+	background-color: #555577;
 }
 
 #wrapper {
 	position: relative;
 	margin-left: auto;
 	margin-right: auto;
-	width: 800px;
+	width: 100%;
 }
 
 #main {
