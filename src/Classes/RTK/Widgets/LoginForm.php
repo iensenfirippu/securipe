@@ -1,6 +1,8 @@
 <?php
 if (defined('RTK') or exit(1))
 {
+	// Remove?
+	
 	/**
 	 * Contains the definition of a login form in HTML
 	 **/

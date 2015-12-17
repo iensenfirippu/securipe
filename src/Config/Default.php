@@ -7,6 +7,7 @@ if (defined('securipe') or exit(1))
 	
 	if (!defined("TIMEZONE"))			define("TIMEZONE",			"Asia/Tokyo");
 	
+	if (!defined("DBVENDOR")) 			define("DBVENDOR",			"mysql");
 	if (!defined("DBSERVER")) 			define("DBSERVER",			"localhost");
 	if (!defined("DBDATABASE"))			define("DBDATABASE",		"securipe");
 	if (!defined("DBUSERNAME"))			define("DBUSERNAME",		"root");

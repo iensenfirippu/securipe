@@ -35,11 +35,10 @@ if (defined('securipe') or exit(1))
 		 * description
 		 * @param param, description.
 		 */
-		public static function GetSafeArgument($id, $keephtml = false)
+		public static function GetArgumentSafely($id, $keephtml = false)
 		{
 			$return = EMPTYSTRING;
-			if (isset($_GET[$id]) && !empty($_GET[$id]))
-			{
+			if (Value::SetAndNotEmpty($_GET, $id)) {
 				$return = _string::Sanitize($_GET[$id], $keephtml);
 			}
 			return $return;
@@ -82,7 +81,8 @@ if (defined('securipe') or exit(1))
 		public static function Sanitize($string, $keephtml = false)
 		{
 			$string = addslashes($string);
-			if ($keephtml == false) { htmlspecialchars($string); }
+			//if ($keephtml == false) { htmlspecialchars($string); } // Changed to htmlentities
+			if ($keephtml == false) { htmlentities($string); }
 			_string::EnforceProperLineEndings($string);
 			return $string;
 		}
