@@ -6,18 +6,14 @@ include_once("Bootstrap.php");
 
 
 // output
-$output = new RTK("Securipe");
-$output->AddStylesheet("style.css");
-$output->AddJavascript("jquery-2.1.4.min.js");
-$output->AddJavascript("login.js");
+$RTK = new RTK("Securipe");
 
-$wrapper = new RTK_Box("wrapper");
-if (Login::GetStatus()->GetError() != EMPTYSTRING) { $wrapper->AddChild(new RTK_Textview(Login::GetStatus()->GetError())); } 
-$wrapper->AddChild(new RTK_LoginForm("loginform"));
+$action = Site::GetArgumentSafely("action");
+if ($action == "login") { include_once("Pages/Login.php"); }
+elseif ($action == "somethingelse") { include_once("Pages/SomeOtherPageEntirely.php"); }
+else { include_once("Pages/Home.php"); }
 
-$output->AddElement($wrapper);
-
-echo $output;
+echo $RTK;
 // output
 
 

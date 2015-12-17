@@ -39,53 +39,72 @@ if (defined('securipe') or exit(1))
 		
 		private function FetchBanStatus()
 		{
-			$ip = htmlentities($_SERVER['REMOTE_ADDR']);
-			$iprox = EMPTYSTRING;
-			if (Value::SetAndNotNull($_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-				htmlentities($_SERVER['HTTP_X_FORWARDED_FOR']);
-			}
-			
-			$bantime = -1;
-			if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM ws_ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
-				$stmt->bind_param('sss', $ip, $iprox, session_id());
-				$stmt->execute();
-				$stmt->bind_result($result);
-				$stmt->fetch();
-				$stmt->close();
-				if ($result != null) {
-					$bantime = $result;
-					$this->_id = $_SESSION['sup3rsEcurevariAble'] = -1;
-					$this->_error = $_SESSION['3rr0r'] = 'Oh noes, looks like you were temporarily banned, check back again tomorrow... ';
-				}
-			}
-			return !($bantime < 0 || (time() - $bantime) > 86400);
+			//$ip = htmlentities($_SERVER['REMOTE_ADDR']);
+			//$iprox = EMPTYSTRING;
+			//if (Value::SetAndNotNull($_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+			//	htmlentities($_SERVER['HTTP_X_FORWARDED_FOR']);
+			//}
+			//
+			//$bantime = -1;
+			//if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM '.DBDATABASE.'.users WHERE ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
+			//	$stmt->bindparam($username);
+			//	$stmt->execute();
+			//	$stmt->bindresult($salt);
+			//	$stmt->fetch();
+			//	$stmt->close();
+			///*if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
+			//	$stmt->bind_param('sss', $ip, $iprox, session_id());
+			//	$stmt->execute();
+			//	$stmt->bind_result($result);
+			//	$stmt->fetch();
+			//	$stmt->close();*/
+			//	if ($result != null) {
+			//		$bantime = $result;
+			//		$this->_id = $_SESSION['sup3rsEcurevariAble'] = -1;
+			//		$this->_error = $_SESSION['3rr0r'] = 'Oh noes, looks like you were temporarily banned, check back again tomorrow... ';
+			//	}
+			//}
+			//return !($bantime < 0 || (time() - $bantime) > 86400);
+			return false;
 		}
 		
 		private function FetchUserSalt($username)
 		{
-			$salt = EMPTYSTRING;
-			if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM login WHERE username_hash=?;')) {
-				$stmt->bind_param('s', $username);
+			$result = EMPTYSTRING;
+			if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM '.DBDATABASE.'.users WHERE username_hash=?;')) {
+				$stmt->bindParam($username);
 				$stmt->execute();
-				$stmt->bind_result($result);
+				$stmt->bindresult($salt);
 				$stmt->fetch();
 				$stmt->close();
-				if ($result != null) { $salt = $result; }
+			/*if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM login WHERE username_hash=?;')) {
+				$stmt->bind_param('s', $username);
+				$stmt->execute();
+				$stmt->bind_result($salt);
+				$stmt->fetch();
+				$stmt->close();*/
+				if ($salt != null) { $result = $salt; }
 			}
-			return $salt;
+			return $result;
 		}
 		
 		private function FetchUsername($userid)
 		{
 			$result = false;
-			if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM users WHERE user_id=?;')) {
-				$stmt->bind_param('i', $userid);
+			if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM '.DBDATABASE.'.users WHERE user_id=?;')) {
+				$stmt->bindparam($userid);
 				$stmt->execute();
-				$stmt->bind_result($userid);
+				$stmt->bindresult($username);
 				$stmt->fetch();
 				$stmt->close();
-				if ($userid != null) {
-					$result = $userid;
+			/*if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM users WHERE user_id=?;')) {
+				$stmt->bind_param('i', $userid);
+				$stmt->execute();
+				$stmt->bind_result($username);
+				$stmt->fetch();
+				$stmt->close();*/
+				if ($username != null) {
+					$result = $username;
 				}
 			}
 			return $result;
@@ -106,12 +125,18 @@ if (defined('securipe') or exit(1))
 					if ($salt['dynamic'] != '') {
 						$password = hash('sha512', $salt['static'].$_POST['loginpass'].$salt['dynamic'].$username);
 						
-						if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM login WHERE username_hash=? AND password_hash=?;')) {
+						if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM '.DBDATABASE.'.login WHERE username_hash=? AND password_hash=?;')) {
+							$stmt->bindparam($username, $password);
+							$stmt->execute();
+							$stmt->bindresult($success);
+							$stmt->fetch();
+							$stmt->close();
+						/*if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM login WHERE username_hash=? AND password_hash=?;')) {
 							$stmt->bind_param('ss', $username, $password);
 							$stmt->execute();
 							$stmt->bind_result($success);
 							$stmt->fetch();
-							$stmt->close();
+							$stmt->close();*/
 							
 							if (Value::SetAndNotNull($success)) {
 								$instance->_id = $_SESSION['sup3rsEcurevariAble'] = $success;
