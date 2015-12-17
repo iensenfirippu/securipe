@@ -46,7 +46,7 @@ if (defined('securipe') or exit(1))
 			//}
 			//
 			//$bantime = -1;
-			//if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM '.DBDATABASE.'.users WHERE ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
+			//if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM users WHERE ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
 			//	$stmt->bindparam($username);
 			//	$stmt->execute();
 			//	$stmt->bindresult($salt);
@@ -71,18 +71,12 @@ if (defined('securipe') or exit(1))
 		private function FetchUserSalt($username)
 		{
 			$result = EMPTYSTRING;
-			if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM '.DBDATABASE.'.users WHERE username_hash=?;')) {
-				$stmt->bindParam($username);
+			if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM login WHERE username_hash=?')) {
+				$stmt->bindParam(1, $username, PDO::PARAM_STR, 255);
 				$stmt->execute();
-				$stmt->bindresult($salt);
+				$stmt->bindColumn(1, $salt);
 				$stmt->fetch();
-				$stmt->close();
-			/*if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM login WHERE username_hash=?;')) {
-				$stmt->bind_param('s', $username);
-				$stmt->execute();
-				$stmt->bind_result($salt);
-				$stmt->fetch();
-				$stmt->close();*/
+				$stmt->closeCursor();
 				if ($salt != null) { $result = $salt; }
 			}
 			return $result;
@@ -91,18 +85,12 @@ if (defined('securipe') or exit(1))
 		private function FetchUsername($userid)
 		{
 			$result = false;
-			if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM '.DBDATABASE.'.users WHERE user_id=?;')) {
-				$stmt->bindparam($userid);
+			if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM users WHERE user_id=?;')) {
+				$stmt->bindParam(1, $userid, PDO::PARAM_INT);
 				$stmt->execute();
-				$stmt->bindresult($username);
+				$stmt->bindColumn(1, $username);
 				$stmt->fetch();
-				$stmt->close();
-			/*if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM users WHERE user_id=?;')) {
-				$stmt->bind_param('i', $userid);
-				$stmt->execute();
-				$stmt->bind_result($username);
-				$stmt->fetch();
-				$stmt->close();*/
+				$stmt->closeCursor();
 				if ($username != null) {
 					$result = $username;
 				}
@@ -125,18 +113,13 @@ if (defined('securipe') or exit(1))
 					if ($salt['dynamic'] != '') {
 						$password = hash('sha512', $salt['static'].$_POST['loginpass'].$salt['dynamic'].$username);
 						
-						if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM '.DBDATABASE.'.login WHERE username_hash=? AND password_hash=?;')) {
-							$stmt->bindparam($username, $password);
+						if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM login WHERE username_hash=? AND password_hash=?;')) {
+							$stmt->bindParam(1, $username, PDO::PARAM_STR, 255);
+							$stmt->bindParam(2, $password, PDO::PARAM_STR, 255);
 							$stmt->execute();
-							$stmt->bindresult($success);
+							$stmt->bindColumn(1, $success);
 							$stmt->fetch();
-							$stmt->close();
-						/*if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM login WHERE username_hash=? AND password_hash=?;')) {
-							$stmt->bind_param('ss', $username, $password);
-							$stmt->execute();
-							$stmt->bind_result($success);
-							$stmt->fetch();
-							$stmt->close();*/
+							$stmt->closeCursor();
 							
 							if (Value::SetAndNotNull($success)) {
 								$instance->_id = $_SESSION['sup3rsEcurevariAble'] = $success;

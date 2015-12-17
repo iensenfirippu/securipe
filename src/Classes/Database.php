@@ -7,7 +7,7 @@ if (defined('securipe') or exit(1))
 		
 		public static function Connect()
 		{
-			$GLOBALS['DATABASE'] = new PDO(DBVENDOR.':host='.DBSERVER.';dbname='.DBDATABASE, DBUSERNAME, DBPASSWORD);
+			$GLOBALS['DATABASE'] = new PDO(DBVENDOR.':host='.DBSERVER.';dbname='.DBDATABASE.';charset='.DBENCODING, DBUSERNAME, DBPASSWORD);
 			//$GLOBALS['DATABASE'] = new mysqli(DBSERVER, DBUSERNAME, DBPASSWORD, DBDATABASE);
 			//Database::getInstance()->_connection = new mysqli(DBSERVER, DBUSERNAME, DBPASSWORD, DBDATABASE);
 			Database::Check();
@@ -23,6 +23,7 @@ if (defined('securipe') or exit(1))
 		
 		public static function Disconnect()
 		{
+			$GLOBALS['DATABASE'] = null;
 			// Close database connection
 			//$GLOBALS['DATABASE']->close();
 			//Database::getInstance()->_connection->close();
