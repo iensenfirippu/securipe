@@ -59,7 +59,8 @@ a:focus, input:focus {
 }
 
 a:focus, .hiddenlink a, input:focus {
-	box-shadow: 0 0 10px 10px #555577 !important;
+	border-radius: 10px;
+	box-shadow: 0 0 20px 20px #555577 !important;
 }
 
 a:focus, .hiddenlink a {
