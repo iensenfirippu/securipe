@@ -13,7 +13,7 @@ if (defined('RTK') or exit(1))
 			$args['alt'] = $alttext;
 			
 			parent::__construct();
-			$this->AddChild('img', HtmlElement::ArgsToString($args));
+			$this->AddChild(new HtmlElement('img', HtmlElement::ArgsToString($args)));
 		}
 		
 		public function AddLink($link, $args=null) {

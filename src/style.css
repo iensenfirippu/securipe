@@ -14,6 +14,9 @@ body {
 	background-color: #aaaaaa;
 	font-family: sans, sans-serif, arial;
 	font-size: 75%;
+	
+	/* Hack to force menu to top, find a better solution... */
+	border: 1px solid rgba(0,0,0,0);
 }
 
 h1, h2, h3, h4, h5 {
@@ -71,9 +74,10 @@ a:focus, .hiddenlink a {
 
 #wrapper {
 	position: relative;
-	margin-left: auto;
+	margin-top: 100px;
 	margin-right: auto;
-	width: 100%;
+	margin-left: auto;
+	width: 800px;
 }
 
 #main {
@@ -82,11 +86,10 @@ a:focus, .hiddenlink a {
 
 #loginbox {
 	position: relative;
-	margin-top: 100px;
 	margin-left: auto;
 	margin-right: auto;
-	padding: 75px 25px 75px 25px;
 	width: 400px;
+	padding: 75px 25px 75px 25px;
 	
 	background-color: #8888aa;
 	border: 2px solid #ffffff;
@@ -129,12 +132,79 @@ a:focus, .hiddenlink a {
 	margin-right: auto;
 }
 
+ul.menu {
+	margin: 0px;
+	padding: 0px;
+	
+	list-style: none;
+}
 
+ul.menu li {
+	margin: 0px 5px 5px 0px;
+	padding: 0px;
+}
 
+#mainmenu {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 10px;
+	z-index: 10;
+}
 
+#mainmenu a {
+	display: inline-block;
+	width: 100px;
+	height: 20px;
+	
+	margin: 0px;
+	padding: 5px;
+	
+	color: #ffffff;
+	font-size: 1em;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform: Capitalize;
+	text-align: center;
+	vertical-align: top;
+	
+	background-color: #777799;
+	border: 2px solid #ffffff;
+	border-top: none;
+	
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-left-radius: 0px !important;
+}
 
+#mainmenu a.selected, #mainmenu a:hover {
+	padding-top: 15px;
+	
+	font-size: 1.1em;
+	background-color: #8888aa;
+}
 
+#recipebox {
+	position: relative;
+	padding: 75px 25px 75px 25px;
+	
+	background-color: #8888aa;
+	border: 2px solid #ffffff;
+	
+	box-shadow: 0 0 25px 10px rgba(0,0,0,0.25);
+	border-radius: 10px;
+}
 
+#recipebox img {
+	float: right;
+	top: 0px;
+	right: 0px;
+}
+
+#recipebox .stepbox {
+	border: 1px solid green;
+}
 
 
 
@@ -253,51 +323,6 @@ a:focus, .hiddenlink a {
 	font-weight: bold;
 	text-decoration: none;
 	text-transform: uppercase;
-}
-
-ul.menu {
-	margin: 0px;
-	padding: 15px 0px 0px 15px;
-	
-	list-style: none;
-}
-
-ul.menu li {
-	float: right;
-	
-	margin: 0px;
-	padding: 0px 0px 5px 0px;
-}
-
-ul.menu a {
-	display: block;
-	width: 100px;
-	
-	margin: 0px;
-	padding: 3px;
-	
-	color: #ffffff;
-	/*font-size: 1em;*/
-	font-weight: bold;
-	text-decoration: none;
-	text-transform: Capitalize;
-	
-	background-color: #aaaaaa;
-	border: 3px solid #ffffff;
-	border-right: none;
-	
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-}
-
-ul.menu a.selected {
-	width: 120px;
-	
-	background-color: #888888;
-}
-
-ul.menu a:hover {
-	background-color: #cccccc;
 }
 
 #content p {

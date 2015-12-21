@@ -29,11 +29,10 @@ if (defined('securipe') or exit(1))
 			exit;
 		}
 		
-		/** GET/POST **/
-		
 		/**
-		 * description
-		 * @param param, description.
+		 * Retrieves a GET value after sanitizing it
+		 * @param id, The name of the GET value to retrieve.
+		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
 		 */
 		public static function GetArgumentSafely($id, $keephtml = false)
 		{
@@ -45,19 +44,22 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Retrieve a POST value after sanitizing it
+		 * @param id, The name of the POST value to retrieve.
+		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
 		 */
-		public static function GetSafePost($id, $keephtml = false)
+		public static function GetPostValueSafely($id, $keephtml = false)
 		{
 			$return = EMPTYSTRING;
 			if (isset($_POST[$id]) && !empty($_POST[$id]))
 			{
 				$return = _string::Sanitize($_POST[$id], $keephtml);
 			}
-			return $return;
 		}
 		
+		/**
+		 * Returns true if the client is connecting via HTTPS, otherwise it returns false.
+		 */
 		public static function HasHttps()
 		{
 			$secure_connection = false;
@@ -70,13 +72,31 @@ if (defined('securipe') or exit(1))
 			}
 			return $secure_connection;
 		}
+		
+		/**
+		 * Creates a Security token to secure a form against XSRF.
+		 */
+		public static function CreateSecurityToken()
+		{
+			$token = md5(utf8_encode(UUID::Create()));
+			return $_SESSION['Sup3r5ecretSecur!peT0k3n'] = $token;
+		}
+		
+		/**
+		 * Checks a Security token against the token stored in the users session.
+		 */
+		public static function CheckSecurityToken($token)
+		{
+			return Value::SetAndEquals($token, $_SESSION, 'Sup3r5ecretSecur!peT0k3n');
+		}
 	}
 	
 	class _string
 	{
 		/**
-		 * description
-		 * @param param, description.
+		 * Sanitizes a string, by encoding potentially malicious characters. 
+		 * @param string, The string value to sanitize.
+		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
 		 */
 		public static function Sanitize($string, $keephtml = false)
 		{
@@ -87,11 +107,9 @@ if (defined('securipe') or exit(1))
 			return $string;
 		}
 		
-		/* Serialization */
-		
 		/**
-		 * description
-		 * @param param, description.
+		 * Unserializes a serialized object from a string.
+		 * @param text, the string of the serialized object.
 		 */
 		public static function Unserialize($text)
 		{
@@ -99,8 +117,8 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Serializes an object into a string.
+		 * @param object, the object to serialize.
 		 */
 		public static function Serialize($object)
 		{
@@ -108,7 +126,7 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
+		 * Find a string inside another string (customized strstr to include multiple needles)
 		 * @param haystack, string to look in
 		 * @param needles, string or string[] to look for
 		 */
@@ -144,7 +162,7 @@ if (defined('securipe') or exit(1))
 		public static function strrempre($a,$b) { return _string::string_remove_prefix($a,$b); }
 		
 		/**
-		 * description
+		 * Removes any Windows linebreaks (\r\n) and replaces them with proper UNIX linebreaks (\n).
 		 * @param param, description.
 		 */
 		public static function EnforceProperLineEndings(& $string)
@@ -155,73 +173,77 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Determines if a String starts with an upper case character
+		 * @param string, The string to check.
 		 */
-		public static function StartsWithUpper($str)
+		public static function StartsWithUpper($string)
 		{
-			$chr = mb_substr($str, 0, 1, "UTF-8");
-			return mb_strtolower($chr, "UTF-8") != $chr;
+			$char = mb_substr($string, 0, 1, "UTF-8");
+			return mb_strtolower($char, "UTF-8") != $char;
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Determines if a String is one of the strings in a specified array
+		 * @param array, The array to look in.
+		 * @param string, The string to look for.
+		 * @param out, If set will contain the key of the matched string.
 		 */
 		public static function IsOneOf($array, $string, &$out=null)
 		{
 			$result = false;
-			
 			if (is_array($array))
 			{
 				$result = in_array($string, $array);
 				if ($out !== null) { $out = array_search($string, $array); }
 			}
-			
 			return $result;
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Checks if a string contains another string.
+		 * @param haystack, string to look in.
+		 * @param needles, string or string[] to look for
+		 * @param match, (-1 = all needles must be in haystack) (0 = none) (# = # or more needles)
+		 * @param out, If set will contain the key(s) of the matched string(s).
 		 */
-		public static function Contains($haystack, $needle, $match=-1, &$out=null)
+		public static function Contains($haystack, $needles, $match=-1, &$out=null)
 		{
 			$value = false;
 			
-			if (is_array($needle))
+			if (is_array($needles))
 			{
 				$matches = 0;
-				//foreach ($needle as $n)
-				for ($i = 0; $i < sizeof($needle); $i++)
+				if ($out !== null) { $out = array(); }
+				for ($i = 0; $i < sizeof($needles); $i++)
 				{
-					$n = $needle[$i];
+					$n = $needles[$i];
 					if (strpos($haystack, $n) !== false)
 					{
 						$matches++;
-						if ($matches == 1) $out = $i;
+						if ($out !== null) { $out[] = $i; }
 					}
 				}
 				
 				// IF match=-1(all), and all needles matched...
-				if ($match == -1 && $matches == sizeof($needle)) $value = true;
+				if ($match == -1 && $matches == sizeof($needles)) $value = true;
 				// OR match=0(none), and no matches...
 				elseif ($match == 0 && $matches == 0) $value = true;
 				// OR match=x(at least x), and more than x matches...
 				elseif ($match > 0 && $matches >= $match) $value = true;
 				// ...return true
-			}
-			else
-			{
-				$value = ($out = strpos($haystack, $needle)) !== false;
+				
+				if (is_array($out) && sizeof($out) == 1) { $out = $out[0]; }
+			} else {
+				$value = ($out = strpos($haystack, $needles)) !== false;
 			}
 			
 			return $value;
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Checks if a string starts with a specified string.
+		 * @param haystack, string to look in.
+		 * @param needle, string to look for.
 		 */
 		public static function StartsWith($haystack, $needle)
 		{
@@ -229,8 +251,9 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Checks if a string ends with a specified string.
+		 * @param haystack, string to look in.
+		 * @param needle, string to look for.
 		 */
 		public static function EndsWith($haystack, $needle)
 		{
@@ -277,28 +300,26 @@ if (defined('securipe') or exit(1))
 	class HTML
 	{
 		/**
-		 * description
-		 * @param param, description.
+		 * Decodes encoded HTML characters in a text back to HTML evaluated characters.
+		 * @param text, The text to decode.
 		 */
-		public static function ConvertTextToHtml($text)
+		public static function Decode($text)
 		{
 			return str_replace(array('\n', '\t'), array(NEWLINE, INDENT), htmlspecialchars_decode($text));
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Encodes HTML characters in a text.
+		 * @param text, The text to encode.
 		 */
-		public static function ConvertHtmlToText($html)
+		public static function Encode($text)
 		{
-			return htmlspecialchars(str_replace(array(NEWLINE, INDENT), array('\n', '\t'), $html));
+			return htmlspecialchars(str_replace(array(NEWLINE, INDENT), array('\n', '\t'), $text));
 		}
 	}
 	
 	class File
 	{
-		/** File methods **/
-		
 		/**
 		 * Logs HTML output to a file (for debugging)
 		 * @param output, HTML to write to file.
@@ -333,22 +354,17 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Returns the given filesize in the closest byte denomination.
+		 * @param $bytes, The filesize in bytes.
 		 */
 		public static function GetSize($bytes)
 		{
 			$value = '';
-			if ($bytes < 1024)
-			{
+			if ($bytes < 1024) {
 				$value = $bytes.' bytes';
-			}
-			else if ($bytes < 1048576)
-			{
+			} else if ($bytes < 1048576) {
 				$value = number_format(($bytes / 1024), 1, ',', '').' KB';
-			}
-			else
-			{
+			} else {
 				$value = number_format(($bytes / 1048576), 1, ',', '').' MB';
 			}
 			return $value;
@@ -358,8 +374,9 @@ if (defined('securipe') or exit(1))
 	class Time
 	{
 		/**
-		 * description
-		 * @param param, description.
+		 * Returns a human readable time from a UNIX timestamp.
+		 * @param timestamp, The timestamp to humanize.
+		 * @param format, An optional format for the outputted string.
 		 */
 		public static function TimestampToHumanTime($timestamp, $format = false)
 		{
@@ -409,8 +426,8 @@ if (defined('securipe') or exit(1))
 	class _bool
 	{
 		/**
-		 * description
-		 * @param param, description.
+		 * Display a boolean as "TRUE" or "FALSE", instead of "1" and "0".
+		 * @param boolean, the boolean to display.
 		 */
 		public static function Display($boolean)
 		{
@@ -422,15 +439,12 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * "Flip" a boolean value to the opposite value
+		 * @param boolean, the value to "flip".
 		 */
 		public static function Flip(&$boolean)
 		{
-			if (is_bool($boolean))
-			{
-				$boolean = !$boolean;
-			}
+			if (is_bool($boolean)) { $boolean = !$boolean; }
 		}
 	}
 	
@@ -492,6 +506,15 @@ if (defined('securipe') or exit(1))
 		public static function IsLongerThan($array, $size)
 		{
 			return is_array($array) && sizeof($array) > $size;
+		}
+		
+		/**
+		 * description
+		 * @param param, description.
+		 */
+		public static function GetIdOf($array, $item)
+		{
+			return array_search($item, $array);
 		}
 		
 		/**

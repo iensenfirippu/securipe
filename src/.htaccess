@@ -1,0 +1,9 @@
+#RewriteEngine On
+#RewriteBase /
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_URI} !(.*)/$
+#RewriteRule ^(.*)$ /$1/ [L,R=301]
+ 
+#RewriteRule ^/$ index.php
+#RewriteRule ^([a-zA-Z]+)/ index.php?action=$1
+#RewriteRule ^([a-zA-Z]+)/(.+)/(.+)/$ &$2=$3 

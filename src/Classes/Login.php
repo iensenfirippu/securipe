@@ -176,8 +176,8 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
-	$GLOBALS['LOGIN'] = new Login();
-	if (Value::SetAndEquals('logout', $_GET, 'action')) { Login::LogOut(); }
-	if (Login::GetStatus()->GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
+	//$GLOBALS['LOGIN'] = new Login();
+	//if (Value::SetAndEquals('logout', $_GET, 'action')) { Login::LogOut(); }
+	//if (Login::GetStatus()->GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
 }
 ?>

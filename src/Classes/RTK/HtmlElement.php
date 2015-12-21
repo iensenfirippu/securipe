@@ -45,16 +45,19 @@ if (defined('RTK') or exit(1))
 		
 		public function __construct($tag=EMPTYSTRING, $attributes=EMPTYSTRING, $content=EMPTYSTRING, $child=null)
 		{
-			if ($tag == 'comment' || $tag == '!--')
-			{
+			if ($tag == 'comment' || $tag == '!--') {
 				$this->_tag = '!--';
 				$this->_endtag = '--';
-			}
-			else
-			{
+			} else {
 				$this->_tag = $tag;
 			}
-			$this->_attributes = $attributes;
+			
+			if (is_array($attributes)) {
+				$this->_attributes = HtmlElement::ArgsToString($attributes);
+			} else {
+				$this->_attributes = $attributes;
+			}
+			
 			$this->_content = _string::EnforceProperLineEndings($content);
 			if ($child !== null)
 			{
@@ -66,29 +69,24 @@ if (defined('RTK') or exit(1))
 		protected static function ArgsToString($args)
 		{
 			$result = EMPTYSTRING;
-			
-			if ($args != null)
-			{
-				if (is_string($args))
-				{
+			if ($args != null) {
+				if (is_string($args)) {
 					$result = SINGLESPACE.$key.'="'.$val.'"';
 				}
-				if (is_array($args))
-				{
+				
+				if (is_array($args)) {
 					ksort($args);
 					foreach ($args as $key => $val) {
 						$result .= SINGLESPACE.$key.'="'.$val.'"';
 					}
 				}
-			}
-			
+			}			
 			return trim($result);
 		}
 		
 		public function SetPointer($containerindex)
 		{
-			if (isset($this->_containers[$containerindex]))
-			{
+			if (isset($this->_containers[$containerindex])) {
 				$this->_pointer = $this->_containers[$containerindex];
 			}
 		}
@@ -102,16 +100,11 @@ if (defined('RTK') or exit(1))
 		
 		protected function AddToContainer($HtmlElement, $container=null)
 		{
-			if ($container != null && Value::SetAndNotNull($this->_containers[$container]))
-			{
+			if ($container != null && Value::SetAndNotNull($this->_containers[$container])) {
 				$this->_containers[$container]->AddChild($HtmlElement);
-			}
-			elseif ($this->_pointer != null)
-			{
+			} elseif ($this->_pointer != null) {
 				$this->_pointer->AddChild($HtmlElement);
-			}
-			else
-			{
+			} else {
 				$this->AddChild($HtmlElement);
 			}
 		}
@@ -145,22 +138,17 @@ if (defined('RTK') or exit(1))
 			$child->_indent = $this->_indent + 1;
 			$child->UpdateChildren();
 			
-			if ($index !== null && $index >= 0 && $index < sizeof($this->_children))
-			{
+			if ($index !== null && $index >= 0 && $index < sizeof($this->_children)) {
 				array_splice($this->_children, $index, 0, array($child));
-			}
-			else
-			{
+			} else {
 				array_push($this->_children, $child);
 			}
 		}
 		
 		private function UpdateChildren()
 		{
-			foreach ($this->_children as $c)
-			{
-				if ($c instanceof HtmlElement)
-				{
+			foreach ($this->_children as $c) {
+				if ($c instanceof HtmlElement) {
 					$c->_indent = $this->_indent + 1;
 					if ($this->_tag == EMPTYSTRING) { $c->_indent = $this->_indent; }
 					if ($this->_oneline > 0) { $c->_oneline = $this->_oneline + 1; }
@@ -178,24 +166,18 @@ if (defined('RTK') or exit(1))
 		public function ToString(&$newline)
 		{
 			$return = EMPTYSTRING;
-			if ($this->_tag != EMPTYSTRING)
-			{
+			if ($this->_tag != EMPTYSTRING) {
 				if ($newline) { $return .= OUTPUTNEWLINE; } else { $newline = true; }
 				if ($this->_oneline <= 1) { $return .= str_repeat(OUTPUTINDENT, $this->_indent); }
 				$return .= '<'.$this->_tag;
 				if ($this->_attributes != EMPTYSTRING) { $return .= " ".$this->_attributes; }
 				if ($this->_endtag != EMPTYSTRING) { $return .= $this->_endtag.">"; }
-				else
-				{
-					if (sizeof($this->_children) == 0)
-					{
-						if ($this->_content != EMPTYSTRING)
-						{
-							if (strstr($this->_content, NEWLINE) && !strstr(PRESERVECONTENTS, $this->_tag))
-							{
+				else {
+					if (sizeof($this->_children) == 0) {
+						if ($this->_content != EMPTYSTRING) {
+							if (strstr($this->_content, NEWLINE) && !strstr(PRESERVECONTENTS, $this->_tag)) {
 								$return .= '>';
-								foreach (explode(NEWLINE, $this->_content) as $line)
-								{
+								foreach (explode(NEWLINE, $this->_content) as $line) {
 									if ($line == EMPTYSTRING || $line[strlen($line) -1] != '>') { $line .= '<br />'; }
 									$return .= OUTPUTNEWLINE.str_repeat(OUTPUTINDENT, $this->_indent + 1).$line;
 								}
@@ -207,17 +189,12 @@ if (defined('RTK') or exit(1))
 						elseif (strstr(VOIDELEMENTS, '|'.$this->_tag.'|')) { $return .= ' />'; }
 						elseif (strstr(NONVOIDELEMENTS, '|'.$this->_tag.'|') || $this->_oneline) { $return .= '></'.$this->_tag.'>'; }
 						else { $return .= ' />'; }
-					}
-					else
-					{
-						if ($this->_oneline)
-						{
+					} else {
+						if ($this->_oneline) {
 							$return .= '>';
 							foreach ($this->_children as $c) { $return .= $c; }
 							$return .= '</'.$this->_tag.'>';
-						}
-						else
-						{
+						} else {
 							$return .= '>'.OUTPUTNEWLINE;
 							if ($this->_content != EMPTYSTRING) { $return .= str_repeat(OUTPUTINDENT, $this->_indent + 1).str_replace("\n", '<br />'.OUTPUTNEWLINE.str_repeat(OUTPUTINDENT, $this->_indent), $this->_content).OUTPUTNEWLINE; }
 							if (sizeof($this->_children) > 0)
@@ -229,12 +206,9 @@ if (defined('RTK') or exit(1))
 						}
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$sizeofchildren = sizeof($this->_children);	
-				if ($sizeofchildren > 0)
-				{
+				if ($sizeofchildren > 0) {
 					$this->UpdateChildren();
 					
 					// INFO: commenting this line seems to have fixed a double-linebreak issue, but may now cause a no-linebreak in some cases... stay tuned...

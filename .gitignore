@@ -126,3 +126,6 @@ pom.xml.asc
 .nrepl-port
 
 .tern-port
+
+# Ignore Custom Config.php
+/Config/Config.php
