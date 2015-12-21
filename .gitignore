@@ -128,4 +128,4 @@ pom.xml.asc
 .tern-port
 
 # Ignore custom Config.php
-/Config/Config.php
+/src/Config/Config.php
