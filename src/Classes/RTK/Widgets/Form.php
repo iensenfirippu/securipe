@@ -6,15 +6,24 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_Form extends HtmlElement
 	{
-		public function __construct($name=EMPTYSTRING, $action=EMPTYSTRING, $method='POST')
+		public function __construct($name=EMPTYSTRING, $action=EMPTYSTRING, $method='POST', $usetoken=true)
 		{
 			parent::__construct('form', 'name="'.$name.'" id="'.$name.'" action="'.$action.'" method="'.$method.'"');
+			if ($usetoken) {
+				$this->AddHiddenField('securitytoken', Site::CreateSecurityToken());
+			}
 			$this->_containers = array();
 		}
 		
 		public function AddText($text, $container=null)
 		{
 			$field = new HtmlElement('div', 'class="formtext"', $text);
+			$this->AddToContainer($field, $container);
+		}
+		
+		public function AddHiddenField($name, $value=null, $container=null)
+		{
+			$field = new HtmlElement('input', 'type="hidden" name="'.$name.'" id="'.$name.'" value="'.$value.'"');
 			$this->AddToContainer($field, $container);
 		}
 		

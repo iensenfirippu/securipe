@@ -5,6 +5,8 @@ if (defined('securipe') or exit(1))
 	if (!defined("DISPLAYERRORS"))		define("DISPLAYERRORS",		false);
 	if (!defined("ONELINEOUTPUT"))		define("ONELINEOUTPUT",		false);
 	
+	if (!defined("BASEURL"))			define("BASEURL",			"localhost/");
+	
 	if (!defined("TIMEZONE"))			define("TIMEZONE",			"Asia/Tokyo");
 	
 	if (!defined("DBVENDOR")) 			define("DBVENDOR",			"mysql");

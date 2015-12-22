@@ -17,7 +17,7 @@ if (defined('RTK') or exit(1))
 			$o_title = EMPTYSTRING;
 			foreach ($options as $option)
 			{
-				if (General::IsArrayLongerThan($option, 1))
+				if (_array::IsLongerThan($option, 1))
 				{
 					$o_value = $option[0];
 					$o_title = $option[1];
