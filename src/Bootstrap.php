@@ -1,5 +1,5 @@
 <?php
-define(STARTTIME, microtime(true));
+define("STARTTIME", microtime(true));
 session_start();
 define("securipe", true);
 
