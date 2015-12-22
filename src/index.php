@@ -1,7 +1,6 @@
 <?php
 define(STARTTIME, microtime(true));
 session_start();
-define("securipe", true);
 include_once("Bootstrap.php");
 
 
