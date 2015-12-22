@@ -14,7 +14,7 @@ $loginbox = new RTK_Box('loginbox');
 if (Login::GetStatus()->IsLoggedIn()) {
 	// If a user is logged in
 	$loginbox->AddChild(new RTK_Textview('You are logged in as: '.Login::GetStatus()->GetUsername()));
-	$loginbox->AddChild(new RTK_Link('https://'.$_SERVER['HTTP_HOST'].'?action=logout', 'click here for log out'));
+	$loginbox->AddChild(new RTK_Link('?action=logout', 'click here for log out', true));
 } elseif (Site::HasHttps()) {
 	// If a user is not logged in, but the site is running secure
 	$loginform = new RTK_Form('loginform', EMPTYSTRING, 'POST');
@@ -25,7 +25,7 @@ if (Login::GetStatus()->IsLoggedIn()) {
 } else {
 	// If a user is not logged in, and the site is not running secure
 	$loginbox->AddChild(new RTK_Textview('You are not running secure and therefore cannot be allowed to log in.'));
-	$loginbox->AddChild(new RTK_Link('https://'.$_SERVER['HTTP_HOST'], 'click here for encrypted login'));
+	$loginbox->AddChild(new RTK_Link($_SERVER['HTTP_HOST'], 'click here for encrypted login', true));
 }
 
 $RTK->AddElement($loginbox);
