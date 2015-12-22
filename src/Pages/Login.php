@@ -25,7 +25,7 @@ if (Login::GetStatus()->IsLoggedIn()) {
 } else {
 	// If a user is not logged in, and the site is not running secure
 	$loginbox->AddChild(new RTK_Textview('You are not running secure and therefore cannot be allowed to log in.'));
-	$loginbox->AddChild(new RTK_Link($_SERVER['HTTP_HOST'], 'click here for encrypted login', true));
+	$loginbox->AddChild(new RTK_Link('?action=login', 'click here for encrypted login', true));
 }
 
 $RTK->AddElement($loginbox);
