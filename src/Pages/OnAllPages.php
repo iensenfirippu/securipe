@@ -1,8 +1,7 @@
 <?php
 // Page Logic
 $titles = array('Home', '_Login', 'Recipe');
-$links = array();
-foreach ($titles as $title) { $links[] = '?action='.strtolower($title); }
+$links = array('?action=home', '?action=login', '?action=recipe');
 
 // Page Output
 $RTK->AddStylesheet('style.css');

@@ -6,7 +6,7 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_Header extends HtmlElement
 	{
-		public function __construct($level=1, $text=EMPTYSTRING, $args=null)
+		public function __construct($text=EMPTYSTRING, $level=1, $args=null)
 		{
 			if ($args == null || !is_array($args)) { $args = array(); }
 			
