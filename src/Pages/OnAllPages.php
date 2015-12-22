@@ -1,10 +1,6 @@
 <?php
 // Page Logic
-$titles = glob('Pages/*.php');
-_array::Remove($titles, _array::GetIdOf($titles, 'Pages/OnAllPages.php'));
-for ($i=0; $i<sizeof($titles); $i++) {
-	$titles[$i] = str_replace(array('Pages/', '.php'), array(EMPTYSTRING, EMPTYSTRING), $titles[$i]);
-}
+$titles = array('Home', '_Login', 'Recipe');
 $links = array();
 foreach ($titles as $title) { $links[] = '?action='.strtolower($title); }
 

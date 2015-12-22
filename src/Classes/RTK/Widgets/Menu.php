@@ -16,16 +16,21 @@ if (defined('RTK') or exit(1))
 			if (sizeof($links) == sizeof($titles)) {
 				for ($i=0; $i<sizeof($links); $i++) {
 					$linkargs = null;
+					$forcehttps = false;
+					if (_string::StartsWith($titles[$i], '_')) {
+						$titles[$i] = _string::RemovePrefix($titles[$i], '_');
+						$forcehttps = true;
+					}
 					if ($selected != null && $selected == $titles[$i]) { $linkargs = array('selected' => true); }
-					$items[] = new RTK_Link($links[$i], $titles[$i], $linkargs);
+					$items[] = new RTK_Link($links[$i], $titles[$i], $forcehttps, $linkargs);
 				}
 			}
 			parent::__construct($items, $args);
 		}
 		
-		public function AddMenuItem($link, $title)
+		public function AddMenuItem($link, $title, $forcehttps=false)
 		{
-			$this->AddChild(new RTK_Link($links[$i], $titles[$i]));
+			$this->AddChild(new RTK_Link($links[$i], $titles[$i], $forcehttps));
 		}
 		
 		public function SetSelected($idortitle) {

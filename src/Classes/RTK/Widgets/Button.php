@@ -9,10 +9,10 @@ if (defined('RTK') or exit(1))
 		public function __construct($name='submit', $title='Submit', $args=null)
 		{
 			if ($args == null || !is_array($args)) { $args = array(); }
-			$args['name'] = $name;
-			$args['value'] = $title;
-			$args['type'] = 'submit';
-			$args['class'] = 'submit';
+			if (!isset($args['name'])) { $args['name'] = $name; }
+			if (!isset($args['value'])) { $args['value'] = $title; }
+			if (!isset($args['type'])) { $args['type'] = 'submit'; }
+			if (!isset($args['class'])) { $args['class'] = 'submit'; }
 			
 			parent::__construct('input', HtmlElement::ArgsToString($args));
 		}

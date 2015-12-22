@@ -187,7 +187,7 @@ ul.menu li {
 
 #recipebox {
 	position: relative;
-	padding: 75px 25px 75px 25px;
+	padding: 20px;
 	
 	background-color: #8888aa;
 	border: 2px solid #ffffff;
@@ -196,14 +196,39 @@ ul.menu li {
 	border-radius: 10px;
 }
 
+#recipebox .recipedescription {
+	margin-bottom: 20px;
+}
+
 #recipebox img {
 	float: right;
-	top: 0px;
-	right: 0px;
 }
 
 #recipebox .stepbox {
-	border: 1px solid green;
+	display: block;
+	position: relative;
+	margin-top: 10px;
+	padding: 5px;
+	border: 2px solid #ffffff;
+	border-radius: 10px;
+}
+
+#recipebox .stepbox h1 {
+	float: left;
+	width: auto;
+	height: auto;
+	margin: 0 5px 5px 0;
+	padding: 2px 8px;
+	text-align: center;
+	font-size: 2em;
+	color: #ffffff;
+	background-color: #555555;
+	border: 1px solid #000000;
+	border-radius: 50%;
+}
+
+.clearfix {
+	clear: both;
 }
 
 

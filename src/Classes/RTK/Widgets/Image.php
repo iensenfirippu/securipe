@@ -20,7 +20,8 @@ if (defined('RTK') or exit(1))
 			$child = $this->GetFirstChild();
 			if ($child != false && $child->GetType() == 'img') {
 				$img = $child;
-				$child = new RTK_Link($link, EMPTYSTRING, $args, $img);
+				$child = new RTK_Link($link, EMPTYSTRING, $args, false);
+				$child->AddChild($img);
 				$child->SetOneLine(true);
 			}
 		}
