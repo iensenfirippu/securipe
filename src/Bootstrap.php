@@ -3,6 +3,8 @@ define("STARTTIME", microtime(true));
 session_start();
 define("securipe", true);
 
+if (!file_exists("index.php")) { chdir("src"); }
+
 if (file_exists("Config/Config.php")) { include_once("Config/Config.php"); }
 include_once("Config/Default.php");
 
