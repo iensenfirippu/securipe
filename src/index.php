@@ -1,6 +1,4 @@
 <?php
-define(STARTTIME, microtime(true));
-session_start();
 include_once("Bootstrap.php");
 
 

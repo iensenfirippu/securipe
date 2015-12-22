@@ -1,4 +1,6 @@
 <?php
+define(STARTTIME, microtime(true));
+session_start();
 define("securipe", true);
 
 if (file_exists("Config/Config.php")) { include_once("Config/Config.php"); }
