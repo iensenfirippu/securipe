@@ -1,7 +1,7 @@
 <?php
 define("securipe", true);
 
-include_once("Config/Config.php");
+if (file_exists("Config/Config.php")) { include_once("Config/Config.php"); }
 include_once("Config/Default.php");
 
 if (DISPLAYERRORS) {
