@@ -11,7 +11,7 @@ $RTK->AddStylesheet('style.css');
 
 $recipebox = new RTK_Box('recipebox');
 $recipedescription = new RTK_Box(null, 'recipedescription');
-$recipedescription->AddChild(new RTK_Header("Example Recipe #".rand(100,1000), 1));
+$recipedescription->AddChild(new RTK_Header("Example Recipe #".rand(100,1000)));
 $recipedescription->AddChild(new RTK_Image('/Images/imgtest.png'));
 $recipedescription->AddChild(new RTK_Textview($steps[2].$steps[1]));
 $recipedescription->AddChild(new RTK_Box(null, 'clearfix'));
@@ -20,7 +20,7 @@ $i = 0;
 foreach ($steps as $step) {
 	$i++;
 	$stepbox = new RTK_Box(null, 'stepbox');
-	$stepbox->AddChild(new RTK_Header($i.EMPTYSTRING, 1));
+	$stepbox->AddChild(new RTK_Header($i.EMPTYSTRING));
 	for ($j=1; $j<$i; $j++) {
 		$stepbox->AddChild(new RTK_Image('/Images/imgtest.png'));	
 	}

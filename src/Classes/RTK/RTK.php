@@ -6,6 +6,7 @@
 
 define("RTK", true);
 include_once("Classes/RTK/HtmlElement.php");
+include_once("Classes/RTK/HtmlAttributes.php");
 foreach (glob("Classes/RTK/Widgets/*.php") as $classfile) { include_once($classfile); }
 
 class RTK

@@ -468,6 +468,20 @@ if (defined('securipe') or exit(1))
 		 * description
 		 * @param param, description.
 		 */
+		public static function SetAndNull($variable, $key=null)
+		{
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = -1; }
+			}
+			return (isset($variable) && $variable == null);
+		}
+		
+		/**
+		 * description
+		 * @param param, description.
+		 */
 		public static function SetAndNotEmpty($variable, $key=null)
 		{
 			//var_dump($variable);
@@ -494,6 +508,20 @@ if (defined('securipe') or exit(1))
 			if ($checktype)	{ $result = (isset($variable) && $variable === $value); }
 			else			{ $result = (isset($variable) && $variable == $value); }
 			return $result;
+		}
+		
+		/**
+		 * description
+		 * @param param, description.
+		 */
+		public static function IsArrayAndNotEmpty($variable, $key=null)
+		{
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = null; }
+			}
+			return (is_array($variable) && !empty($variable));
 		}
 	}
 	
@@ -524,6 +552,7 @@ if (defined('securipe') or exit(1))
 		public static function Remove(&$array, $index)
 		{
 			$result = false;
+			if (!is_integer($index)) { $index = array_search($index, $array); }
 			if (is_array($array) && sizeof($array) > $index)
 			{
 				unset($array[$index]);

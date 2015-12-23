@@ -9,6 +9,8 @@ if (defined('RTK') or exit(1))
 	define("VOIDELEMENTS", "|area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr|");
 	// Tags which contents must not be altered (i.e. indented)
 	define("PRESERVECONTENTS", "|textarea|");
+	// Parameter keys that should not have a value assignment
+	//define("SOLITARYPARAMETERS", "|checked|selected|");
 	
 	if (ONELINEOUTPUT === true) {
 		define("OUTPUTNEWLINE",	EMPTYSTRING);
@@ -24,7 +26,7 @@ if (defined('RTK') or exit(1))
 		protected $_oneline = 0;
 		protected $_tag = EMPTYSTRING;
 		protected $_endtag = EMPTYSTRING;
-		protected $_attributes = EMPTYSTRING;
+		protected $_attributes = null;
 		protected $_content = EMPTYSTRING;
 		protected $_children = array();
 		protected $_containers = array();
@@ -52,10 +54,12 @@ if (defined('RTK') or exit(1))
 				$this->_tag = $tag;
 			}
 			
-			if (is_array($attributes)) {
-				$this->_attributes = HtmlElement::ArgsToString($attributes);
-			} else {
+			if (is_a($attributes, 'HtmlAttributes')) {
 				$this->_attributes = $attributes;
+			} elseif (is_array($attributes)) {
+				$this->_attributes = new HtmlAttributes($attributes);
+			} else {
+				$this->_attributes = new HtmlAttributes();
 			}
 			
 			$this->_content = _string::EnforceProperLineEndings($content);
@@ -66,29 +70,50 @@ if (defined('RTK') or exit(1))
 			}
 		}
 		
-		protected static function ArgsToString($args)
+		/*protected static function ArgsToString($args)
 		{
 			$result = EMPTYSTRING;
 			if ($args != null) {
-				if (is_string($args)) {
-					$result = SINGLESPACE.$key.'="'.$val.'"';
-				}
+				//if (is_string($args)) {
+				//	$result = SINGLESPACE.$key.'="'.$val.'"';
+				//}
 				
 				if (is_array($args)) {
 					ksort($args);
 					foreach ($args as $key => $val) {
-						$result .= SINGLESPACE.$key.'="'.$val.'"';
+						if (strstr(SOLITARYPARAMETERS, '|'.$key.'|') && $val == true) {
+							$result .= SINGLESPACE.$key;
+						} else {
+							$result .= SINGLESPACE.$key.'="'.$val.'"';
+						}
 					}
 				}
 			}			
 			return trim($result);
-		}
+		}*/
 		
 		public function SetPointer($containerindex)
 		{
 			if (isset($this->_containers[$containerindex])) {
 				$this->_pointer = $this->_containers[$containerindex];
 			}
+		}
+		
+		public function AddAttributes($attributes, $override=true)
+		{
+			foreach ($attributes as $key => $val) {
+				$this->_attributes->Add($key, $val);
+			}
+		}
+		
+		public function AddAttribute($key, $value, $override=true)
+		{
+			$this->_attributes->Add($key, $value, $override);
+		}
+		
+		public function RemoveAttribute($key)
+		{
+			$this->_attributes->Remove($key);
 		}
 		
 		public function AddContainer($HtmlElement, $name)
@@ -170,7 +195,7 @@ if (defined('RTK') or exit(1))
 				if ($newline) { $return .= OUTPUTNEWLINE; } else { $newline = true; }
 				if ($this->_oneline <= 1) { $return .= str_repeat(OUTPUTINDENT, $this->_indent); }
 				$return .= '<'.$this->_tag;
-				if ($this->_attributes != EMPTYSTRING) { $return .= " ".$this->_attributes; }
+				if (Value::IsArrayAndNotEmpty($this->_attributes)) { $return .= " ".$this->_attributes; }
 				if ($this->_endtag != EMPTYSTRING) { $return .= $this->_endtag.">"; }
 				else {
 					if (sizeof($this->_children) == 0) {

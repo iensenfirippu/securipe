@@ -8,15 +8,15 @@ if (defined('RTK') or exit(1))
 	{
 		public function __construct($text=EMPTYSTRING, $inline=false, $id=null, $class=null, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			if ($id != null && !isset($args['id'])) { $args['id'] = $id; }
-			if ($class != null && !isset($args['class'])) { $args['class'] = $class; }
+			if ($args == null || !is_array($args)) { $args = new HtmlAttributes(); }
+			elseif (!is_a($args, 'HtmlAttributes')) { $args = new HtmlAttributes($args); }
+			
+			if ($id != null) { $args->Add('id', $id); }
+			if ($class != null) { $args->Add('class', $class); }
 			
 			$tag = $inline ? 'span' : 'div';
-			parent::__construct($tag, HtmlElement::ArgsToString($args), $text);
+			parent::__construct($tag, $args, $text);
 		}
 	}
-	
-	new RTK_Textview('text', array("id" => "idjegvilsoegeefter"));
 }
 ?>
