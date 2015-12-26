@@ -8,11 +8,11 @@ if (defined('RTK') or exit(1))
 	{
 		public function __construct($url=EMPTYSTRING, $name=EMPTYSTRING, $forcehttps=false, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			if (Site::HasHttps() || $forcehttps) { $args['href'] = 'https://'.BASEURL.$url; }
-			else { $args['href'] = 'http://'.BASEURL.$url; }
+			HtmlAttributes::Assure($args);
+			if (Site::HasHttps() || $forcehttps) { $args->Add('href', 'https://'.BASEURL.$url); }
+			else { $args->Add('href', 'http://'.BASEURL.$url); }
 			
-			parent::__construct('a', HtmlElement::ArgsToString($args), $name);
+			parent::__construct('a', $args, $name);
 		}
 	}
 }

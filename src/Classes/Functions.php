@@ -484,7 +484,6 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function SetAndNotEmpty($variable, $key=null)
 		{
-			//var_dump($variable);
 			if ($key != null && is_array($variable))
 			{
 				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
@@ -497,7 +496,21 @@ if (defined('securipe') or exit(1))
 		 * description
 		 * @param param, description.
 		 */
-		public static function SetAndEquals($value, $variable, $key=null, $checktype=false)
+		public static function SetAndEmpty($variable, $key=null)
+		{
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = null; }
+			}
+			return (isset($variable) && empty($variable));
+		}
+		
+		/**
+		 * description
+		 * @param param, description.
+		 */
+		public static function SetAndEqualTo($value, $variable, $key=null, $checktype=false)
 		{
 			$result = false;
 			if ($key != null && is_array($variable))
@@ -514,14 +527,17 @@ if (defined('securipe') or exit(1))
 		 * description
 		 * @param param, description.
 		 */
-		public static function IsArrayAndNotEmpty($variable, $key=null)
+		public static function SetAndNotEqualTo($value, $variable, $key=null, $checktype=false)
 		{
+			$result = false;
 			if ($key != null && is_array($variable))
 			{
 				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
 				else { $variable = null; }
 			}
-			return (is_array($variable) && !empty($variable));
+			if ($checktype)	{ $result = (isset($variable) && $variable !== $value); }
+			else			{ $result = (isset($variable) && $variable != $value); }
+			return $result;
 		}
 	}
 	
@@ -534,6 +550,20 @@ if (defined('securipe') or exit(1))
 		public static function IsLongerThan($array, $size)
 		{
 			return is_array($array) && sizeof($array) > $size;
+		}
+		
+		/**
+		 * description
+		 * @param param, description.
+		 */
+		public static function NotEmpty($variable, $key=null)
+		{
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = null; }
+			}
+			return (is_array($variable) && !empty($variable));
 		}
 		
 		/**

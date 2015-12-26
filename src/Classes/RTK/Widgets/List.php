@@ -8,8 +8,6 @@ if (defined('RTK') or exit(1))
 	{
 		public function __construct($items=null, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			
 			parent::__construct('ul', $args);
 			foreach ($items as $item) {
 				if (is_a($item, 'HtmlElement')) {

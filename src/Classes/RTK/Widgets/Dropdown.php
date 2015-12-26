@@ -8,25 +8,24 @@ if (defined('RTK') or exit(1))
 	{
 		public function __construct($name, $options, $selected=null, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			$args['name'] = $name;
+			HtmlAttributes::Assure($args);
+			$args->Add('name', $name);
 			
-			parent::__construct('select', HtmlElement::ArgsToString($args));
+			parent::__construct('select', $args);
 			
-			$o_value = EMPTYSTRING;
-			$o_title = EMPTYSTRING;
-			foreach ($options as $option)
-			{
-				if (_array::IsLongerThan($option, 1))
-				{
-					$o_value = $option[0];
-					$o_title = $option[1];
-				}
-				else { $o_value = $o_title = $option; }
+			$option_value = EMPTYSTRING;
+			$option_title = EMPTYSTRING;
+			foreach ($options as $option) {
+				if (_array::IsLongerThan($option, 1)) {
+					$option_value = $option[0];
+					$option_title = $option[1];
+				} else { $option_value = $option_title = $option; }
 				
-				$optionargs = array('value' => $o_value);
-				if ($selected == $o_value) { $optionargs['selected'] = true; }
-				$this->AddChild(new HtmlElement('option', HtmlElement::ArgsToString($optionargs), $o_title));
+				$optionargs = new HtmlAttributes();
+				$optionargs->Add('value', $option_value);
+				if ($selected == $option_value) { $optionargs->Add('selected', true); }
+				
+				$buttons->AddChild(new HtmlElement('option', $optionargs, $option_title));
 			}
 		}
 	}

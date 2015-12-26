@@ -11,6 +11,7 @@ foreach (glob("Classes/RTK/Widgets/*.php") as $classfile) { include_once($classf
 
 class RTK
 {
+	protected $_doctype = EMPTYSTRING;
 	protected $_stylesheets = array();
 	protected $_javascripts = array();
 	protected $_breadcrumbs = null;
@@ -20,8 +21,7 @@ class RTK
 	
 	public function __construct($title, $doctype='html')
 	{
-		$tmp = new HtmlElement('!doctype', $doctype);
-		array_push($this->_elements, $tmp);
+		$this->_doctype = $doctype;
 		
 		$this->AddElement(new HtmlElement('html'), null, 'HTML');
 		$this->AddElement(new HtmlElement('head'), 'HTML', 'HEAD');
@@ -34,43 +34,43 @@ class RTK
 	
 	public function GetBreadcrumbs()			{ return $this->_breadcrumbs; }
 	
-	public function AddStylesheet($filename, $args=null)	{ $this->_stylesheets[$filename] = new HtmlElement('link', 'rel="stylesheet" type="text/css" href="'.$filename.'"'.$args); }
-	public function AddJavascript($filename, $args=null)	{ $this->_javascripts[$filename] = new HtmlElement('script', 'src="'.$filename.'"'.$args); }
+	public function AddStylesheet($filename, $args=null)
+	{
+		if (Value::SetAndNull($args) || !is_array($args)) { $args = array(); }
+		$args['rel'] = 'stylesheet';
+		$args['type'] = 'text/css';
+		$args['href'] = $filename;
+		$this->_stylesheets[$filename] = new HtmlElement('link', $args);
+	}
+	
+	public function AddJavascript($filename, $args=null)
+	{
+		if (Value::SetAndNull($args) || !is_array($args)) { $args = array(); }
+		$args['src'] = $filename;
+		$this->_javascripts[$filename] = new HtmlElement('script', $args);
+	}
 	
 	public function SetPointer($name)			{ $this->_pointer = $this->_references[$name]; }
 	
 	public function AddElement($HtmlElement, $inelement=null, $registeras=null, $index=null)
 	{
-		if ($HtmlElement != null && is_a($HtmlElement, 'HtmlElement'))
-		{
-			if ($inelement != null)
-			{
-				if (isset($this->_references[$inelement]) && is_a($this->_references[$inelement], 'HtmlElement'))
-				{
+		if ($HtmlElement != null && is_a($HtmlElement, 'HtmlElement')) {
+			if ($inelement != null) {
+				if (isset($this->_references[$inelement]) && is_a($this->_references[$inelement], 'HtmlElement')) {
 					$this->_references[$inelement]->AddChild($HtmlElement, $index);
-				}
-				else
-				{
+				} else {
 					// TODO: Add error reporting at some point
 				}
-			}
-			elseif ($this->_pointer != null)
-			{
+			} elseif ($this->_pointer != null) {
 				$this->_pointer->AddChild($HtmlElement);
-			}
-			else
-			{
+			} else {
 				array_push($this->_elements, $HtmlElement);
 			}
 			
-			if ($registeras != null)
-			{
-				if (!isset($this->_references[$registeras]))
-				{
+			if ($registeras != null) {
+				if (!isset($this->_references[$registeras])) {
 					$this->_pointer = $this->_references[$registeras] = $HtmlElement;
-				}
-				else
-				{
+				} else {
 					// TODO: Add error reporting at some point
 				}
 			}
@@ -91,7 +91,7 @@ class RTK
 	
 	public function __tostring()
 	{
-		$html = EMPTYSTRING;
+		$html = '<!doctype '.$this->_doctype.'>'.OUTPUTNEWLINE;
 		$headprocessed = false;
 		
 		// To make sure that stylesheets are always loaded in the same order (important for some rules), sort the stylesheet collection

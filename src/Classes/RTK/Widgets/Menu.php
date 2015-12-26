@@ -8,9 +8,9 @@ if (defined('RTK') or exit(1))
 	{
 		public function __construct($id, $class, $links, $titles, $selected=null, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			if ($id != null) { $args['id'] = $id; }
-			if ($class != null) { $args['class'] = $class; }
+			HtmlAttributes::Assure($args);
+			$args->Add('id', $id, true);
+			$args->Add('class', $class, true);
 			
 			$items = array();
 			if (sizeof($links) == sizeof($titles)) {
@@ -36,11 +36,11 @@ if (defined('RTK') or exit(1))
 		public function SetSelected($idortitle) {
 			$children = $this->GetChildren();
 			if (is_integer($idortitle) && $idortitle < sizeof($children)) {
-				$children[$idortitle]->SetAttributes($children->GetAttributes().' selected');
+				$children[$idortitle]->GetAttributes->Add('selected', true, true);
 			} elseif (is_string($idortitle)) {
 				foreach ($children as $child) {
-					if (_string::Contains($child->GetAttributes(), 'title="'.$idortitle.'"')) {
-						$child->SetAttributes($child->GetAttributes().' selected');
+					if ($child->GetAttributes()->KeyHasValue('title', $idortitle)) {
+						$child->GetAttributes()->Add('selected', true, true);
 					}
 				}
 			}

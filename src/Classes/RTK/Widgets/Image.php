@@ -8,17 +8,17 @@ if (defined('RTK') or exit(1))
 	{
 		public function __construct($imgurl=EMPTYSTRING, $alttext=EMPTYSTRING, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			$args['src'] = $imgurl;
-			$args['alt'] = $alttext;
+			HtmlAttributes::Assure($args);
+			$args->Add('src', $imgurl, true);
+			$args->Add('alt', $alttext, true);
 			
 			parent::__construct();
-			$this->AddChild(new HtmlElement('img', HtmlElement::ArgsToString($args)));
+			$this->AddChild(new HtmlElement('img', $args));
 		}
 		
 		public function AddLink($link, $args=null) {
 			$child = $this->GetFirstChild();
-			if ($child != false && $child->GetType() == 'img') {
+			if ($child != false && $child->GetTag() == 'img') {
 				$img = $child;
 				$child = new RTK_Link($link, EMPTYSTRING, $args, false);
 				$child->AddChild($img);
@@ -28,9 +28,9 @@ if (defined('RTK') or exit(1))
 		
 		public function RemoveLink() {
 			$child = $this->GetFirstChild();
-			if ($child != false && $child->GetType() == 'a') {
+			if ($child != false && $child->GetTag() == 'a') {
 				$grandchild = $child->GetFirstChild();
-				if ($child != false && $child->GetType() == 'img') {
+				if ($child != false && $child->GetTag() == 'img') {
 					$child = $grandchild;
 					$child->SetOneLine(false);
 				}

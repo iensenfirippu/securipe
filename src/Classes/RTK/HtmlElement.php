@@ -2,15 +2,13 @@
 if (defined('RTK') or exit(1))
 {
 	// Tags that must not be closed in any way
-	define("NONCLOSINGELEMENTS", "|!doctype|");
+	//define("NONCLOSINGELEMENTS", "|!doctype|");
 	// Tags that must NOT be closed by "/>"
 	define("NONVOIDELEMENTS", "|ul|script|a|tr|td|div|textarea|article|");
 	// Tags that MUST be closed by "/>"
 	define("VOIDELEMENTS", "|area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr|");
 	// Tags which contents must not be altered (i.e. indented)
 	define("PRESERVECONTENTS", "|textarea|");
-	// Parameter keys that should not have a value assignment
-	//define("SOLITARYPARAMETERS", "|checked|selected|");
 	
 	if (ONELINEOUTPUT === true) {
 		define("OUTPUTNEWLINE",	EMPTYSTRING);
@@ -69,28 +67,6 @@ if (defined('RTK') or exit(1))
 				else { foreach ($child as $c) { $this->AddChild($c); } }
 			}
 		}
-		
-		/*protected static function ArgsToString($args)
-		{
-			$result = EMPTYSTRING;
-			if ($args != null) {
-				//if (is_string($args)) {
-				//	$result = SINGLESPACE.$key.'="'.$val.'"';
-				//}
-				
-				if (is_array($args)) {
-					ksort($args);
-					foreach ($args as $key => $val) {
-						if (strstr(SOLITARYPARAMETERS, '|'.$key.'|') && $val == true) {
-							$result .= SINGLESPACE.$key;
-						} else {
-							$result .= SINGLESPACE.$key.'="'.$val.'"';
-						}
-					}
-				}
-			}			
-			return trim($result);
-		}*/
 		
 		public function SetPointer($containerindex)
 		{
@@ -195,7 +171,7 @@ if (defined('RTK') or exit(1))
 				if ($newline) { $return .= OUTPUTNEWLINE; } else { $newline = true; }
 				if ($this->_oneline <= 1) { $return .= str_repeat(OUTPUTINDENT, $this->_indent); }
 				$return .= '<'.$this->_tag;
-				if (Value::IsArrayAndNotEmpty($this->_attributes)) { $return .= " ".$this->_attributes; }
+				if (is_a($this->_attributes, 'HtmlAttributes')) { $return .= $this->_attributes; }
 				if ($this->_endtag != EMPTYSTRING) { $return .= $this->_endtag.">"; }
 				else {
 					if (sizeof($this->_children) == 0) {
@@ -210,7 +186,7 @@ if (defined('RTK') or exit(1))
 							}
 							else { $return .= '>'.$this->_content.'</'.$this->_tag.'>'; }
 						}
-						elseif (strstr(NONCLOSINGELEMENTS, '|'.$this->_tag.'|')) { $return .= '>'; }
+						//elseif (strstr(NONCLOSINGELEMENTS, '|'.$this->_tag.'|')) { $return .= '>'; }
 						elseif (strstr(VOIDELEMENTS, '|'.$this->_tag.'|')) { $return .= ' />'; }
 						elseif (strstr(NONVOIDELEMENTS, '|'.$this->_tag.'|') || $this->_oneline) { $return .= '></'.$this->_tag.'>'; }
 						else { $return .= ' />'; }
