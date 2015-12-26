@@ -54,7 +54,7 @@ if (defined('RTK') or exit(1))
 			if ($i === 0) { $value .= ' table_first_row'; }
 			if ($isheader) { $value .= ' table_header_row'; }
 			else {
-				General::FlipBoolean($this->_alternaterow);
+				_bool::Flip($this->_alternaterow);
 				if ($this->_alternaterow) { $value .= ' table_alternate_row'; }
 			}
 			if ($i === null) { $value .= ' table_last_row'; }
@@ -65,7 +65,7 @@ if (defined('RTK') or exit(1))
 		private function GetCellClass($i, $last, $isheader=false)
 		{
 			$value = 'table_cell';
-			_boolean::Flip($this->_alternatecell);
+			_bool::Flip($this->_alternatecell);
 			if ($i === 0) { $value .= ' table_first_cell'; }
 			if ($isheader)
 			{

@@ -25,7 +25,7 @@ if (defined('RTK') or exit(1))
 				$optionargs->Add('value', $option_value);
 				if ($selected == $option_value) { $optionargs->Add('selected', true); }
 				
-				$buttons->AddChild(new HtmlElement('option', $optionargs, $option_title));
+				$this->AddChild(new HtmlElement('option', $optionargs, $option_title));
 			}
 		}
 	}
