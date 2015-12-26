@@ -39,33 +39,29 @@ if (defined('securipe') or exit(1))
 		
 		private function FetchBanStatus()
 		{
-			//$ip = htmlentities($_SERVER['REMOTE_ADDR']);
-			//$iprox = EMPTYSTRING;
-			//if (Value::SetAndNotNull($_SERVER, 'HTTP_X_FORWARDED_FOR')) {
-			//	htmlentities($_SERVER['HTTP_X_FORWARDED_FOR']);
-			//}
-			//
-			//$bantime = -1;
-			//if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM users WHERE ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
-			//	$stmt->bindparam($username);
-			//	$stmt->execute();
-			//	$stmt->bindresult($salt);
-			//	$stmt->fetch();
-			//	$stmt->close();
-			///*if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
-			//	$stmt->bind_param('sss', $ip, $iprox, session_id());
-			//	$stmt->execute();
-			//	$stmt->bind_result($result);
-			//	$stmt->fetch();
-			//	$stmt->close();*/
-			//	if ($result != null) {
-			//		$bantime = $result;
-			//		$this->_id = $_SESSION['sup3rsEcurevariAble'] = -1;
-			//		$this->_error = $_SESSION['3rr0r'] = 'Oh noes, looks like you were temporarily banned, check back again tomorrow... ';
-			//	}
-			//}
-			//return !($bantime < 0 || (time() - $bantime) > 86400);
-			return false;
+			$ip = htmlentities($_SERVER['REMOTE_ADDR']);
+			$iprox = EMPTYSTRING;
+			if (Value::SetAndNotNull($_SERVER, 'HTTP_X_FORWARDED_FOR')) {
+				htmlentities($_SERVER['HTTP_X_FORWARDED_FOR']);
+			}
+			
+			$bantime = -1;
+			if ($stmt = Database::GetLink()->prepare('SELECT timestamp FROM Ban WHERE ban WHERE ip=? OR ip_proxy=? OR sessionid=?;')) {
+				$stmt->bindParam(1, $ip, PDO::PARAM_STR);
+				$stmt->bindParam(2, $ip_proxy, PDO::PARAM_STR);
+				$stmt->bindParam(3, $session_id, PDO::PARAM_STR);
+				$stmt->execute();
+				$stmt->bindColumn(1, $username);
+				$stmt->fetch();
+				$stmt->closeCursor();
+				if ($result != null) {
+					$bantime = $result;
+					$this->_id = $_SESSION['sup3rsEcurevariAble'] = -1;
+					$this->_error = $_SESSION['3rr0r'] = 'Oh noes, looks like you were temporarily banned, check back again tomorrow... ';
+				}
+			}
+			return !($bantime < 0 || (time() - $bantime) > ONEDAY);
+			//return false;
 		}
 		
 		private function FetchUserSalt($username)
@@ -110,7 +106,7 @@ if (defined('securipe') or exit(1))
 					$username = hash('sha512', $_POST['loginname']);
 					$salt = array('static' => '92bf5/624073"e03_6eA 98$6a83e.76', 'dynamic' => $instance->FetchUserSalt($username));
 					
-					if ($salt['dynamic'] != '') {
+					if ($salt['dynamic'] != EMPTYSTRING) {
 						$password = hash('sha512', $salt['static'].$_POST['loginpass'].$salt['dynamic'].$username);
 						
 						if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM login WHERE username_hash=? AND password_hash=?;')) {
