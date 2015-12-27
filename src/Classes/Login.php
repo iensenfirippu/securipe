@@ -1,8 +1,14 @@
 <?php
 if (defined('securipe') or exit(1))
 {
+	/**
+	 * Contains logic for logging in and out of securipe
+	 */
 	class Login
 	{
+		/**
+		 * Returns the status of the currently logged in user, if applicable ($GLOBALS['LOGIN'])
+		 */
 		public static function GetStatus() { return $GLOBALS['LOGIN']; }
 		
 		private $_id = null;
@@ -10,11 +16,26 @@ if (defined('securipe') or exit(1))
 		private $_attempts = EMPTYSTRING;
 		private $_error = EMPTYSTRING;
 		
+		/**
+		 * Returns whether there is a user logged in or not.
+		 */
 		public function IsLoggedIn() { return ($this->_id != null); }
+		/**
+		 * Returns the id of the user logged in, if applicable.
+		 */
 		public function GetId() { return $this->_id; }
+		/**
+		 * Returns the username of the user logged in, if applicable.
+		 */
 		public function GetUsername() { return $this->_username; }
+		/**
+		 * Returns error message that was generated during login, if applicable.
+		 */
 		public function GetError() { return $this->_error; }
 		
+		/**
+		 * Contains logic for logging in and out of securipe
+		 */
 		public function __construct()
 		{
 			if (Value::SetAndNotNull($_SESSION, "sup3rsEcurevariAble")) {
@@ -30,6 +51,9 @@ if (defined('securipe') or exit(1))
 			} else { $this->_attempts = $_SESSION['fail3d4ttempt5'] = 0; }
 		}
 		
+		/**
+		 * Determines whether or not there is input from the login form.
+		 */
 		private function HasLoginInput()
 		{
 			$hasuser = Value::SetAndNotNull($_POST, 'loginname');
@@ -37,6 +61,9 @@ if (defined('securipe') or exit(1))
 			return ($hasuser && $haspass);
 		}
 		
+		/**
+		 * Check in the database, if the current client is banned from the site.
+		 */
 		private function FetchBanStatus()
 		{
 			//$ip = htmlentities($_SERVER['REMOTE_ADDR']);
@@ -68,6 +95,10 @@ if (defined('securipe') or exit(1))
 			return false;
 		}
 		
+		/**
+		 * Get the corresponding salt from the database, for a given username.
+		 * @param username, the username_hash for which to get the salt for.
+		 */
 		private function FetchUserSalt($username)
 		{
 			$result = EMPTYSTRING;
@@ -82,6 +113,10 @@ if (defined('securipe') or exit(1))
 			return $result;
 		}
 		
+		/**
+		 * Get the actual username a user with a given id, from the database.
+		 * @param userid, the ID of the user for which to get the username.
+		 */
 		private function FetchUsername($userid)
 		{
 			$result = false;
@@ -98,6 +133,9 @@ if (defined('securipe') or exit(1))
 			return $result;
 		}
 		
+		/**
+		 * Tries to login, given that all the prerequisites are fullfilled.
+		 */
 		public static function TryToLogin()
 		{
 			$instance = Login::GetStatus();
@@ -138,6 +176,9 @@ if (defined('securipe') or exit(1))
 			return $result;
 		}
 		
+		/**
+		 * Logs the user out.
+		 */
 		public static function LogOut()
 		{
 			$instance = Login::GetStatus();
@@ -146,7 +187,11 @@ if (defined('securipe') or exit(1))
 			Site::BackToHome();
 		}
 		
-		private function BanClient($username)
+		/**
+		 * Bans a client (browser), by IP, Proxy IP AND session ID.
+		 * @param username, the username that the client provided (in hashed form, but will be translated if possible).
+		 */
+		private function BanClient($username=EMPTYSTRING)
 		{
 			// Banning not yet implemented
 			/*$ip = htmlentities($_SERVER['REMOTE_ADDR']);
@@ -162,6 +207,10 @@ if (defined('securipe') or exit(1))
 			}*/
 		}
 		
+		/**
+		 * Log a failed login attempt.
+		 * @param username, the username that the client provided (in hashed form, but will be translated if possible).
+		 */
 		private function LogFailedAttempt($username=EMPTYSTRING)
 		{
 			// Banning not yet implemented
