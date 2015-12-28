@@ -6,6 +6,13 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_DropDown extends HtmlElement
 	{
+		/**
+		 * A widget containing a dropdown selector
+		 * @param string $name The HTML name of the element
+		 * @param string[][] $options An array of options, each of which is an array of value and title
+		 * @param string $selected The value of the selected item in the dropdown
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+		 **/
 		public function __construct($name, $options, $selected=null, $args=null)
 		{
 			HtmlAttributes::Assure($args);

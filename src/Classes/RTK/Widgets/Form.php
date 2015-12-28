@@ -6,6 +6,14 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_Form extends HtmlElement
 	{
+		/**
+		 * A widget containing a user input form
+		 * @param string $name The HTML #id and name of the element
+		 * @param string $action The url that should handle the request (leave blank for current page)
+		 * @param string $method POST or GET
+		 * @param boolean $usetoken Includes a security token on all forms, pass false to opt out (not recommended)
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+		 **/
 		public function __construct($name=EMPTYSTRING, $action=EMPTYSTRING, $method='POST', $usetoken=true, $args=null)
 		{
 			HtmlAttributes::Assure($args);
@@ -21,12 +29,23 @@ if (defined('RTK') or exit(1))
 			$this->_containers = array();
 		}
 		
+		/**
+		 * Add an RTK_TextView to the form
+		 * @param string $text The text to display
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddText($text, $container=null)
 		{
-			$field = new HtmlElement('div', array('class' => 'formtext'), $text);
-			$this->AddToContainer($field, $container);
+			$textview = new RTK_Textview($text, true, null, 'formtext');
+			$this->AddToContainer($textview, $container);
 		}
 		
+		/**
+		 * Add a hidden field to the form
+		 * @param string $name The name of the hidden field
+		 * @param string $value The predefined value in the hidden field
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddHiddenField($name, $value=null, $container=null)
 		{
 			$args = new HtmlAttributes();
@@ -39,6 +58,14 @@ if (defined('RTK') or exit(1))
 			$this->AddToContainer($field, $container);
 		}
 		
+		/**
+		 * Add a text input field to the form
+		 * @param string $name The HTML name (and #id) of the input field
+		 * @param string $title The text written next to the input field
+		 * @param string $value The predefined value in the input field
+		 * @param integer $size How many rows the input field should span
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddTextField($name, $title, $value=null, $size=null, $container=null)
 		{
 			$args = new HtmlAttributes();
@@ -60,6 +87,12 @@ if (defined('RTK') or exit(1))
 			$this->AddToContainer($field, $container);
 		}
 		
+		/**
+		 * Add a password input field to the form
+		 * @param string $name The HTML name (and #id) of the input field
+		 * @param string $title The text written next to the input field
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddPasswordField($name, $title, $container=null)
 		{
 			$args = new HtmlAttributes();
@@ -75,6 +108,15 @@ if (defined('RTK') or exit(1))
 			$this->AddToContainer($field, $container);
 		}
 		
+		/**
+		 * Add a checkbox to the form
+		 * @param string $name The HTML name (and #id) of the input field
+		 * @param string $title The text written next to the input field
+		 * @param boolean $checked Whether the checkbox is checked
+		 * @param string $value The value sent if it is checked
+		 * @param string $text (optional) a text to display next to the checkbox
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddCheckBox($name, $title, $checked=false, $value='true', $text=null, $container=null)
 		{
 			$args = new HtmlAttributes();
@@ -95,6 +137,14 @@ if (defined('RTK') or exit(1))
 			$this->AddToContainer($field, $container);
 		}
 		
+		/**
+		 * Add a row of radiobuttons to the form
+		 * @param string $name The HTML name (and #id) of the input field
+		 * @param string $title The text written next to the input field
+		 * @param string[][] $options An array of options, each of which is an array of value and title
+		 * @param string $selected The value of the selected radiobutton
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddRadioButtons($name, $title, $options, $selected=null, $container=null)
 		{
 			$buttons = new HtmlElement('div', array('class' => 'radiobuttons'));
@@ -124,6 +174,14 @@ if (defined('RTK') or exit(1))
 			$this->AddToContainer($field, $container);
 		}
 		
+		/**
+		 * Add a dropdown selector to the form
+		 * @param string $name The HTML name (and #id) of the input field
+		 * @param string $title The text written next to the input field
+		 * @param string[][] $options An array of options, each of which is an array of value and title
+		 * @param string $selected The value of the selected item in the dropdown
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddDropDown($name, $title, $options, $selected=null, $container=null)
 		{
 			$dropdown = new RTK_DropDown($name, $options, $selected);
@@ -135,6 +193,12 @@ if (defined('RTK') or exit(1))
 			$this->AddToContainer($field, $container);
 		}
 		
+		/**
+		 * Add a button to the form
+		 * @param string $name The name/id of the button
+		 * @param string $title The text written on the button
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddButton($name='submit', $title='Submit', $container=null)
 		{
 			$field = new HtmlElement('div', array('class' => 'formline'));
@@ -143,6 +207,11 @@ if (defined('RTK') or exit(1))
 			$this->AddToContainer($field, $container);
 		}
 		
+		/**
+		 * Add a custom HtmlElement into the form (not recommended)
+		 * @param HtmlElement $HtmlElement The element to add
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
 		public function AddElement($htmlelement, $container=null)
 		{
 			$field = new HtmlElement('div', array('class' => 'formline'));

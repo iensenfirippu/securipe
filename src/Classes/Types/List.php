@@ -1,6 +1,10 @@
 <?php
 if (defined('securipe') or exit(1))
 {
+	/**
+	 * Class that can that acts like an array
+	 * and can be iterated through via a foreach
+	 */
 	class ListObject implements Iterator
 	{
 		public $_list;
@@ -16,7 +20,6 @@ if (defined('securipe') or exit(1))
 		public function key() { $k = array_keys($this->_list); $var = $k[$this->_index]; return $var; }
 		public function next() { $k = array_keys($this->_list); if (isset($k[++$this->_index])) { $var = $this->_list[$k[$this->_index]]; return $var; } else { return false; } }
 		public function valid() { $k = array_keys($this->_list); $var = isset($k[$this->_index]);return $var; }
-		//public function Add($item) { $this->_list[] = $item; }
 		
 		/**
 		 * Constructor

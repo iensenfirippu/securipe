@@ -2,6 +2,13 @@
 /*
  * [R]TK [T]ool [K]it
  *  - "make PHP, not HTML..."
+ *
+ * Toolkit to make manual HTML creation obsolete.
+ * It automatically renders nested PHP objects into 100% valid HTML
+ *
+ * The main class "RTK" acts like an HTML document,
+ * or like a window/canvas from other desktop toolkits
+ * (like: winforms, java swing, gtk, etc.)
  */
 
 define("RTK", true);
@@ -19,6 +26,11 @@ class RTK
 	protected $_references = array();
 	protected $_pointer = null;
 	
+	/**
+	 * Class containing an abstracted HTML document
+	 * @param string $title The title of the document (The <TITLE> to put in <HEAD>)
+	 * @param string $doctype The doctype of the document (not implemented, only "html" will generate valid html)
+	 */
 	public function __construct($title, $doctype='html')
 	{
 		$this->_doctype = $doctype;
@@ -32,26 +44,49 @@ class RTK
 		$this->_pointer = $this->_references['BODY'];
 	}
 	
-	public function GetBreadcrumbs()			{ return $this->_breadcrumbs; }
+	//public function GetBreadcrumbs()			{ return $this->_breadcrumbs; }
 	
+	/**
+	 * Adds a stylesheet to the HTML document
+	 * @param string $filename The name of the file to add
+	 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+	 */
 	public function AddStylesheet($filename, $args=null)
 	{
-		if (Value::SetAndNull($args) || !is_array($args)) { $args = array(); }
-		$args['rel'] = 'stylesheet';
-		$args['type'] = 'text/css';
-		$args['href'] = $filename;
+		HtmlAttributes::Assure($args);
+		$args->Add('rel', 'stylesheet');
+		$args->Add('type', 'text/css');
+		$args->Add('href', $filename);
+		
 		$this->_stylesheets[$filename] = new HtmlElement('link', $args);
 	}
 	
+	/**
+	 * Adds a javascript to the HTML document
+	 * @param string $filename The name of the file to add
+	 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+	 */
 	public function AddJavascript($filename, $args=null)
 	{
-		if (Value::SetAndNull($args) || !is_array($args)) { $args = array(); }
-		$args['src'] = $filename;
+		HtmlAttributes::Assure($args);
+		$args->Add('src', $filename);
+		
 		$this->_javascripts[$filename] = new HtmlElement('script', $args);
 	}
 	
+	/**
+	 * Sets the "pointer" to a "reference"d name
+	 * @param string $name The name of the "reference"
+	 */
 	public function SetPointer($name)			{ $this->_pointer = $this->_references[$name]; }
 	
+	/**
+	 * Adds an HtmlElement to the document
+	 * @param HtmlElement $HtmlElement The element (or "widget") to add
+	 * @param string $inelement (optional) The name of a "reference"d element, in which to add the element to 
+	 * @param string $registeras (optional) The name to "reference" the added element as
+	 * @param integer $index (optional) A forced index of the new element, to assure a specific placement in the document (doesn't override another element but pushes it instead)
+	 */
 	public function AddElement($HtmlElement, $inelement=null, $registeras=null, $index=null)
 	{
 		if ($HtmlElement != null && is_a($HtmlElement, 'HtmlElement')) {
@@ -77,14 +112,16 @@ class RTK
 		}
 	}
 	
+	/**
+	 * Gets the HtmlElement that was "reference"d as the specified name
+	 * @param string $name The name of the "reference" to get
+	 * @return var Returns the specified "reference", or false if it doesn't exist
+	 */
 	public function GetReference($name)
 	{
-		if (isset($this->_references[$name]) && is_a($this->_references[$name], 'HtmlElement'))
-		{
+		if (isset($this->_references[$name]) && is_a($this->_references[$name], 'HtmlElement')) {
 			return $this->_references[$name];
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}

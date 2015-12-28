@@ -7,10 +7,11 @@ if (defined('RTK') or exit(1))
 	class RTK_Pagination extends HtmlElement
 	{
 		/**
-		 * @param baseurl, the base part of the URL that all links in the paginition shares
-		 * @param amount, the amount of items to divide into pages
-		 * @param perpage, the amount of items per page
-		 * @param args, allows custom html tag arguments to be specified (not recommended)
+		 * A widget containing the links to different pages for a common URL
+		 * @param string $baseurl The base part of the URL that all links in the paginition shares
+		 * @param integer $amount The amount of items to divide into pages
+		 * @param integer $perpage The amount of items per page
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
 		 **/
 		public function __construct($baseurl, $amount, $perpage, $page, $args=null)
 		{
