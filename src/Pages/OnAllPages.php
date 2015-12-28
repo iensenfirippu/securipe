@@ -1,10 +1,10 @@
 <?php
 // Page Logic
 $titles = array('Home', '_Login', 'Recipe');
-$links = array('?action=home', '?action=login', '?action=recipe');
+$links = array('home/', 'login/', 'recipe/');
 
 // Page Output
-$RTK->AddStylesheet('style.css');
+$RTK->AddStylesheet('/style.css');
 $wrapper = new RTK_Box('wrapper');
 $menu = new RTK_Menu('mainmenu', 'menu', $links, $titles);
 $menu->SetSelected(Site::GetArgumentSafely('action'));

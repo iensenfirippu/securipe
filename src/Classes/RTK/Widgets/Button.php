@@ -6,15 +6,21 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_Button extends HtmlElement
 	{
+		/**
+		 * A button widget
+		 * @param string $name The name/id of the button
+		 * @param string $title The text written on the button
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+		 **/
 		public function __construct($name='submit', $title='Submit', $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			if (!isset($args['name'])) { $args['name'] = $name; }
-			if (!isset($args['value'])) { $args['value'] = $title; }
-			if (!isset($args['type'])) { $args['type'] = 'submit'; }
-			if (!isset($args['class'])) { $args['class'] = 'submit'; }
+			HtmlAttributes::Assure($args);
+			$args->Add('type', 'submit', false);
+			$args->Add('name', $name, false);
+			$args->Add('class', 'submit', false);
+			$args->Add('value', $title, false);
 			
-			parent::__construct('input', HtmlElement::ArgsToString($args));
+			parent::__construct('input', $args);
 		}
 	}
 }
