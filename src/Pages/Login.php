@@ -6,8 +6,8 @@ if (Login::GetStatus()->GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
 
 // Page Output
 include_once('Pages/OnAllPages.php');
-$RTK->AddJavascript('jquery-2.1.4.min.js');
-$RTK->AddJavascript('login.js');
+$RTK->AddJavascript('/jquery-2.1.4.min.js');
+$RTK->AddJavascript('/login.js');
 
 if (Login::GetStatus()->GetError() != EMPTYSTRING) { $RTK->AddElement(new RTK_Textview(Login::GetStatus()->GetError())); } 
 $loginbox = new RTK_Box('loginbox');
