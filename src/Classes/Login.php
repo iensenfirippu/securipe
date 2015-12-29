@@ -78,7 +78,7 @@ if (defined('securipe') or exit(1))
 				$stmt->bindParam(2, $ip_proxy, PDO::PARAM_STR);
 				$stmt->bindParam(3, $session_id, PDO::PARAM_STR);
 				$stmt->execute();
-				$stmt->bindColumn(1, $username);
+				$stmt->bindColumn(1, $result);
 				$stmt->fetch();
 				$stmt->closeCursor();
 				if ($result != null) {
