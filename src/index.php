@@ -9,6 +9,7 @@ $RTK = new RTK("Securipe");
 $action = Site::GetArgumentSafely("action");
 if (_string::IsOneOf(array("login", "logout"), $action)) { include_once("Pages/Login.php"); }
 elseif ($action == "recipe") { include_once("Pages/Recipe.php"); }
+//elseif ($action == "widgettest") { include_once("Pages/Widgets.php"); }
 elseif ($action == "somethingelse") { include_once("Pages/SomeOtherPageEntirely.php"); }
 else { include_once("Pages/Home.php"); }
 
