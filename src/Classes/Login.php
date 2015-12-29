@@ -95,10 +95,11 @@ if (defined('securipe') or exit(1))
 		 * Get the corresponding salt from the database, for a given username.
 		 * @param username, the username_hash for which to get the salt for.
 		 */
+		 
 		private function FetchUserSalt($username)
 		{
 			$result = EMPTYSTRING;
-			if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM login WHERE username_hash=?')) {
+			if ($stmt = Database::GetLink()->prepare('SELECT personal_salt FROM Login WHERE username_hash=?')) {
 				$stmt->bindParam(1, $username, PDO::PARAM_STR, 255);
 				$stmt->execute();
 				$stmt->bindColumn(1, $salt);
@@ -116,7 +117,7 @@ if (defined('securipe') or exit(1))
 		private function FetchUsername($userid)
 		{
 			$result = false;
-			if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM users WHERE user_id=?;')) {
+			if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM User WHERE user_id=?;')) {
 				$stmt->bindParam(1, $userid, PDO::PARAM_INT);
 				$stmt->execute();
 				$stmt->bindColumn(1, $username);
@@ -147,7 +148,7 @@ if (defined('securipe') or exit(1))
 					if ($salt['dynamic'] != EMPTYSTRING) {
 						$password = hash('sha512', $salt['static'].$_POST['loginpass'].$salt['dynamic'].$username);
 						
-						if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM login WHERE username_hash=? AND password_hash=?;')) {
+						if ($stmt = Database::GetLink()->prepare('SELECT user_id FROM Login WHERE username_hash=? AND password_hash=?;')) {
 							$stmt->bindParam(1, $username, PDO::PARAM_STR, 255);
 							$stmt->bindParam(2, $password, PDO::PARAM_STR, 255);
 							$stmt->execute();
