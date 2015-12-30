@@ -15,7 +15,7 @@ if (Login::GetStatus()->IsLoggedIn()) {
 	// If a user is logged in
 	$loginbox->AddChild(new RTK_Textview('You are logged in as: '.Login::GetStatus()->GetUsername()));
 	$loginbox->AddChild(new RTK_Link('https://'.$_SERVER['HTTP_HOST'].'?action=logout', 'click here for log out'));
-} elseif (Site::HasHttps()) {
+} elseif (true) {
 	// If a user is not logged in, but the site is running secure
 	$loginform = new RTK_Form('loginform', EMPTYSTRING, 'POST');
 	$loginform->AddTextField('loginname', 'Username:');

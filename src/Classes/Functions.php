@@ -98,10 +98,14 @@ if (defined('securipe') or exit(1))
 		 * @param string, The string value to sanitize.
 		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
 		 */
-		public static function Sanitize($string, $keephtml = false)
+		public static function Sanitize($string, $flag, $keephtml = false)
 		{
 			$string = addslashes($string);
 			//if ($keephtml == false) { htmlspecialchars($string); } // Changed to htmlentities
+			if (Value::SetAndNotNull($flag))
+			{	
+				return filter_var($string, $flag);		
+			}
 			if ($keephtml == false) { htmlentities($string); }
 			_string::EnforceProperLineEndings($string);
 			return $string;
