@@ -6,12 +6,16 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_Header extends HtmlElement
 	{
-		public function __construct($level=1, $text=EMPTYSTRING, $args=null)
+		/**
+		 * A widget for displaying a title/header (h1)
+		 * @param string $text The text in the title
+		 * @param integer $level The level (or "debth") of the title
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+		 **/
+		public function __construct($text=EMPTYSTRING, $level=1, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			
 			$tag = is_numeric($level) && $level > 0 && $level < 9 ? 'h'.$level : 'h1';
-			parent::__construct($tag, HtmlElement::ArgsToString($args), $text);
+			parent::__construct($tag, $args, $text);
 		}
 	}
 }

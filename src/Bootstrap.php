@@ -3,7 +3,8 @@ define("STARTTIME", microtime(true));
 session_start();
 define("securipe", true);
 
-if (!file_exists("index.php")) { chdir("src"); }
+// if running from outside "src" folder (i.e. for inclusion in phpunit)
+//if (!file_exists("index.php")) { chdir("src"); }
 
 if (file_exists("Config/Config.php")) { include_once("Config/Config.php"); }
 include_once("Config/Default.php");
@@ -51,4 +52,5 @@ include_once("Classes/RTK/RTK.php");
 include_once("Classes/Database.php");
 include_once("Classes/Login.php");
 include_once("Classes/CrudUserDB.php");
+
 ?>

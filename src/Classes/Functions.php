@@ -1,21 +1,20 @@
 <?php
 if (defined('securipe') or exit(1))
 {
+	define('SECURITY_TOKEN', md5(STATIC_SALT.'security_token'));
+	
 	/**
-	 * Contains additional general purpose methods for PHP
-	 * And altered/extended versions of current PHP methods
+	 * Contains site specific functionality
 	 */
 	class Site
 	{
-		/** Redirection **/
-		
 		/**
 		 * Redirects the page to the root of the website
 		 * @param logout, if set to true will also log out the user.
 		 */
 		public static function BackToHome()
 		{
-			Site::Redirect('/');
+			Site::Redirect('/home/');
 		}
 		
 		/**
@@ -79,7 +78,7 @@ if (defined('securipe') or exit(1))
 		public static function CreateSecurityToken()
 		{
 			$token = md5(utf8_encode(UUID::Create()));
-			return $_SESSION['Sup3r5ecretSecur!peT0k3n'] = $token;
+			return $_SESSION[SECURITY_TOKEN] = $token;
 		}
 		
 		/**
@@ -87,10 +86,41 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function CheckSecurityToken($token)
 		{
-			return Value::SetAndEquals($token, $_SESSION, 'Sup3r5ecretSecur!peT0k3n');
+			return Value::SetAndEquals($token, $_SESSION, SECURITY_TOKEN);
 		}
+		
+		/**
+		 * Creates a new session for the user.
+		 *
+		public static function NewSessionId()
+		{
+			vd(session_id());
+			vd($_SESSION);
+			
+			$_SESSION[md5('old_session')] = session_id();
+			session_regenerate_id();
+			
+			
+			
+			vd(session_id());
+			vdd($_SESSION);
+		}*/
+		
+		/**
+		 * Cleans up old session variables after a creating new sessionid .
+		 *
+		public static function CleanSession()
+		{
+			if (Value::SetAndNotNull($_SESSION, md5('old_session'))) {
+				if (Value::SetAndNotNull($_SESSION, '')
+			}
+		}*/
 	}
 	
+	/**
+	 * Contains additional general purpose functions for handling strings in PHP
+	 * (also contains altered/extended versions of existing PHP functions)
+	 */
 	class _string
 	{
 		/**
@@ -214,15 +244,12 @@ if (defined('securipe') or exit(1))
 		{
 			$value = false;
 			
-			if (is_array($needles))
-			{
+			if (is_array($needles)) {
 				$matches = 0;
 				if ($out !== null) { $out = array(); }
-				for ($i = 0; $i < sizeof($needles); $i++)
-				{
+				for ($i = 0; $i < sizeof($needles); $i++) {
 					$n = $needles[$i];
-					if (strpos($haystack, $n) !== false)
-					{
+					if (strpos($haystack, $n) !== false) {
 						$matches++;
 						if ($out !== null) { $out[] = $i; }
 					}
@@ -301,6 +328,9 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
+	/**
+	 * Contains functions for encoding/decoding HTML chars in a string
+	 */
 	class HTML
 	{
 		/**
@@ -322,6 +352,9 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
+	/**
+	 * Contains additional functionality for working with files in PHP
+	 */
 	class File
 	{
 		/**
@@ -375,6 +408,9 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
+	/**
+	 * Contains functionality for handling time in PHP
+	 */
 	class Time
 	{
 		/**
@@ -427,6 +463,9 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
+	/**
+	 * Contains additional functionality for handling booleans in PHP
+	 */
 	class _bool
 	{
 		/**
@@ -452,11 +491,15 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
+	/**
+	 * Contains functions for variable/value checking
+	 */
 	class Value
 	{
 		/**
-		 * description
-		 * @param param, description.
+		 * Determines if a variable: isset(v) && v != NULL
+		 * @param variable, the variable to check.
+		 * @param key, (optionally) the key in variable to check (for arrays).
 		 */
 		public static function SetAndNotNull($variable, $key=null)
 		{
@@ -469,12 +512,27 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Determines if a variable: isset(v) && v == NULL
+		 * @param variable, the variable to check.
+		 * @param key, (optionally) the key in variable to check (for arrays).
+		 */
+		public static function SetAndNull($variable, $key=null)
+		{
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = -1; }
+			}
+			return (isset($variable) && $variable == null);
+		}
+		
+		/**
+		 * Determines if a variable: isset(v) && !empty(v)
+		 * @param variable, the variable to check.
+		 * @param key, (optionally) the key in variable to check (for arrays).
 		 */
 		public static function SetAndNotEmpty($variable, $key=null)
 		{
-			//var_dump($variable);
 			if ($key != null && is_array($variable))
 			{
 				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
@@ -484,10 +542,28 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Determines if a variable: isset(v) && empty(v)
+		 * @param variable, the variable to check.
+		 * @param key, (optionally) the key in variable to check (for arrays).
 		 */
-		public static function SetAndEquals($value, $variable, $key=null, $checktype=false)
+		public static function SetAndEmpty($variable, $key=null)
+		{
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = null; }
+			}
+			return (isset($variable) && empty($variable));
+		}
+		
+		/**
+		 * Determines if a variable: isset(v) && v ==|=== x
+		 * @param value, the value to check for.
+		 * @param variable, the variable to check.
+		 * @param key, (optionally) the key in variable to check (for arrays).
+		 * @param checktype, set true for === instead of == check.
+		 */
+		public static function SetAndEqualTo($value, $variable, $key=null, $checktype=false)
 		{
 			$result = false;
 			if ($key != null && is_array($variable))
@@ -499,13 +575,37 @@ if (defined('securipe') or exit(1))
 			else			{ $result = (isset($variable) && $variable == $value); }
 			return $result;
 		}
+		
+		/**
+		 * Determines if a variable: isset(v) && v !=|!== x
+		 * @param value, the value to check for.
+		 * @param variable, the variable to check.
+		 * @param key, (optionally) the key in variable to check (for arrays).
+		 * @param checktype, set true for !== instead of != check.
+		 */
+		public static function SetAndNotEqualTo($value, $variable, $key=null, $checktype=false)
+		{
+			$result = false;
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = null; }
+			}
+			if ($checktype)	{ $result = (isset($variable) && $variable !== $value); }
+			else			{ $result = (isset($variable) && $variable != $value); }
+			return $result;
+		}
 	}
 	
+	/**
+	 * Contains functionality for handling array in PHP
+	 */
 	class _array
 	{
 		/**
-		 * description
-		 * @param param, description.
+		 * Determines whether a variable is and array and is longer than x items
+		 * @param array, the variable to check.
+		 * @param size, the smallest acceptable size of the array.
 		 */
 		public static function IsLongerThan($array, $size)
 		{
@@ -513,8 +613,24 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Determines if an array is not empty
+		 * @param variable, the variable to check.
+		 * @param key, (optionally) the key in variable to check (for sub-arrays).
+		 */
+		public static function NotEmpty($variable, $key=null)
+		{
+			if ($key != null && is_array($variable))
+			{
+				if (array_key_exists($key, $variable)) { $variable = $variable[$key]; }
+				else { $variable = null; }
+			}
+			return (is_array($variable) && !empty($variable));
+		}
+		
+		/**
+		 * Determines which index a given item in the array has
+		 * @param array, the variable to check in.
+		 * @param item, the item to get the index of.
 		 */
 		public static function GetIdOf($array, $item)
 		{
@@ -522,12 +638,14 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Remove an item from an array
+		 * @param array, the variable to remove from.
+		 * @param index, the index of the item to remove.
 		 */
 		public static function Remove(&$array, $index)
 		{
 			$result = false;
+			if (!is_integer($index)) { $index = array_search($index, $array); }
 			if (is_array($array) && sizeof($array) > $index)
 			{
 				unset($array[$index]);
@@ -538,11 +656,15 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
+	/**
+	 * Contains some functions to more easily handle URLs in PHP
+	 */
 	class URL
 	{
 		/**
-		 * description
-		 * @param param, description.
+		 * Safely appends something to a URL
+		 * @param url, the URL to append to.
+		 * @param append, the text to append.
 		 */
 		public static function Append($url, $append)
 		{
@@ -576,8 +698,8 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * description
-		 * @param param, description.
+		 * Gets the last folder of a URL appends something to a URL
+		 * @param url, the URL to look in.
 		 */
 		public static function LastFolder($url)
 		{
@@ -594,24 +716,38 @@ if (defined('securipe') or exit(1))
 		}
 	}
 	
+	/**
+	 * alias for: var_dump($var)
+	 * @param var, Variable to dump.
+	 */
 	function vd($var)
 	{
 		var_dump($var);
 	}
 	
+	/**
+	 * alias for: var_dump($var) + die(1)
+	 * @param var, Variable to dump.
+	 */
 	function vdd($var)
 	{
 		var_dump($var);
 		die(1);
 	}
 	
+	/**
+	 * Enumerator for Time formatting
+	 */
 	abstract class TimeFormat
 	{
 		const HumanTime	= false;
-		const Date			= 'D-M-Y';
+		const Date		= 'D-M-Y';
 		const DateTime	= 'd-m-y H:i';
-		const Time			= 'H:i';
+		const Time		= 'H:i';
 	}
+	/**
+	 * alias for: TimeFormat
+	 */
 	abstract class TF extends TimeFormat {}
 }
 ?>

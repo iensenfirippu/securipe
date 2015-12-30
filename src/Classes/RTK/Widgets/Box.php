@@ -6,13 +6,19 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_Box extends HtmlElement
 	{
+		/**
+		 * A widget for containing/structuring other widgets (div)
+		 * @param string $id The HTML #id of the box
+		 * @param string $class The HTML .class of box
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+		 **/
 		public function __construct($id=null, $class=null, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
-			if ($id != null) { $args['id'] = $id; }
-			if ($class != null) { $args['class'] = $class; }
+			HtmlAttributes::Assure($args);
+			$args->Add('id', $id);
+			$args->Add('class', $class);
 			
-			parent::__construct('div', HtmlElement::ArgsToString($args));
+			parent::__construct('div', $args);
 		}
 	}
 }

@@ -6,12 +6,22 @@ if (defined('RTK') or exit(1))
 	 **/
 	class RTK_Textview extends HtmlElement
 	{
-		public function __construct($text=EMPTYSTRING, $args=null, $inline=false)
+		/**
+		 * A widget containing text (essentially just a div or span with text)
+		 * @param string $text The text to display
+		 * @param boolean $inline Determines if the widget should be span(true) or div(false)
+		 * @param string $id The HTML #id of the element
+		 * @param string $class The HTML .class of element
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
+		 **/
+		public function __construct($text=EMPTYSTRING, $inline=false, $id=null, $class=null, $args=null)
 		{
-			if ($args == null || !is_array($args)) { $args = array(); }
+			HtmlAttributes::Assure($args);
+			if (Value::SetAndNotNull($id)) { $args->Add('id', $id); }
+			if (Value::SetAndNotNull($class)) { $args->Add('class', $class); }
 			
 			$tag = $inline ? 'span' : 'div';
-			parent::__construct($tag, HtmlElement::ArgsToString($args), $text);
+			parent::__construct($tag, $args, $text);
 		}
 	}
 }

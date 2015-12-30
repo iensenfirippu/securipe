@@ -7,16 +7,20 @@ if (defined('RTK') or exit(1))
 	class RTK_Pagination extends HtmlElement
 	{
 		/**
-		 * @param baseurl, the base part of the URL that all links in the paginition shares
-		 * @param amount, the amount of items to divide into pages
-		 * @param perpage, the amount of items per page
-		 * @param page, the currently selected page
+		 * A widget containing the links to different pages for a common URL
+		 * @param string $baseurl The base part of the URL that all links in the paginition shares
+		 * @param integer $amount The amount of items to divide into pages
+		 * @param integer $perpage The amount of items per page
+		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
 		 **/
-		public function __construct($baseurl, $amount, $perpage, $page)
+		public function __construct($baseurl, $amount, $perpage, $page, $args=null)
 		{
+			HtmlAttributes::Assure($args);
+			$args->Add('class', 'pagination', false);
+			
 			if ($amount > $perpage || PAGINATIONSHOWEMPTY)
 			{
-				parent::__construct('ul', 'class="pagination"');
+				parent::__construct('ul', $args);
 				$firstpage = 1;
 				$lastpage = ceil($amount / $perpage);
 				$lowerlimit = ($page - PAGINATIONLINKS);
@@ -28,12 +32,12 @@ if (defined('RTK') or exit(1))
 				{
 					$this->AddChild(
 						new HtmlElement('li', EMPTYSTRING, EMPTYSTRING,
-							new HtmlElement('a', 'href="'.$baseurl.$firstpage.'/"', PAGINATIONFIRST)
+							new HtmlElement('a', array('href' => $baseurl.$firstpage.SINGLESLASH), PAGINATIONFIRST)
 						)
 					);
 					$this->AddChild(
 						new HtmlElement('li', EMPTYSTRING, EMPTYSTRING,
-							new HtmlElement('a', 'href="'.$baseurl.($page - 1).'/"', PAGINATIONPREV)
+							new HtmlElement('a', array('href' => $baseurl.($page - 1).SINGLESLASH), PAGINATIONPREV)
 						)
 					);
 				}
@@ -47,12 +51,12 @@ if (defined('RTK') or exit(1))
 				for ($i = $lowerlimit; $i <= $upperlimit; $i++)
 				{
 					
-					if ($i == $page) { $this->AddChild(new HtmlElement('li', 'class="current"', $page)); }
+					if ($i == $page) { $this->AddChild(new HtmlElement('li', array('class' => 'current'), $page)); }
 					elseif ($i >= $firstpage && $i <= $lastpage)
 					{
 						$this->AddChild(
 							new HtmlElement('li', EMPTYSTRING, EMPTYSTRING,
-								new HtmlElement('a', 'href="'.$baseurl.$i.'/"', $i)
+								new HtmlElement('a', array('href' => $baseurl.$i.SINGLESLASH), $i)
 							)
 						);
 					}
@@ -64,12 +68,12 @@ if (defined('RTK') or exit(1))
 				{
 					$this->AddChild(
 						new HtmlElement('li', EMPTYSTRING, EMPTYSTRING,
-							new HtmlElement('a', 'href="'.$baseurl.($page + 1).'/"', PAGINATIONNEXT)
+							new HtmlElement('a', array('href' => $baseurl.($page + 1).SINGLESLASH), PAGINATIONNEXT)
 						)
 					);
 					$this->AddChild(
 						new HtmlElement('li', EMPTYSTRING, EMPTYSTRING,
-							new HtmlElement('a', 'href="'.$baseurl.$lastpage.'/"', PAGINATIONLAST)
+							new HtmlElement('a', array('href' => $baseurl.$lastpage.SINGLESLASH), PAGINATIONLAST)
 						)
 					);
 				}

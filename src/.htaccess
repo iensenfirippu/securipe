@@ -1,9 +1,8 @@
-#RewriteEngine On
-#RewriteBase /
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond %{REQUEST_URI} !(.*)/$
-#RewriteRule ^(.*)$ /$1/ [L,R=301]
- 
-#RewriteRule ^/$ index.php
-#RewriteRule ^([a-zA-Z]+)/ index.php?action=$1
+RewriteEngine On
+RewriteBase /
+RewriteRule ^([^/]*\.css)$ Styles/$1 [END]
+RewriteRule ^([^/]*\.js)$ Scripts/$1 [END]
+RewriteRule ^([^/]*\.(jpe?g|png))$ Images/$1 [END]
+
+RewriteRule ^([a-zA-Z]+)/ index.php?action=$1 [QSA]
 #RewriteRule ^([a-zA-Z]+)/(.+)/(.+)/$ &$2=$3 
