@@ -54,16 +54,25 @@ CREATE TABLE `Picture` (
 	PRIMARY KEY (`picture_id`)
 );
 
+CREATE TABLE `RecipeType` (
+	`type_id` int(10) NOT NULL AUTO_INCREMENT,
+	`type_name` varchar(255) NOT NULL,
+	PRIMARY KEY (`type_id`)
+);
+
 CREATE TABLE `Recipe` (
 	`recipe_id` int(10) NOT NULL AUTO_INCREMENT,
 	`picture_id` int(10) NOT NULL,
 	`user_id` int(10) NOT NULL,
-	`recipe_type` int(50) NOT NULL,
+	`type_id` int(50),
+	`recipe_title` varchar(255),
+	`recipe_des` blob,
 	`favorite_count` int(10),
 	`disable` bit NOT NULL,
 	PRIMARY KEY (`recipe_id`),
 	FOREIGN KEY (`picture_id`) REFERENCES `Picture`(`picture_id`),
-	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
+	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`),
+	FOREIGN KEY (`type_id`) REFERENCES `RecipeType`(`type_id`)
 );
 
 CREATE TABLE `Favorite` (
@@ -76,6 +85,7 @@ CREATE TABLE `Favorite` (
 CREATE TABLE `Step` (
 	`recipe_id` int(10),
 	`picture_id` int(10),
+	`step_des` varchar(255),
 	FOREIGN KEY (`recipe_id`) REFERENCES `Recipe`(`recipe_id`),
 	FOREIGN KEY (`picture_id`) REFERENCES `Picture`(`picture_id`)
 );
