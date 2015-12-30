@@ -25,6 +25,9 @@ if (defined('securipe') or exit(1))
 	if (!defined("PAGINATIONLAST"))			define("PAGINATIONLAST",		'&Gt;');	// text on button for: last page
 	if (!defined("PAGINATIONPREV"))			define("PAGINATIONPREV",		'&lt;');	// text on button for: previous page
 	if (!defined("PAGINATIONNEXT"))			define("PAGINATIONNEXT",		'&gt;');	// text on button for: next page
-	if (!defined("PAGINATIONSHOWEMPTY"))	define("PAGINATIONSHOWEMPTY",	false);		// determines weither or not to display an empty pagination 
+	if (!defined("PAGINATIONSHOWEMPTY"))	define("PAGINATIONSHOWEMPTY",	false);		// determines weither or not to display an empty pagination
+	
+	// Static salt across entire site
+	if (!defined("STATIC_SALT"))			define("STATIC_SALT",			'92bf5/624073"e03_6eA 98$6a83e.76');
 }
 ?>
