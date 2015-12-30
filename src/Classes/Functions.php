@@ -1,6 +1,8 @@
 <?php
 if (defined('securipe') or exit(1))
 {
+	define('SECURITY_TOKEN', md5(STATIC_SALT.'security_token'));
+	
 	/**
 	 * Contains site specific functionality
 	 */
@@ -12,7 +14,7 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function BackToHome()
 		{
-			Site::Redirect('/');
+			Site::Redirect('/home/');
 		}
 		
 		/**
@@ -76,7 +78,7 @@ if (defined('securipe') or exit(1))
 		public static function CreateSecurityToken()
 		{
 			$token = md5(utf8_encode(UUID::Create()));
-			return $_SESSION['Sup3r5ecretSecur!peT0k3n'] = $token;
+			return $_SESSION[SECURITY_TOKEN] = $token;
 		}
 		
 		/**
@@ -84,8 +86,35 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function CheckSecurityToken($token)
 		{
-			return Value::SetAndEquals($token, $_SESSION, 'Sup3r5ecretSecur!peT0k3n');
+			return Value::SetAndEquals($token, $_SESSION, SECURITY_TOKEN);
 		}
+		
+		/**
+		 * Creates a new session for the user.
+		 *
+		public static function NewSessionId()
+		{
+			vd(session_id());
+			vd($_SESSION);
+			
+			$_SESSION[md5('old_session')] = session_id();
+			session_regenerate_id();
+			
+			
+			
+			vd(session_id());
+			vdd($_SESSION);
+		}*/
+		
+		/**
+		 * Cleans up old session variables after a creating new sessionid .
+		 *
+		public static function CleanSession()
+		{
+			if (Value::SetAndNotNull($_SESSION, md5('old_session'))) {
+				if (Value::SetAndNotNull($_SESSION, '')
+			}
+		}*/
 	}
 	
 	/**

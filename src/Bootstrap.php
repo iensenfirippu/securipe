@@ -50,5 +50,5 @@ foreach (glob("Classes/Types/*.php") as $datatype) { include_once($datatype); }
 include_once("Classes/Functions.php");
 include_once("Classes/RTK/RTK.php");
 include_once("Classes/Database.php");
-include_once("Classes/Login.php");
+include_once("Classes/Login.php")
 ?>
