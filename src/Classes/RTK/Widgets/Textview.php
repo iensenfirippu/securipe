@@ -17,8 +17,8 @@ if (defined('RTK') or exit(1))
 		public function __construct($text=EMPTYSTRING, $inline=false, $id=null, $class=null, $args=null)
 		{
 			HtmlAttributes::Assure($args);
-			$args->Add('id', $id);
-			$args->Add('class', $class);
+			if (Value::SetAndNotNull($id)) { $args->Add('id', $id); }
+			if (Value::SetAndNotNull($class)) { $args->Add('class', $class); }
 			
 			$tag = $inline ? 'span' : 'div';
 			parent::__construct($tag, $args, $text);
