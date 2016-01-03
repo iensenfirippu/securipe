@@ -59,8 +59,8 @@ if (defined('RTK') or exit(1))
 				$children[$idortitle]->GetAttributes()->Add('selected', true, true);
 			} elseif (is_string($idortitle)) {
 				foreach ($children as $child) {
-					if ($child->GetAttributes()->KeyHasValue('title', $idortitle)) {
-						$child->GetAttributes()->Add('selected', true, true);
+					if (strtolower($child->GetContent()) == strtolower($idortitle)) {
+						$child->GetAttributes()->Add('class', 'selected');
 					}
 				}
 			}

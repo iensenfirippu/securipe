@@ -7,7 +7,12 @@ $links = array('home/', 'login/', 'recipe/');
 $RTK->AddStylesheet('/style.css');
 $wrapper = new RTK_Box('wrapper');
 $menu = new RTK_Menu('mainmenu', 'menu', $links, $titles);
-$menu->SetSelected(Site::GetArgumentSafely('action'));
+$menu->SetSelected($currentpage);
 $RTK->AddElement($menu);
 $RTK->AddElement($wrapper, null, 'wrapper');
+
+if ($currentpage != 'login') {
+	$main = new RTK_Box('main');
+	$RTK->AddElement($main, 'wrapper', 'main');
+}
 ?>
