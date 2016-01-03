@@ -57,6 +57,22 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
+		 * Retrieve a FILES value as an image
+		 * @param id, The name of the FILES value to retrieve.
+		 */
+		public static function GetUploadedImage($id)
+		{
+			$return = null;
+			$image = new Image();
+			$image->Load($id);
+			if (Value::SetAndNotNull($image->GetImage()))
+			{
+				$return = $image;
+			}
+			return $return;
+		}
+		
+		/**
 		 * Returns true if the client is connecting via HTTPS, otherwise it returns false.
 		 */
 		public static function HasHttps()
@@ -70,6 +86,16 @@ if (defined('securipe') or exit(1))
 				}
 			}
 			return $secure_connection;
+		}
+		
+		/**
+		 * Returns true if the client is connecting via HTTPS, otherwise it returns false.
+		 * @param boolean $forcehttps Specify if the link has to have https
+		 */
+		public static function GetBaseURL($forcehttps=false)
+		{
+			if (Site::HasHttps() || $forcehttps) { return 'https://'.BASEURL; }
+			else { return 'http://'.BASEURL; }
 		}
 		
 		/**

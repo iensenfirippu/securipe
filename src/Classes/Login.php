@@ -235,6 +235,8 @@ if (defined('securipe') or exit(1))
 					$stmt->bindParam(5, $session, PDO::PARAM_STR, 32);
 					$stmt->execute();
 					$stmt->closeCursor();
+					
+					Login::SetAttempts(0);
 				}
 			}
 		}
