@@ -24,6 +24,7 @@ if (Login::IsLoggedIn()) {
 	$loginbox->AddChild(new RTK_Link('logout/', 'click here for log out', true));
 	
 } elseif (Site::HasHttps()) {
+
 	// If a user is not logged in, but the site is running secure
 	$loginform = new RTK_Form('loginform', EMPTYSTRING, 'POST');
 	$loginform->AddTextField('loginname', 'Username:');
