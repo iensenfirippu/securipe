@@ -22,7 +22,12 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function __construct($columnheaders, $alternaterow=true, $alternatecell=false, $args=null)
 		{
-			parent::__construct('table', $args);
+			HtmlAttributes::Assure($args);
+			$args->Add('class', 'listview', false);
+			
+			parent::__construct();
+			$this->AddContainer(new HtmlElement('div', $args, EMPTYSTRING, new HtmlElement('table')), 'table');
+			//$this->SetPointer('table');
 			if ($alternaterow == false) { $this->_alternaterow = null; }
 			else { $this->_alternaterow = true; }
 			if ($alternatecell == false) { $this->_alternatecell = null; }
@@ -49,7 +54,18 @@ if (defined('RTK') or exit(1))
 		}
 		
 		/**
-		 * In order to apply a "finalrow" class to the final row isn't appended until the Listview is finalized
+		 * Converts the element into an HTML string
+		 * @param boolean $newline Specifies whether or not to start with a newline
+		 * @return string A string containing the entire HTML structure of the element and it's children
+		 **/
+		public function ToString(&$newline)
+		{
+			$this->Finalize();
+			return parent::ToString($newline);
+		}
+		
+		/**
+		 * In order to apply a "finalrow" class, the final row isn't appended until the Listview is finalized
 		 **/
 		private function Finalize()
 		{
@@ -66,14 +82,14 @@ if (defined('RTK') or exit(1))
 			// reset alternatecell, so every row starts with the same type of cell
 			if ($this->_alternatecell !== null) { $this->_alternatecell = true; }
 			
-			$value = 'table_row';
-			if ($i === 0) { $value .= ' table_first_row'; }
-			if ($isheader) { $value .= ' table_header_row'; }
+			$value = 'lv_row';
+			if ($i === 0) { $value .= ' lv_firstrow'; }
+			if ($isheader) { $value .= ' lv_headerrow'; }
 			else {
 				_bool::Flip($this->_alternaterow);
-				if ($this->_alternaterow) { $value .= ' table_alternate_row'; }
+				if ($this->_alternaterow) { $value .= ' lv_altrow'; }
 			}
-			if ($i === null) { $value .= ' table_last_row'; }
+			if ($i === null) { $value .= ' lv_lastrow'; }
 			
 			return $value;
 		}
@@ -86,17 +102,17 @@ if (defined('RTK') or exit(1))
 		 **/
 		private function GetCellClass($i, $last, $isheader=false)
 		{
-			$value = 'table_cell';
+			$value = 'lv_cell';
 			_bool::Flip($this->_alternatecell);
-			if ($i === 0) { $value .= ' table_first_cell'; }
+			if ($i === 0) { $value .= ' lv_firstcell'; }
 			if ($isheader)
 			{
-				$value .= ' table_header_cell';
-				if ($this->_alternatecell) { $value .= ' table_alternate_header_cell'; }
+				$value .= ' lv_headercell';
+				if ($this->_alternatecell) { $value .= ' lv_altheadercell'; }
 			}
-			if ($this->_alternatecell) { $value .= ' table_alternate_cell'; }
-			if ($i == $last) { $value .= ' table_last_cell'; }
-			if (in_array($i, $this->_compressedcols)) { $value .= ' table_compressed_cell'; }
+			if ($this->_alternatecell) { $value .= ' lv_headercell'; }
+			if ($i == $last) { $value .= ' lv_lastcell'; }
+			if (in_array($i, $this->_compressedcols)) { $value .= ' lv_smallcell'; }
 			return $value;
 		}
 		
@@ -111,9 +127,11 @@ if (defined('RTK') or exit(1))
 			$rowsize = sizeof($row) -1;
 			for ($i = 0; $i <= $rowsize; $i++) {
 				$header->AddChild(new HtmlElement('td', array('class' => $this->GetCellClass($i, $rowsize, true)), $row[$i]));
+				//$header->AddToContainer(new HtmlElement('div', array('class' => $this->GetCellClass($i, $rowsize, true)), $row[$i]), 'table');
 			}
 			
-			$this->AddChild($header);
+			//$this->AddChild($header);
+			$this->AddToContainer($header, 'table');
 			$this->_rows++;
 		}
 		
@@ -149,7 +167,8 @@ if (defined('RTK') or exit(1))
 				}
 			}
 			
-			$this->AddChild($line);
+			//$this->AddChild($line);
+			$this->AddToContainer($line, 'table');
 		}
 	}
 }	

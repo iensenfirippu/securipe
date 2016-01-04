@@ -64,7 +64,7 @@ CREATE TABLE `Recipe` (
 	`recipe_id` int(10) NOT NULL AUTO_INCREMENT,
 	`picture_id` int(10) NOT NULL,
 	`user_id` int(10) NOT NULL,
-	`type_id` int(50),
+	`type_id` int(50) NOT NULL,
 	`recipe_title` varchar(255),
 	`recipe_des` blob,
 	`favorite_count` int(10),
@@ -85,7 +85,7 @@ CREATE TABLE `Favorite` (
 CREATE TABLE `Step` (
 	`recipe_id` int(10),
 	`picture_id` int(10),
-	`step_des` varchar(255),
+	`step_des` blob,
 	FOREIGN KEY (`recipe_id`) REFERENCES `Recipe`(`recipe_id`),
 	FOREIGN KEY (`picture_id`) REFERENCES `Picture`(`picture_id`)
 );
