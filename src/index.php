@@ -12,7 +12,7 @@ if (Login::FetchBanStatus()) {
 	elseif ($currentpage == "login") { include_once("Pages/Login.php"); }
 	elseif ($currentpage == "recipe") { include_once("Pages/Recipe.php"); }
 	elseif ($currentpage == "widgettest") { include_once("Pages/Widgets.php"); }
-	elseif ($action == "mypage") { include_once("Pages/PersonalStartPage.php"); }
+	elseif ($currentpage == "mypage") { include_once("Pages/PersonalStartPage.php"); }
 	else { include_once("Pages/Home.php"); }
 }
 echo $RTK;

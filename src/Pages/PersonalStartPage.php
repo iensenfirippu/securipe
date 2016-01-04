@@ -1,34 +1,85 @@
 <?php
 // Page Logic
-$steps = array(	"Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I&apos;m in a transitional period so I don&apos;t wanna kill you, I wanna help you. But I can&apos;t give you this case, it don&apos;t belong to me. Besides, I&apos;ve already been through too much shit this morning over this case to hand it over to your dumb ass.",
-				"Look, just because I don&apos;t be givin&apos; no man a foot massage don&apos;t make it right for Marsellus to throw Antwone into a glass motherfuckin&apos; house, fuckin&apos; up the way the nigger talks. Motherfucker do that shit to me, he better paralyze my ass, &apos;cause I&apos;ll kill the motherfucker, know what I&apos;m sayin&apos;?",
-				"Your bones don&apos;t break, mine do. That&apos;s clear. Your cells react to bacteria and viruses differently than mine. You don&apos;t get sick, I do. That&apos;s also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We&apos;re on the same curve, just on opposite ends.",
-				"Now that we know who you are, I know who I am. I&apos;m not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain&apos;s going to be? He&apos;s the exact opposite of the hero. And most times they&apos;re friends, like you and me! I should&apos;ve known way back when... You know why, David? Because of the kids. They called me Mr Glass");
+if (!Login::IsLoggedIn())
+{
+	Site::BackToHome();
+}
+
+$string_nofavorites = "There are no favorite";
+$string_nomyrecipes = "There are no recipes";
+$string_nomymessages = "There are no messages";
+
+$edit = new RTK_Link("bleh/","Edit");
+$delete = new RTK_Link("ugh/","Delete");
+
+$recipeLink = new RTK_Link("recipe/","Recipe name blablablabla..........test data!");
+$createRecipeLink = new RTK_Link("createrecipe/","Create Recipe");
+$myRecipes = array();
+//$myRecipes[] = array($recipeLink,$edit,$delete);
+
+$favoriteRecipeLink = new RTK_Link("favorite/");
+$myFavoriteRecipes = array();
+//$myFavoriteRecipes[] = array($favoriteRecipeLink,$delete);
+
+$myMessageLink = new RTK_Link("message/");
+$myMessages = array();
+
+
+
 
 // Page Output
 include_once('Pages/OnAllPages.php');
 
-$mylistbox = new RTK_Box('mylistbox');
+// my recipe list
 $columnMylist = array("Recipe Name","Edit","Delete");
-$mylistdata = array(" "," "," ");
-
 $mylistTitle = new RTK_Header("My Recipe");
-
-$createBtn = new RTK_Button(" ","Create Recipe",null);
-
 $mylist = new RTK_Listview($columnMylist);
-$mylist->AddRow($mylistdata);
-$mylist->AddRow($mylistdata);
-$mylist->AddRow($mylistdata);
-$mylist->AddRow($mylistdata);
-$mylist->AddRow($mylistdata);
+$RTK->AddElement($mylistTitle);
+if (sizeof($myRecipes) > 0)
+{
+	foreach ($myRecipes as $recipe)
+	{
+		$mylist->AddRow($recipe);
+	}
+	$RTK->AddElement($mylist);
+}else{
+	$RTK->AddElement(new RTK_Textview($string_nomyrecipes));
+}
+$RTK->AddElement($createRecipeLink);
 
-$mylistbox->AddChild($mylistTitle);
-$mylistbox->AddChild($createBtn);
-$mylistbox->AddChild($mylist);
+
+// my favorite recipes
+$columnMyFavorite = array("Recipe Name","Delete");
+$myfavoriteTitle = new RTK_Header("My Favorite");
+$RTK->AddElement($myfavoriteTitle);
+if (sizeof($myFavoriteRecipes) > 0)
+{
+	$myfavoriteList = new RTK_Listview($columnMyFavorite);
+	foreach ($myFavoriteRecipes as $recipe)
+	{
+		$myfavoriteList->AddRow($recipe);
+	}
+	$RTK->AddElement($myfavoriteList);
+}else{
+	$RTK->AddElement(new RTK_Textview($string_nofavorites));
+}
 
 
-
+// my message
+$columnMyMessage = array("Message Title","Delete");
+$myMessageTitle = new RTK_Header("Messages");
+$RTK->AddElement($myMessageTitle);
+if (sizeof($myMessages) > 0)
+{
+	$myMessageList = new RTK_Listview($columnMyMessage);
+	foreach ($myMessages as $message)
+	{
+		$myMessageList->AddRow($message);
+	}
+	$RTK->AddElement($myMessageList);
+}else{
+	$RTK->AddElement(new RTK_Textview($string_nomymessages));
+}
 
 
 /*$recipebox = new RTK_Box('recipebox');
@@ -51,5 +102,5 @@ foreach ($steps as $step) {
 	$recipebox->AddChild($stepbox);
 }*/
 
-$RTK->AddElement($mylistbox);
+
 ?>
