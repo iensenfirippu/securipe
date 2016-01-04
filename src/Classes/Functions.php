@@ -49,25 +49,11 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function GetPostValueSafely($id, $keephtml = false)
 		{
+		
 			$return = EMPTYSTRING;
 			if (isset($_POST[$id]) && !empty($_POST[$id]))
 			{
 				$return = _string::Sanitize($_POST[$id], $keephtml);
-			}
-		}
-		
-		/**
-		 * Retrieve a FILES value as an image
-		 * @param id, The name of the FILES value to retrieve.
-		 */
-		public static function GetUploadedImage($id)
-		{
-			$return = null;
-			$image = new Image();
-			$image->Load($id);
-			if (Value::SetAndNotNull($image->GetImage()))
-			{
-				$return = $image;
 			}
 			return $return;
 		}
@@ -86,16 +72,6 @@ if (defined('securipe') or exit(1))
 				}
 			}
 			return $secure_connection;
-		}
-		
-		/**
-		 * Returns true if the client is connecting via HTTPS, otherwise it returns false.
-		 * @param boolean $forcehttps Specify if the link has to have https
-		 */
-		public static function GetBaseURL($forcehttps=false)
-		{
-			if (Site::HasHttps() || $forcehttps) { return 'https://'.BASEURL; }
-			else { return 'http://'.BASEURL; }
 		}
 		
 		/**

@@ -29,7 +29,7 @@ class CRUD
 		}
 		
 	
-		public static function InsertUser()
+		public static function InsertUser($firstName)
 		{	
 		
 		$v1 = "\tcafé\n";
@@ -51,6 +51,7 @@ class CRUD
 		
 				if($stmt = Database::GetLink()->prepare('INSERT INTO `User`(`fname`, `lname`, `email`, `telno`, `user_name`) VALUES (?,?,?,?,?)'))
 				{
+						
 					$stmt->bindParam(1, $firstName, PDO::PARAM_STR, 255);
 				    $stmt->bindParam(2, $semail, PDO::PARAM_STR, 255);
 					$stmt->bindParam(3, $semail2, PDO::PARAM_STR, 255);

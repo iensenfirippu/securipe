@@ -1,5 +1,9 @@
 <?php
 // Page Logic
+
+
+
+
 $GLOBALS['LOGIN'] = new Login();
 if (Value::SetAndEqualTo('logout', $_GET, 'action')) { Login::LogOut(); }
 if (Login::GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
@@ -33,16 +37,14 @@ $RTK->AddElement($box1);
 
 if (Value::SetAndNotNull($_POST, 'Submit')) {
      
-   // vdd(false); 
    $firstName = Site::GetPostValueSafely("FirstName");
-    
-    Crud::InsertUser();
+   
+    Crud::InsertUser("dette er en test");
     //echo $firstName;
    // $test = new CRUD("");
 
 //$test->InsertUser();
 //
 }
-
 
 ?>
