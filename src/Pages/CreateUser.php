@@ -1,8 +1,8 @@
 <?php
 // Page Logic
 $GLOBALS['LOGIN'] = new Login();
-if (Value::SetAndEquals('logout', $_GET, 'action')) { Login::LogOut(); }
-if (Login::GetStatus()->GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
+if (Value::SetAndEqualTo('logout', $_GET, 'action')) { Login::LogOut(); }
+if (Login::GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
 
 // Page Output
 include_once('Pages/OnAllPages.php');
@@ -31,7 +31,7 @@ $box1->AddChild($form);
 
 $RTK->AddElement($box1);
 
-$test = new CRUD();
+$test = new CRUD(");
 
 $test->InsertUser();
     
