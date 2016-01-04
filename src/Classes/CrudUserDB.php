@@ -1,11 +1,8 @@
 <?php
 class CRUD
 {
-		
-
 		public function sanatize($string, $type)
-		{
-				
+		{		
 				$email_filter = FILTER_SANITIZE_EMAIL;
 				$string_filter = FILTER_SANITIZE_STRING;
 				$string_Strip_Low = FILTER_FLAG_STRIP_LOW;
@@ -50,9 +47,11 @@ class CRUD
 		//echo CRUD::sanatize($v1, "fname");
 		//sanatize($testv1, "user_name");
 
+		
+		
 				if($stmt = Database::GetLink()->prepare('INSERT INTO `User`(`fname`, `lname`, `email`, `telno`, `user_name`) VALUES (?,?,?,?,?)'))
 				{
-					$stmt->bindParam(1, $sv1, PDO::PARAM_STR, 255);
+					$stmt->bindParam(1, $v1, PDO::PARAM_STR, 255);
 				    $stmt->bindParam(2, $semail, PDO::PARAM_STR, 255);
 					$stmt->bindParam(3, $semail2, PDO::PARAM_STR, 255);
 					$stmt->bindParam(4, $v4, PDO::PARAM_STR, 255);

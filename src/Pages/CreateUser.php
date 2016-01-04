@@ -18,7 +18,7 @@ $form= new RTK_Form("createUserForm");
 $form->AddTextField("UserName", "User Name");
 $form->AddPasswordField("Password", "Password");
 
-$form->AddTextField("FirstName", "First Name");
+$form->AddTextField("FirstName", "First Name555888");
 $form->AddTextField("LastName", "Last Name");
 $form->AddTextField("email", "Email");
 $form->AddTextField("telePhoneNo", "Phone No");
@@ -31,9 +31,16 @@ $box1->AddChild($form);
 
 $RTK->AddElement($box1);
 
-$test = new CRUD(");
-
-$test->InsertUser();
+//if (Value::SetAndNotNull($_POST, 'submit')) {
+     
+    echo "test"; 
+  //  $firstName = Site::GetPostValueSafely("FirstName");
     
+    //echo $firstName;
+//$test = new CRUD("");
+
+//$test->InsertUser();
+//}
+
 
 ?>
