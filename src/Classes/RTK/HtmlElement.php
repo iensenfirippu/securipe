@@ -4,7 +4,7 @@ if (defined('RTK') or exit(1))
 	// Tags that must not be closed in any way
 	//define("NONCLOSINGELEMENTS", "|!doctype|");
 	// Tags that must NOT be closed by "/>"
-	define("NONVOIDELEMENTS", "|ul|script|a|tr|td|div|textarea|article|");
+	define("NONVOIDELEMENTS", "|ul|script|a|tr|td|div|textarea|article|label|");
 	// Tags that MUST be closed by "/>"
 	define("VOIDELEMENTS", "|area|base|br|col|command|embed|hr|img|input|keygen|link|meta|param|source|track|wbr|");
 	// Tags which contents must not be altered (i.e. indented)
@@ -270,6 +270,7 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function ToString(&$newline)
 		{
+			//if (is_a($this, 'RTK_Listview')) { vdd($this); } else { vd(gettype($this)); }
 			$return = EMPTYSTRING;
 			if ($this->_tag != EMPTYSTRING) {
 				if ($newline) { $return .= OUTPUTNEWLINE; } else { $newline = true; }

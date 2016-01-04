@@ -36,7 +36,7 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function AddText($text, $container=null)
 		{
-			$textview = new RTK_Textview($text, true, null, 'formtext');
+			$textview = new RTK_Textview($text, false, null, 'formtext');
 			$this->AddToContainer($textview, $container);
 		}
 		
@@ -72,19 +72,21 @@ if (defined('RTK') or exit(1))
 			$args->Add('name', $name);
 			$args->Add('id', $name);
 			
-			$field = new HtmlElement('div', array('class' => 'formline'));
-			$field->AddChild(new HtmlElement('label', array('for' => $name), $title));
+			$line = new HtmlElement('div', array('class' => 'formline'));
+			$line->AddChild(new HtmlElement('label', array('for' => $name), $title));
+			$group = new HtmlElement('div', array('class' => 'formgroup'));
 			
 			if ($size == null || intval($size) <= 0) {
 				$args->Add('type', 'text');
 				if (Value::SetAndNotNull($value)) { $args->Add('value', $value); }
-				$field->AddChild(new HtmlElement('input', $args));
+				$group->AddChild(new HtmlElement('input', $args));
 			} else {
 				$args->Add('rows', $size);
-				$field->AddChild(new HtmlElement('textarea', $args, $value));
+				$group->AddChild(new HtmlElement('textarea', $args, $value));
 			}
 			
-			$this->AddToContainer($field, $container);
+			$line->AddChild($group);
+			$this->AddToContainer($line, $container);
 		}
 		
 		/**
@@ -100,11 +102,38 @@ if (defined('RTK') or exit(1))
 			$args->Add('name', $name);
 			$args->Add('id', $name);
 			
+			$line = new HtmlElement('div', array('class' => 'formline'));
+			$line->AddChild(new HtmlElement('label', array('for' => $name), $title));
+			$group = new HtmlElement('div', array('class' => 'formgroup'));
+			$group->AddChild(new HtmlElement('input', $args));
+			$line->AddChild($group);
+			
+			$this->AddToContainer($line, $container);
+		}
+		
+		/**
+		 * Add a file upload field to the form
+		 * @param string $name The HTML name (and #id) of the upload field
+		 * @param string $title The text written next to the upload field
+		 * @param string $value The value sent if there us no file selected
+		 * @param HtmlElement $container (optional) The "container" to add it to
+		 **/
+		public function AddFileUpload($name, $title, $value='false', $container=null)
+		{
+			$args = new HtmlAttributes();
+			$args->Add('class', 'filebox');
+			$args->Add('type', 'file');
+			$args->Add('name', $name);
+			$args->Add('id', $name);
+			$args->Add('value', $value);
+			
 			$field = new HtmlElement('div', array('class' => 'formline'));
 			$field->AddChild(new HtmlElement('label', array('for' => $name), $title));
+			$group = new HtmlElement('div', array('class' => 'formgroup'));
+			$group->AddChild(new HtmlElement('input', $args));
+			$field->AddChild($group);
 			
-			$field->AddChild(new HtmlElement('input', $args));
-			
+			$this->GetAttributes()->Add('enctype', 'multipart/form-data');
 			$this->AddToContainer($field, $container);
 		}
 		
@@ -130,9 +159,10 @@ if (defined('RTK') or exit(1))
 			$field = new HtmlElement('div', array('class' => 'formline'));
 			$field->AddChild(new HtmlElement('label', array('for' => $name), $title));
 			
-			$field->AddChild(new HtmlElement('input', $args));
-			
-			if ($text != null) { $field->AddChild(new HtmlElement('span', EMPTYSTRING, $text)); }
+			$group = new HtmlElement('div', array('class' => 'formgroup'));
+			$group->AddChild(new HtmlElement('input', $args));
+			if ($text != null) { $group->AddChild(new HtmlElement('span', EMPTYSTRING, $text)); }
+			$field->AddChild($group);
 			
 			$this->AddToContainer($field, $container);
 		}
@@ -147,7 +177,7 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function AddRadioButtons($name, $title, $options, $selected=null, $container=null)
 		{
-			$buttons = new HtmlElement('div', array('class' => 'radiobuttons'));
+			$group = new HtmlElement('div', array('class' => 'formgroup'));
 			
 			$option_value = EMPTYSTRING;
 			$option_title = EMPTYSTRING;
@@ -159,17 +189,19 @@ if (defined('RTK') or exit(1))
 				
 				$args = new HtmlAttributes();
 				$args->Add('type', 'radio');
+				$args->Add('class', 'radiobox');
 				$args->Add('name', $name);
 				$args->Add('id', $name);
 				$args->Add('value', $option_value);
 				if ($selected == $option_value) { $args->Add('checked', true); }
 				
-				$buttons->AddChild(new HtmlElement('input', $args, $option_title));
+				$group->AddChild(new HtmlElement('input', $args));
+				$group->AddChild(new HtmlElement('span', EMPTYSTRING, $option_title));
 			}
 			
 			$field = new HtmlElement('div', array('class' => 'formline'));
 			$field->AddChild(new HtmlElement('label', array('for' => $name), $title));
-			$field->AddChild($buttons);
+			$field->AddChild($group);
 			
 			$this->AddToContainer($field, $container);
 		}
@@ -188,7 +220,7 @@ if (defined('RTK') or exit(1))
 			
 			$field = new HtmlElement('div', array('class' => 'formline'));
 			$field->AddChild(new HtmlElement('label', array('for' => $name), $title));
-			$field->AddChild($dropdown);
+			$field->AddChild(new HtmlElement('div', array('class' => 'formgroup'), EMPTYSTRING, $dropdown));
 			
 			$this->AddToContainer($field, $container);
 		}
@@ -196,26 +228,35 @@ if (defined('RTK') or exit(1))
 		/**
 		 * Add a button to the form
 		 * @param string $name The name/id of the button
-		 * @param string $title The text written on the button
+		 * @param string $text The text written on the button
+		 * @param string $title The text written next to the button
 		 * @param HtmlElement $container (optional) The "container" to add it to
 		 **/
-		public function AddButton($name='submit', $title='Submit', $container=null)
+		public function AddButton($name='submit', $text='Submit', $title=EMPTYSTRING, $container=null)
 		{
 			$field = new HtmlElement('div', array('class' => 'formline'));
-			$field->AddChild(new RTK_Button($name, $title));
+			$field->AddChild(new HtmlElement('label', array('for' => $name), $title));
+			$group = new HtmlElement('div', array('class' => 'formgroup'));
+			$group->AddChild(new RTK_Button($name, $text));
+			$field->AddChild($group);
 			
 			$this->AddToContainer($field, $container);
 		}
 		
 		/**
 		 * Add a custom HtmlElement into the form (not recommended)
+		 * @param string $name The name/id of the element
+		 * @param string $title The text written on the element
 		 * @param HtmlElement $HtmlElement The element to add
 		 * @param HtmlElement $container (optional) The "container" to add it to
 		 **/
-		public function AddElement($htmlelement, $container=null)
+		public function AddElement($name, $title, $htmlelement, $container=null)
 		{
 			$field = new HtmlElement('div', array('class' => 'formline'));
-			$field->AddChild($htmlelement);
+			$field->AddChild(new HtmlElement('label', array('for' => $name), $title));
+			$group = new HtmlElement('div', array('class' => 'formgroup'));
+			$group->AddChild($htmlelement);
+			$field->AddChild($group);
 			
 			$this->AddToContainer($field, $container);
 		}
