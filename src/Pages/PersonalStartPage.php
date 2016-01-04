@@ -8,11 +8,24 @@ $steps = array(	"Normally, both your asses would be dead as fucking fried chicke
 // Page Output
 include_once('Pages/OnAllPages.php');
 
-$titles = array("mylist","listName","listName2");
-$mylist = new RTK_Listview($titles);
-$mylist->AddRow($titles);
-$mylist->AddRow($titles);
-$mylist->AddRow($titles);
+$mylistbox = new RTK_Box('mylistbox');
+$columnMylist = array("Recipe Name","Edit","Delete");
+$mylistdata = array(" "," "," ");
+
+$mylistTitle = new RTK_Header("My Recipe");
+
+$createBtn = new RTK_Button(" ","Create Recipe",null);
+
+$mylist = new RTK_Listview($columnMylist);
+$mylist->AddRow($mylistdata);
+$mylist->AddRow($mylistdata);
+$mylist->AddRow($mylistdata);
+$mylist->AddRow($mylistdata);
+$mylist->AddRow($mylistdata);
+
+$mylistbox->AddChild($mylistTitle);
+$mylistbox->AddChild($createBtn);
+$mylistbox->AddChild($mylist);
 
 
 
@@ -38,5 +51,5 @@ foreach ($steps as $step) {
 	$recipebox->AddChild($stepbox);
 }*/
 
-$RTK->AddElement($mylist);
+$RTK->AddElement($mylistbox);
 ?>

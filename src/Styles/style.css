@@ -233,6 +233,32 @@ ul.menu li {
 
 
 
+table {
+	table-layout:auto;
+	border-collapse: separate;
+	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	width: 100%;
+}
+
+table td .table_hedder_cell {
+	width:25%;
+	padding:6px;
+	text-align:left;
+	vertical-align:top;
+	color:#666666;
+	background-color:#feedf3;
+	
+}
+
+table td {
+	padding:10px;
+	background-color:#fafafa;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 10px;
+}
+
 
 
 
