@@ -31,16 +31,18 @@ $box1->AddChild($form);
 
 $RTK->AddElement($box1);
 
-//if (Value::SetAndNotNull($_POST, 'submit')) {
+if (Value::SetAndNotNull($_POST, 'Submit')) {
      
-    echo "test"; 
-  //  $firstName = Site::GetPostValueSafely("FirstName");
+   // vdd(false); 
+   $firstName = Site::GetPostValueSafely("FirstName");
     
+    Crud::InsertUser();
     //echo $firstName;
-//$test = new CRUD("");
+   // $test = new CRUD("");
 
 //$test->InsertUser();
-//}
+//
+}
 
 
 ?>

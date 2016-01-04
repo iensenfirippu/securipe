@@ -1,7 +1,7 @@
 <?php
 class CRUD
 {
-		public function sanatize($string, $type)
+		public static function sanatize($string, $type)
 		{		
 				$email_filter = FILTER_SANITIZE_EMAIL;
 				$string_filter = FILTER_SANITIZE_STRING;
@@ -29,7 +29,7 @@ class CRUD
 		}
 		
 	
-		public function InsertUser()
+		public static function InsertUser()
 		{	
 		
 		$v1 = "\tcafé\n";
@@ -51,7 +51,7 @@ class CRUD
 		
 				if($stmt = Database::GetLink()->prepare('INSERT INTO `User`(`fname`, `lname`, `email`, `telno`, `user_name`) VALUES (?,?,?,?,?)'))
 				{
-					$stmt->bindParam(1, $v1, PDO::PARAM_STR, 255);
+					$stmt->bindParam(1, $firstName, PDO::PARAM_STR, 255);
 				    $stmt->bindParam(2, $semail, PDO::PARAM_STR, 255);
 					$stmt->bindParam(3, $semail2, PDO::PARAM_STR, 255);
 					$stmt->bindParam(4, $v4, PDO::PARAM_STR, 255);
