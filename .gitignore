@@ -77,7 +77,6 @@ $RECYCLE.BIN/
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -129,3 +128,6 @@ pom.xml.asc
 
 # Ignore Custom Config.php
 /src/Config/Config.php
+
+# Ignore Images
+/src/Images/*

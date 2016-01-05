@@ -1,6 +1,8 @@
 <?php
 if (defined('securipe') or exit(1))
 {
+	define('SECURITY_TOKEN', md5(STATIC_SALT.'security_token'));
+	
 	/**
 	 * Contains site specific functionality
 	 */
@@ -12,7 +14,7 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function BackToHome()
 		{
-			Site::Redirect('/');
+			Site::Redirect('/home/');
 		}
 		
 		/**
@@ -55,6 +57,22 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
+		 * Retrieve a FILES value as an image
+		 * @param id, The name of the FILES value to retrieve.
+		 */
+		public static function GetUploadedImage($id)
+		{
+			$return = null;
+			$image = new Image();
+			$image->Load($id);
+			if (Value::SetAndNotNull($image->GetImage()))
+			{
+				$return = $image;
+			}
+			return $return;
+		}
+		
+		/**
 		 * Returns true if the client is connecting via HTTPS, otherwise it returns false.
 		 */
 		public static function HasHttps()
@@ -71,12 +89,22 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
+		 * Returns true if the client is connecting via HTTPS, otherwise it returns false.
+		 * @param boolean $forcehttps Specify if the link has to have https
+		 */
+		public static function GetBaseURL($forcehttps=false)
+		{
+			if (Site::HasHttps() || $forcehttps) { return 'https://'.BASEURL; }
+			else { return 'http://'.BASEURL; }
+		}
+		
+		/**
 		 * Creates a Security token to secure a form against XSRF.
 		 */
 		public static function CreateSecurityToken()
 		{
 			$token = md5(utf8_encode(UUID::Create()));
-			return $_SESSION['Sup3r5ecretSecur!peT0k3n'] = $token;
+			return $_SESSION[SECURITY_TOKEN] = $token;
 		}
 		
 		/**
@@ -84,8 +112,35 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function CheckSecurityToken($token)
 		{
-			return Value::SetAndEquals($token, $_SESSION, 'Sup3r5ecretSecur!peT0k3n');
+			return Value::SetAndEquals($token, $_SESSION, SECURITY_TOKEN);
 		}
+		
+		/**
+		 * Creates a new session for the user.
+		 *
+		public static function NewSessionId()
+		{
+			vd(session_id());
+			vd($_SESSION);
+			
+			$_SESSION[md5('old_session')] = session_id();
+			session_regenerate_id();
+			
+			
+			
+			vd(session_id());
+			vdd($_SESSION);
+		}*/
+		
+		/**
+		 * Cleans up old session variables after a creating new sessionid .
+		 *
+		public static function CleanSession()
+		{
+			if (Value::SetAndNotNull($_SESSION, md5('old_session'))) {
+				if (Value::SetAndNotNull($_SESSION, '')
+			}
+		}*/
 	}
 	
 	/**
@@ -99,10 +154,14 @@ if (defined('securipe') or exit(1))
 		 * @param string, The string value to sanitize.
 		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
 		 */
-		public static function Sanitize($string, $keephtml = false)
+		public static function Sanitize($string, $flag, $keephtml = false)
 		{
 			$string = addslashes($string);
 			//if ($keephtml == false) { htmlspecialchars($string); } // Changed to htmlentities
+			if (Value::SetAndNotNull($flag))
+			{	
+				return filter_var($string, $flag);		
+			}
 			if ($keephtml == false) { htmlentities($string); }
 			_string::EnforceProperLineEndings($string);
 			return $string;

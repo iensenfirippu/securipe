@@ -43,7 +43,11 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function Add($key, $value, $override=true)
 		{
-			if ($override == true || !array_key_exists($key, $this->_list)) {
+			if ($value == null) {
+				if ($override == true && array_key_exists($key, $this->_list)) {
+					$this->Remove([$key]);
+				}
+			} elseif ($override == true || !array_key_exists($key, $this->_list)) {
 				$this->_list[$key] = $value;
 			}
 		}

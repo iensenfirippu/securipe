@@ -1,4 +1,5 @@
 <?php
+
 if (defined('securipe') or exit(1))
 {
 	class Recipe{
