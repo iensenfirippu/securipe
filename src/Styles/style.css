@@ -212,6 +212,44 @@ ul.menu li {
 	font-size: 1.1em;
 	background-color: #8888aa;
 }
+#mymenu {
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	z-index: 10;
+}
+#mymenu a {
+	display: inline-block;
+	width: 100px;
+	height: 20px;
+	
+	margin: 0px;
+	padding: 5px;
+	
+	color: #ffffff;
+	font-size: 1em;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform: Capitalize;
+	text-align: center;
+	vertical-align: top;
+	
+	background-color: #777799;
+	border: 2px solid #ffffff;
+	border-top: none;
+	
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-left-radius: 0px !important;
+}
+#mymenu a.selected, #mymenu a:hover {
+	padding-top: 15px;
+	
+	font-size: 1.1em;
+	background-color: #8888aa;
+}
 /* - Menu styling - */
 
 /* - ListView styling - */

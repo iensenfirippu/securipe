@@ -14,7 +14,7 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function BackToHome()
 		{
-			Site::Redirect('/home/');
+			Site::Redirect(Site::GetBaseURL().'Home'.URLPAGEEXT);
 		}
 		
 		/**
@@ -50,10 +50,10 @@ if (defined('securipe') or exit(1))
 		public static function GetPostValueSafely($id, $keephtml = false)
 		{
 			$return = EMPTYSTRING;
-			if (isset($_POST[$id]) && !empty($_POST[$id]))
-			{
+			if (Value::SetAndNotEmpty($_POST, $id)) {
 				$return = _string::Sanitize($_POST[$id], $keephtml);
 			}
+			return $return;
 		}
 		
 		/**
@@ -153,12 +153,10 @@ if (defined('securipe') or exit(1))
 		 * Sanitizes a string, by encoding potentially malicious characters. 
 		 * @param string, The string value to sanitize.
 		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
-		 */
+		 **/
 		public static function Sanitize($string, $keephtml = false)
 		{
-			$string = addslashes($string);
-			//if ($keephtml == false) { htmlspecialchars($string); } // Changed to htmlentities
-			if ($keephtml == false) { htmlentities($string); }
+			if ($keephtml == false) { $string = htmlentities($string); }
 			_string::EnforceProperLineEndings($string);
 			return $string;
 		}
@@ -166,7 +164,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Unserializes a serialized object from a string.
 		 * @param text, the string of the serialized object.
-		 */
+		 **/
 		public static function Unserialize($text)
 		{
 			return unserialize(gzuncompress(base64_decode($text)));
@@ -175,7 +173,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Serializes an object into a string.
 		 * @param object, the object to serialize.
-		 */
+		 **/
 		public static function Serialize($object)
 		{
 			return base64_encode(gzcompress(serialize($object)));
@@ -185,7 +183,7 @@ if (defined('securipe') or exit(1))
 		 * Find a string inside another string (customized strstr to include multiple needles)
 		 * @param haystack, string to look in
 		 * @param needles, string or string[] to look for
-		 */
+		 **/
 		public static function StringInString($haystack, $needles)
 		{
 			$result = false;
@@ -209,7 +207,7 @@ if (defined('securipe') or exit(1))
 		 * Removes a text from the beginning of another
 		 * @param string, the string to look in.
 		 * @param prefix, the prefix to remove.
-		 */
+		 **/
 		public static function RemovePrefix($string, $prefix)
 		{
 			if(strpos($string, $prefix) === 0) { $string = substr($string, strlen($prefix)).EMPTYSTRING; }
@@ -220,7 +218,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Removes any Windows linebreaks (\r\n) and replaces them with proper UNIX linebreaks (\n).
 		 * @param param, description.
-		 */
+		 **/
 		public static function EnforceProperLineEndings(& $string)
 		{
 			$improper_lineending = "\r\n";
@@ -231,7 +229,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Determines if a String starts with an upper case character
 		 * @param string, The string to check.
-		 */
+		 **/
 		public static function StartsWithUpper($string)
 		{
 			$char = mb_substr($string, 0, 1, "UTF-8");
@@ -243,7 +241,7 @@ if (defined('securipe') or exit(1))
 		 * @param array, The array to look in.
 		 * @param string, The string to look for.
 		 * @param out, If set will contain the key of the matched string.
-		 */
+		 **/
 		public static function IsOneOf($array, $string, &$out=null)
 		{
 			$result = false;
@@ -261,7 +259,7 @@ if (defined('securipe') or exit(1))
 		 * @param needles, string or string[] to look for
 		 * @param match, (-1 = all needles must be in haystack) (0 = none) (# = # or more needles)
 		 * @param out, If set will contain the key(s) of the matched string(s).
-		 */
+		 **/
 		public static function Contains($haystack, $needles, $match=-1, &$out=null)
 		{
 			$value = false;
@@ -297,7 +295,7 @@ if (defined('securipe') or exit(1))
 		 * Checks if a string starts with a specified string.
 		 * @param haystack, string to look in.
 		 * @param needle, string to look for.
-		 */
+		 **/
 		public static function StartsWith($haystack, $needle)
 		{
 			return strpos($haystack, $needle) === 0;
@@ -307,7 +305,7 @@ if (defined('securipe') or exit(1))
 		 * Checks if a string ends with a specified string.
 		 * @param haystack, string to look in.
 		 * @param needle, string to look for.
-		 */
+		 **/
 		public static function EndsWith($haystack, $needle)
 		{
 			return strpos($haystack, $needle) === sizeof($haystack-1);
@@ -316,7 +314,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Checks if a string contains HTML tags
 		 * @param string, the string to check.
-		 */
+		 **/
 		public static function HasTags($string)
 		{
 			return sizeof(preg_match_all('/(<([^>]+)>)/', $string)) > 0 ? true : false;
@@ -325,7 +323,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Strips all HTML tags from string
 		 * @param string, the string to strip.
-		 */
+		 **/
 		public static function StripTags($string)
 		{
 			return preg_replace('/(<([^>]+)>)/', EMPTYSTRING, $string);
@@ -335,7 +333,7 @@ if (defined('securipe') or exit(1))
 		 * Shortens and ellipsizes a string
 		 * @param string, the string to ellipsize.
 		 * @param length, the length of the new string (incl. ellipsis).
-		 */
+		 **/
 		public static function Ellipsize($string, $length)
 		{
 			// TODO: consider making a constant ellipsize string ("...")
@@ -352,13 +350,13 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Contains functions for encoding/decoding HTML chars in a string
-	 */
+	 **/
 	class HTML
 	{
 		/**
 		 * Decodes encoded HTML characters in a text back to HTML evaluated characters.
 		 * @param text, The text to decode.
-		 */
+		 **/
 		public static function Decode($text)
 		{
 			return str_replace(array('\n', '\t'), array(NEWLINE, INDENT), htmlspecialchars_decode($text));
@@ -367,7 +365,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Encodes HTML characters in a text.
 		 * @param text, The text to encode.
-		 */
+		 **/
 		public static function Encode($text)
 		{
 			return htmlspecialchars(str_replace(array(NEWLINE, INDENT), array('\n', '\t'), $text));
@@ -376,13 +374,13 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Contains additional functionality for working with files in PHP
-	 */
+	 **/
 	class File
 	{
 		/**
 		 * Logs HTML output to a file (for debugging)
 		 * @param output, HTML to write to file.
-		 */
+		 **/
 		public static function LogOutput($output)
 		{
 			Log::WriteToFile('output.txt', $output, true);
@@ -391,7 +389,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Logs an error message to the errorlog file
 		 * @param message, The error message to append to the errorlog.
-		 */
+		 **/
 		public static function LogError($message) // Logs an error message to the log file
 		{
 			$_SESSION['MESSAGE'] = $message;
@@ -403,7 +401,7 @@ if (defined('securipe') or exit(1))
 		 * @param file, The file to write.
 		 * @param string, The string to write.
 		 * @param overwrite, Whether the string should be appended to, or should overwrite the file.
-		 */
+		 **/
 		public static function WriteToFile($file, $string, $overwrite=false) // Writes a string to a file
 		{
 			if ($overwrite && file_exists($file)) { unlink($file); }
@@ -415,7 +413,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Returns the given filesize in the closest byte denomination.
 		 * @param $bytes, The filesize in bytes.
-		 */
+		 **/
 		public static function GetSize($bytes)
 		{
 			$value = '';
@@ -432,14 +430,14 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Contains functionality for handling time in PHP
-	 */
+	 **/
 	class Time
 	{
 		/**
 		 * Returns a human readable time from a UNIX timestamp.
 		 * @param timestamp, The timestamp to humanize.
 		 * @param format, An optional format for the outputted string.
-		 */
+		 **/
 		public static function TimestampToHumanTime($timestamp, $format = false)
 		{
 			// TODO: ineffective, enhance using halfing technique. (N becomes N/2)
@@ -487,13 +485,13 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Contains additional functionality for handling booleans in PHP
-	 */
+	 **/
 	class _bool
 	{
 		/**
 		 * Display a boolean as "TRUE" or "FALSE", instead of "1" and "0".
 		 * @param boolean, the boolean to display.
-		 */
+		 **/
 		public static function Display($boolean)
 		{
 			$value;
@@ -506,7 +504,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * "Flip" a boolean value to the opposite value
 		 * @param boolean, the value to "flip".
-		 */
+		 **/
 		public static function Flip(&$boolean)
 		{
 			if (is_bool($boolean)) { $boolean = !$boolean; }
@@ -515,14 +513,14 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Contains functions for variable/value checking
-	 */
+	 **/
 	class Value
 	{
 		/**
 		 * Determines if a variable: isset(v) && v != NULL
 		 * @param variable, the variable to check.
 		 * @param key, (optionally) the key in variable to check (for arrays).
-		 */
+		 **/
 		public static function SetAndNotNull($variable, $key=null)
 		{
 			if ($key != null && is_array($variable))
@@ -537,7 +535,7 @@ if (defined('securipe') or exit(1))
 		 * Determines if a variable: isset(v) && v == NULL
 		 * @param variable, the variable to check.
 		 * @param key, (optionally) the key in variable to check (for arrays).
-		 */
+		 **/
 		public static function SetAndNull($variable, $key=null)
 		{
 			if ($key != null && is_array($variable))
@@ -552,7 +550,7 @@ if (defined('securipe') or exit(1))
 		 * Determines if a variable: isset(v) && !empty(v)
 		 * @param variable, the variable to check.
 		 * @param key, (optionally) the key in variable to check (for arrays).
-		 */
+		 **/
 		public static function SetAndNotEmpty($variable, $key=null)
 		{
 			if ($key != null && is_array($variable))
@@ -567,7 +565,7 @@ if (defined('securipe') or exit(1))
 		 * Determines if a variable: isset(v) && empty(v)
 		 * @param variable, the variable to check.
 		 * @param key, (optionally) the key in variable to check (for arrays).
-		 */
+		 **/
 		public static function SetAndEmpty($variable, $key=null)
 		{
 			if ($key != null && is_array($variable))
@@ -584,7 +582,7 @@ if (defined('securipe') or exit(1))
 		 * @param variable, the variable to check.
 		 * @param key, (optionally) the key in variable to check (for arrays).
 		 * @param checktype, set true for === instead of == check.
-		 */
+		 **/
 		public static function SetAndEqualTo($value, $variable, $key=null, $checktype=false)
 		{
 			$result = false;
@@ -604,7 +602,7 @@ if (defined('securipe') or exit(1))
 		 * @param variable, the variable to check.
 		 * @param key, (optionally) the key in variable to check (for arrays).
 		 * @param checktype, set true for !== instead of != check.
-		 */
+		 **/
 		public static function SetAndNotEqualTo($value, $variable, $key=null, $checktype=false)
 		{
 			$result = false;
@@ -621,14 +619,14 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Contains functionality for handling array in PHP
-	 */
+	 **/
 	class _array
 	{
 		/**
 		 * Determines whether a variable is and array and is longer than x items
 		 * @param array, the variable to check.
 		 * @param size, the smallest acceptable size of the array.
-		 */
+		 **/
 		public static function IsLongerThan($array, $size)
 		{
 			return is_array($array) && sizeof($array) > $size;
@@ -638,7 +636,7 @@ if (defined('securipe') or exit(1))
 		 * Determines if an array is not empty
 		 * @param variable, the variable to check.
 		 * @param key, (optionally) the key in variable to check (for sub-arrays).
-		 */
+		 **/
 		public static function NotEmpty($variable, $key=null)
 		{
 			if ($key != null && is_array($variable))
@@ -653,7 +651,7 @@ if (defined('securipe') or exit(1))
 		 * Determines which index a given item in the array has
 		 * @param array, the variable to check in.
 		 * @param item, the item to get the index of.
-		 */
+		 **/
 		public static function GetIdOf($array, $item)
 		{
 			return array_search($item, $array);
@@ -663,7 +661,7 @@ if (defined('securipe') or exit(1))
 		 * Remove an item from an array
 		 * @param array, the variable to remove from.
 		 * @param index, the index of the item to remove.
-		 */
+		 **/
 		public static function Remove(&$array, $index)
 		{
 			$result = false;
@@ -680,14 +678,14 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Contains some functions to more easily handle URLs in PHP
-	 */
+	 **/
 	class URL
 	{
 		/**
 		 * Safely appends something to a URL
 		 * @param url, the URL to append to.
 		 * @param append, the text to append.
-		 */
+		 **/
 		public static function Append($url, $append)
 		{
 			$value = $url;
@@ -722,7 +720,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Gets the last folder of a URL appends something to a URL
 		 * @param url, the URL to look in.
-		 */
+		 **/
 		public static function LastFolder($url)
 		{
 			$pieces = explode(SINGLESLASH, $url);
@@ -741,7 +739,7 @@ if (defined('securipe') or exit(1))
 	/**
 	 * alias for: var_dump($var)
 	 * @param var, Variable to dump.
-	 */
+	 **/
 	function vd($var)
 	{
 		var_dump($var);
@@ -750,7 +748,7 @@ if (defined('securipe') or exit(1))
 	/**
 	 * alias for: var_dump($var) + die(1)
 	 * @param var, Variable to dump.
-	 */
+	 **/
 	function vdd($var)
 	{
 		var_dump($var);
@@ -759,7 +757,7 @@ if (defined('securipe') or exit(1))
 	
 	/**
 	 * Enumerator for Time formatting
-	 */
+	 **/
 	abstract class TimeFormat
 	{
 		const HumanTime	= false;
@@ -769,7 +767,7 @@ if (defined('securipe') or exit(1))
 	}
 	/**
 	 * alias for: TimeFormat
-	 */
+	 **/
 	abstract class TF extends TimeFormat {}
 }
 ?>

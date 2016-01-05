@@ -8,5 +8,5 @@ include_once('Pages/OnAllPages.php');
 
 $RTK->AddElement(new RTK_Textview($home_text));
 // Links to the login page should maybe contain https for the sake of usability
-$RTK->AddElement(new RTK_Link('login/', $home_link, true));
+$RTK->AddElement(new RTK_Link('Login'.URLPAGEEXT, $home_link, true));
 ?>
