@@ -12,7 +12,8 @@ if (Login::FetchBanStatus()) {
 	if ($currentpage == "Logout") { Login::LogOut(); }
 	elseif ($currentpage == "Home") { include_once("Pages/Home.php"); }
 	elseif ($currentpage == "Login") { include_once("Pages/Login.php"); }
-	elseif ($currentpage == "Recipe") { include_once("Pages/Recipe.php"); }
+	elseif ($currentpage == "ViewRecipe") { $GLOBALS['EDIT'] = false; include_once("Pages/Recipe.php"); }
+	elseif ($currentpage == "EditRecipe") { $GLOBALS['EDIT'] = true; include_once("Pages/Recipe.php"); }
 	elseif ($currentpage == "WidgetTest") { include_once("Pages/Widgets.php"); }
 	elseif ($currentpage == "CreateRecipe") { include_once("Pages/CreateRecipe.php"); }
 	elseif ($currentpage == "CreateUser") { include_once("Pages/CreateUser.php");  }

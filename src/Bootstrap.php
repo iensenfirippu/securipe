@@ -53,5 +53,4 @@ include_once("Classes/Database.php");
 include_once("Classes/Login.php");
 include_once("Classes/CrudUserDB.php");
 include_once("Classes/Image.php");
-
 ?>
