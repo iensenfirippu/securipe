@@ -5,6 +5,7 @@ $currentpage = Site::GetArgumentSafely("action");
 
 // create the requested page
 $RTK = new RTK("Securipe");
+
 if (Login::FetchBanStatus()) {
 	include_once("Pages/Banned.php");
 } else {
@@ -13,8 +14,11 @@ if (Login::FetchBanStatus()) {
 	elseif ($currentpage == "Login") { include_once("Pages/Login.php"); }
 	elseif ($currentpage == "Recipe") { include_once("Pages/Recipe.php"); }
 	elseif ($currentpage == "WidgetTest") { include_once("Pages/Widgets.php"); }
+	elseif ($currentpage == "CreateRecipe") { include_once("Pages/CreateRecipe.php"); }
+	elseif ($currentpage == "CreateUser") { include_once("Pages/CreateUser.php");  }
 	else { Site::BackToHome(); }
 }
+
 echo $RTK;
 
 Database::Disconnect();

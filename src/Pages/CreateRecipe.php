@@ -21,21 +21,31 @@ $loginbox = new RTK_Box('loginbox');
 if (Login::IsLoggedIn()) {
 	// If a user is logged in
 	$loginbox->AddChild(new RTK_Textview('You are logged in as: '.Login::GetUsername()));
-	$loginbox->AddChild(new RTK_Link('Logout'.URLPAGEEXT, 'click here for log out', true));
+	$loginbox->AddChild(new RTK_Link('logout/', 'click here for log out', true));
 	
 } elseif (Site::HasHttps()) {
-
 	// If a user is not logged in, but the site is running secure
 	$loginform = new RTK_Form('loginform', EMPTYSTRING, 'POST');
-	$loginform->AddTextField('loginname', 'Username:');
-	$loginform->AddPasswordField('loginpass', 'Password:');
-	$loginform->AddButton('submit', 'log in');
+	$loginform->AddTextField('recipeName', 'Recipe Name:');
+	$loginform->AddTextField('recipeType', 'Recipe Type:');
+	$loginform->AddTextField('recipeImagePath', 'Image:');
+	$loginform->AddTextField('step1', 'Step 1:');
+	$loginform->AddTextField('step1', 'Step image:');
+	$loginform->AddTextField('step2', 'Step 2:');
+	$loginform->AddTextField('step1', 'Step image:');
+	$loginform->AddTextField('step3', 'Step 3:');
+	$loginform->AddTextField('step1', 'Step image:');
+	$loginform->AddTextField('step4', 'Step 4:');
+	$loginform->AddTextField('step1', 'Step image:');
+	$loginform->AddTextField('step5', 'Step 5:');
+	$loginform->AddTextField('step1', 'Step image:');
+	$loginform->AddButton('submit', 'Submit');
 	$loginbox->AddChild($loginform);
 	
 } else {
 	// If a user is not logged in, and the site is not running secure
 	$loginbox->AddChild(new RTK_Textview('You are not running secure and therefore cannot be allowed to log in.'));
-	$loginbox->AddChild(new RTK_Link('Login'.URLPAGEEXT, 'click here for encrypted login', true));
+	$loginbox->AddChild(new RTK_Link('login/', 'click here for encrypted login', true));
 }
 
 $RTK->AddElement($loginbox);
