@@ -52,8 +52,11 @@ if (defined('securipe') or exit(1))
 			$return = EMPTYSTRING;
 			if (isset($_POST[$id]) && !empty($_POST[$id]))
 			{
+			
 				$return = _string::Sanitize($_POST[$id], $keephtml);
+			
 			}
+			return $return;
 		}
 		
 		/**
@@ -154,15 +157,11 @@ if (defined('securipe') or exit(1))
 		 * @param string, The string value to sanitize.
 		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
 		 */
-		public static function Sanitize($string, $flag, $keephtml = false)
+		public static function Sanitize($string, $keephtml = false)
 		{
-			$string = addslashes($string);
+			//$string = addslashes($string);
 			//if ($keephtml == false) { htmlspecialchars($string); } // Changed to htmlentities
-			if (Value::SetAndNotNull($flag))
-			{	
-				return filter_var($string, $flag);		
-			}
-			if ($keephtml == false) { htmlentities($string); }
+			if ($keephtml == false) { $string = htmlentities($string); }
 			_string::EnforceProperLineEndings($string);
 			return $string;
 		}
