@@ -29,24 +29,24 @@ $form->AddButton("Submit", "Submit Form");
 $box1->AddChild($form);
 
 $RTK->AddElement($box1);
+//UserTest::testFunction();
 
 	if (Value::SetAndNotNull($_POST, 'Submit'))
 	{
+		
 		$userName = Site::GetPostValueSafely("UserName");// need to be hashed client-side
 		$password =	Site::GetPostValueSafely("Password");// need to be hashed client-side
 		$firstName= Site::GetPostValueSafely("FirstName");
 		$lastName = Site::GetPostValueSafely("LastName");
 		$email    = Site::GetPostValueSafely("email");
 		$telNo    = Site::GetPostValueSafely("telNo");
+	
+		$user = new User($userName, $password, $firstName, $lastName, $email, $telNo);
 		
-		if(!(Crud::checkIfUserExits($userName)))
+		if(!(UserDBHandler::checkIfUserExits($user->getUserName())))
 		{
-			echo "test";
-			CRUD::insertUserDB($userName, $firstName, $lastName, $email, $telNo, $password);
-
-
+			new UserDBHandler($user);
 		}
-
 	}
 
 ?>
