@@ -28,7 +28,7 @@ $box4 = new RTK_Box(null, 'subtest4');
 $form = new RTK_Form('testform');
 $form->AddTextField('title', 'Recipe title:');
 $form->AddTextField('description', 'Description:', null, 5);
-$form->AddDropDown('dropdown', 'daun', $items, $items[2][0]);
+$form->AddDropDown('type', 'Type:', $items, $items[2][0]);
 $form->AddFileUpload('imagepath', 'Image: ');
 $form->AddButton('Submit', 'Submit recipe');
 $box4->AddChild($form);
@@ -41,17 +41,20 @@ $box1->AddChild($box3);
 $box1->AddChild($box4);
 
 $RTK->AddElement($box1);
-$recipeId = "1";
+//$recipeId = "1";
 
 if (Value::SetAndNotNull($_POST, 'Submit')){
 	echo "submit works";
-	
-	$recipe = new Recipe()
-	vdd(Site::GetPostValueSafely("imagepath");
+
+	//vdd(Site::GetPostValueSafely("imagepath"));
 	$imagepath = Site::GetPostValueSafely("imagepath");
 	$title = Site::GetPostValueSafely("title");
+	$type = Site::GetPostValueSafely("type");
+
 	$description = Site::GetPostValueSafely("description");
-	recipe::createRecipe($imagepath, "1", "1", $title, $description, "9001", "0");
+	$recipe = new Recipe($title, $type,$description, $imagepath);
+	
+	//Recipe::createRecipe($imagepath, "1", "1", $title, $description, "9001", "0");
 	echo "inserted succesfully";
 }
 ?>
