@@ -1,7 +1,7 @@
 <?php
 // Page Logic
 $pages = array(array('Home'.URLPAGEEXT, 'Home'));
-$pages[] = array('Recipe'.URLPAGEEXT, 'Recipe');
+$pages[] = array('ViewRecipe'.URLPAGEEXT, 'Recipe');
 $pages[] = array('WidgetTest'.URLPAGEEXT, 'Test');
 
 $mymenu = array();
