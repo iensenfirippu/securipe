@@ -1,9 +1,6 @@
 <?php
 // Page Logic
 
-
-
-
 $GLOBALS['LOGIN'] = new Login();
 if (Value::SetAndEqualTo('logout', $_GET, 'action')) { Login::LogOut(); }
 if (Login::GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
@@ -22,29 +19,34 @@ $form= new RTK_Form("createUserForm");
 $form->AddTextField("UserName", "User Name");
 $form->AddPasswordField("Password", "Password");
 
-$form->AddTextField("FirstName", "First Name555888");
+$form->AddTextField("FirstName", "First Name");
 $form->AddTextField("LastName", "Last Name");
 $form->AddTextField("email", "Email");
-$form->AddTextField("telePhoneNo", "Phone No");
-
+$form->AddTextField("telNo", "Phone No");
 
 $form->AddButton("Submit", "Submit Form");
 
 $box1->AddChild($form);
 
-
 $RTK->AddElement($box1);
 
-if (Value::SetAndNotNull($_POST, 'Submit')) {
-     
-   $firstName = Site::GetPostValueSafely("FirstName");
-   
-    Crud::InsertUser("dette er en test");
-    //echo $firstName;
-   // $test = new CRUD("");
+	if (Value::SetAndNotNull($_POST, 'Submit'))
+	{
+		$userName = Site::GetPostValueSafely("UserName");// need to be hashed client-side
+		$password =	Site::GetPostValueSafely("Password");// need to be hashed client-side
+		$firstName= Site::GetPostValueSafely("FirstName");
+		$lastName = Site::GetPostValueSafely("LastName");
+		$email    = Site::GetPostValueSafely("email");
+		$telNo    = Site::GetPostValueSafely("telNo");
+		
+		if(!(Crud::checkIfUserExits($userName)))
+		{
+			echo "test";
+			CRUD::insertUserDB($userName, $firstName, $lastName, $email, $telNo, $password);
 
-//$test->InsertUser();
-//
-}
+
+		}
+
+	}
 
 ?>

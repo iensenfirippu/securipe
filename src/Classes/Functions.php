@@ -52,7 +52,9 @@ if (defined('securipe') or exit(1))
 			$return = EMPTYSTRING;
 			if (isset($_POST[$id]) && !empty($_POST[$id]))
 			{
+			
 				$return = _string::Sanitize($_POST[$id], $keephtml);
+			
 			}
 			return $return;
 		}
@@ -157,9 +159,9 @@ if (defined('securipe') or exit(1))
 		 */
 		public static function Sanitize($string, $keephtml = false)
 		{
-			$string = addslashes($string);
+			//$string = addslashes($string);
 			//if ($keephtml == false) { htmlspecialchars($string); } // Changed to htmlentities
-			if ($keephtml == false) { htmlentities($string); }
+			if ($keephtml == false) { $string = htmlentities($string); }
 			_string::EnforceProperLineEndings($string);
 			return $string;
 		}
