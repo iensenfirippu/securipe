@@ -19,6 +19,7 @@ $myRecipes = array();
 
 $favoriteRecipeLink = new RTK_Link("favorite/");
 $myFavoriteRecipes = array();
+
 //$myFavoriteRecipes[] = array($favoriteRecipeLink,$delete);
 
 $myMessageLink = new RTK_Link("message/");
