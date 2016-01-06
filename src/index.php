@@ -16,7 +16,8 @@ if (Login::FetchBanStatus()) {
 	elseif ($currentpage == "EditRecipe") { $GLOBALS['EDIT'] = true; include_once("Pages/Recipe.php"); }
 	elseif ($currentpage == "WidgetTest") { include_once("Pages/Widgets.php"); }
 	elseif ($currentpage == "CreateRecipe") { include_once("Pages/CreateRecipe.php"); }
-	elseif ($currentpage == "CreateUser") { include_once("Pages/CreateUser.php");  }
+	elseif ($currentpage == "CreateUser") { include_once("Pages/CreateUser.php"); }
+	elseif ($currentpage == "MyPage") { include_once("Pages/PersonalStartPage.php"); }
 	else { Site::BackToHome(); }
 }
 
