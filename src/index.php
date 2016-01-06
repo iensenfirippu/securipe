@@ -2,7 +2,6 @@
 // load all necessary config and class files, etc.
 include_once("Bootstrap.php");
 $currentpage = Site::GetArgumentSafely("action");
-
 // create the requested page
 $RTK = new RTK("Securipe");
 
@@ -13,8 +12,8 @@ if (Login::FetchBanStatus()) {
 	elseif ($currentpage == "login") { include_once("Pages/Login.php"); }
 	elseif ($currentpage == "recipe") { include_once("Pages/Recipe.php"); }
 	elseif ($currentpage == "widgettest") { include_once("Pages/Widgets.php"); }
-	elseif ($action == "createrecipe") { include_once("Pages/createrecipe.php"); }
-	elseif ($action == "CreateUser") { include_once("Pages/CreateUser.php");  }
+	elseif ($currentpage == "createrecipe") { include_once("Pages/CreateRecipe.php"); }
+	elseif ($currentpage == "CreateUser") { include_once("Pages/CreateUser.php");  }
 	else { include_once("Pages/Home.php"); }
 }
 

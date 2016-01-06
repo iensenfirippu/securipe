@@ -1,42 +1,39 @@
 <?php
-
 if (defined('securipe') or exit(1))
 {
 	class Recipe{
 		
-		private $recipeId = null;
-		private $pictureId = null;
-		private $userId = null;
-		private $typeId = null;
-		private $title = null;
-		private $description = null;
-		private $favoriteCount = null;
-		private $disable = null;
+		private $recipeId;
+		private $pictureId;
+		private $userId;
+		private $typeId;
+		private $title;
+		private $description;
+		private $favoriteCount;
+		private $disable;
 		
-		public function __construct ()
+		public function __construct ($pictureId, $userId, $typeId, $title, $description, $favoriteCount, $disable)
 		{
-			$recipeId = "1";
-			$pictureId = "1232";
-			$userId = "1234";
-			$typeId = "11";
-			$title = "boller i karry";
-			$desription = "";
-			$favoriteCount = "9001";
-			$disable = "0";	
+			$this->pictureId = $pictureId;
+			$this->userId = $userId;
+			$this->typeId = $typeID;
+			$this->title = $title;
+			$this->desription = $description;
+			$this->favoriteCount = $favoriteCount;
+			$this->disable = $disable;	
 		}
 		
-		public function createRecipe()
+		public function createRecipe ()
 		{	
-				if($stmt = Database::GetLink()->prepare('INSERT INTO `Recipe`(`recipe_id`, `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_des`, `favorite_count`, `disable`) VALUES (?,?,?,?,?,?,?,?)'))
+				if($stmt = Database::GetLink()->prepare('INSERT INTO `Recipe`(`picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_des`, `favorite_count`, `disable`) VALUES (?,?,?,?,?,?,?)'))
 				{
-					$stmt->bindParam(1, $recipeId, PDO::PARAM_STR, 255);
-					$stmt->bindParam(2, $pictureId, PDO::PARAM_STR, 255);
-					$stmt->bindParam(3, $userId, PDO::PARAM_STR, 255);
-					$stmt->bindParam(4, $typeId, PDO::PARAM_STR, 255);
-					$stmt->bindParam(5, $title, PDO::PARAM_STR, 255);
-					$stmt->bindParam(6, $description, PDO::PARAM_STR, 255);
-					$stmt->bindParam(7, $favoriteCount,PDO::PARAM_STR, 255);
-					$stmt->bindParam(8, $disable, PDO::PARAM_STR, 255);
+					$stmt->bindParam(1, $pictureId, PDO::PARAM_STR, 255);
+					$stmt->bindParam(2, $userId, PDO::PARAM_STR, 255);
+					$stmt->bindParam(3, $typeId, PDO::PARAM_STR, 255);
+					$stmt->bindParam(4, $title, PDO::PARAM_STR, 255);
+					$stmt->bindParam(5, $description, PDO::PARAM_STR, 255);
+					$stmt->bindParam(6, $favoriteCount,PDO::PARAM_STR, 255);
+					$stmt->bindParam(7, $disable, PDO::PARAM_STR, 255);
 					$stmt->execute();
 					$stmt->closeCursor();
 					echo "all good";

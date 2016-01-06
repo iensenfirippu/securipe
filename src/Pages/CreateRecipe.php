@@ -1,52 +1,57 @@
 <?php
 // Page Logic
 
-	// Make sure that the session variables are set
-	if (!Value::SetAndNotNull($_SESSION, LOGIN_USERID)) { Login::SetId(-1); }
-	if (!Value::SetAndNotNull($_SESSION, LOGIN_USERNAME)) { Login::SetUsername(EMPTYSTRING); }
-	if (!Value::SetAndNotNull($_SESSION, LOGIN_PRIVILEGE)) { Login::SetPrivilege(0); }
-	if (!Value::SetAndNotNull($_SESSION, LOGIN_ATTEMPTS)) { Login::SetAttempts(0); }
-	if (!Value::SetAndNotNull($GLOBALS, LOGIN_ERROR)) { Login::SetError(EMPTYSTRING); }
-	
-	// Handle the login
-	if (!Login::IsLoggedIn()) { Login::TryToLogin(); }
+if (Value::SetAndNotNull($_POST, 'submit2')) {
+	$image = Site::GetUploadedImage('pffile');
+}
+
+$text1 = "Here you can add a recipe to securipe.";
 
 // Page Output
 include_once('Pages/OnAllPages.php');
-$RTK->AddJavascript('/jquery-2.1.4.min.js');
-$RTK->AddJavascript('/login.js');
 
-if (Login::GetError() != EMPTYSTRING) { $RTK->AddElement(new RTK_Textview(Login::GetError())); } 
-$loginbox = new RTK_Box('loginbox');
-if (Login::IsLoggedIn()) {
-	// If a user is logged in
-	$loginbox->AddChild(new RTK_Textview('You are logged in as: '.Login::GetUsername()));
-	$loginbox->AddChild(new RTK_Link('logout/', 'click here for log out', true));
+$box1 = new RTK_Box(null, 'createrecipe');
+
+$box2 = new RTK_Box(null, 'subtest1');
+$box2->AddChild(new RTK_Header("Create a recipe"));
+$box2->AddChild(new RTK_Textview($text1, true));
+$box2->AddChild(new RTK_Box(null, 'clearfix'));
+
+$box3 = new RTK_Box(null, 'subtest3');
+
+$items = array();
+$items[] = array('type_opt_1', 'fisk');
+$items[] = array('type_opt_2', 'ost');
+$items[] = array('type_opt_3', 'ikkefisk');
+
+$box4 = new RTK_Box(null, 'subtest4');
+$form = new RTK_Form('testform');
+$form->AddTextField('title', 'Recipe title:');
+$form->AddTextField('description', 'Description:', null, 5);
+$form->AddDropDown('dropdown', 'daun', $items, $items[2][0]);
+$form->AddFileUpload('imagepath', 'Image: ');
+$form->AddButton('Submit', 'Submit recipe');
+$box4->AddChild($form);
+$box4->AddChild(new RTK_Box(null, 'clearfix'));
+
+
 	
-} elseif (Site::HasHttps()) {
-	// If a user is not logged in, but the site is running secure
-	$loginform = new RTK_Form('loginform', EMPTYSTRING, 'POST');
-	$loginform->AddTextField('recipeName', 'Recipe Name:');
-	$loginform->AddTextField('recipeType', 'Recipe Type:');
-	$loginform->AddTextField('recipeImagePath', 'Image:');
-	$loginform->AddTextField('step1', 'Step 1:');
-	$loginform->AddTextField('step1', 'Step image:');
-	$loginform->AddTextField('step2', 'Step 2:');
-	$loginform->AddTextField('step1', 'Step image:');
-	$loginform->AddTextField('step3', 'Step 3:');
-	$loginform->AddTextField('step1', 'Step image:');
-	$loginform->AddTextField('step4', 'Step 4:');
-	$loginform->AddTextField('step1', 'Step image:');
-	$loginform->AddTextField('step5', 'Step 5:');
-	$loginform->AddTextField('step1', 'Step image:');
-	$loginform->AddButton('submit', 'Submit');
-	$loginbox->AddChild($loginform);
+$box1->AddChild($box2);
+$box1->AddChild($box3);
+$box1->AddChild($box4);
+
+$RTK->AddElement($box1);
+$recipeId = "1";
+
+if (Value::SetAndNotNull($_POST, 'Submit')){
+	echo "submit works";
 	
-} else {
-	// If a user is not logged in, and the site is not running secure
-	$loginbox->AddChild(new RTK_Textview('You are not running secure and therefore cannot be allowed to log in.'));
-	$loginbox->AddChild(new RTK_Link('login/', 'click here for encrypted login', true));
+	$recipe = new Recipe()
+	vdd(Site::GetPostValueSafely("imagepath");
+	$imagepath = Site::GetPostValueSafely("imagepath");
+	$title = Site::GetPostValueSafely("title");
+	$description = Site::GetPostValueSafely("description");
+	recipe::createRecipe($imagepath, "1", "1", $title, $description, "9001", "0");
+	echo "inserted succesfully";
 }
-
-$RTK->AddElement($loginbox);
 ?>
