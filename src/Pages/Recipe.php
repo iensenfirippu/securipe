@@ -43,4 +43,9 @@ foreach ($steps as $step) {
 if ($edit) { $recipebox->AddChild(new RTK_Link('CreateStep'.URLPAGEEXT.'?index='.($i+1), 'Add Step After')); }
 
 $RTK->AddElement($recipebox);
+
+if (!$edit) {
+	$commentbox = new RTK_CommentView(1);
+	$RTK->AddElement($commentbox, 'wrapper', 'comments');
+}
 ?>

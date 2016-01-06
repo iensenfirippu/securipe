@@ -60,7 +60,7 @@ input {
 
 /* - Keyboard link/input highlighting - */
 a, input {
-	z-index: 0;
+	z-index: 10;
 }
 a:focus, input:focus {
 	z-index: 1000 !important;
@@ -94,6 +94,7 @@ a:focus, .hiddenlink a {
 	
 	box-shadow: 0 0 25px 10px rgba(0,0,0,0.25);
 	border-radius: 10px;
+	z-index: 10;
 }
 #main div {
 	margin-bottom: 10px;
@@ -293,6 +294,44 @@ ul.menu li {
 }
 /* - ListView styling - */
 
+/* - CommentView styling - */
+#CommentView {
+	width: 95%;
+	margin: -50px auto 0 auto;
+	padding: 40px 10px 10px 10px;
+	background-color: #999999;
+	z-index: 5;
+}
+#CommentView .comments {
+}
+#CommentView .comments:hover {
+	color: #7f7f7f;
+}
+#CommentView > .comment: {
+	padding: 0;
+	background-color: pink;
+}
+#CommentView .comment .comment {
+	padding-left: 10px;
+}
+#CommentView .commentmessage {
+	padding: 5px;
+}
+#CommentView .commentmessage:hover {
+	color: #000000;
+	background-color: #cccccc;
+}
+#CommentView input {
+	height: 24px;
+	width: 100%;
+	color: #000000;
+	background-color: #ffffff;
+	border: 1px solid #ffffff;
+	border-radius: 0px !important;
+	box-sizing: border-box;
+}
+/* - CommentView styling - */
+
 /* - Pagination - */
 .pagination {
 	margin: 0px;
@@ -348,8 +387,6 @@ ul.menu li {
 /* - Recipe Page - */
 #recipebox {
 	text-align: center;
-	/*margin-right: auto;
-	margin-left: auto;*/
 }
 #recipebox .recipedescription {
 	margin-bottom: 20px;
