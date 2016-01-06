@@ -66,7 +66,7 @@ CREATE TABLE `Recipe` (
 	`user_id` int(10) NOT NULL,
 	`type_id` int(50) NOT NULL,
 	`recipe_title` varchar(255),
-	`recipe_des` blob,
+	`recipe_description` blob,
 	`favorite_count` int(10),
 	`disable` bit NOT NULL,
 	PRIMARY KEY (`recipe_id`),
@@ -85,7 +85,7 @@ CREATE TABLE `Favorite` (
 CREATE TABLE `Step` (
 	`recipe_id` int(10),
 	`picture_id` int(10),
-	`step_des` blob,
+	`step_description` blob,
 	FOREIGN KEY (`recipe_id`) REFERENCES `Recipe`(`recipe_id`),
 	FOREIGN KEY (`picture_id`) REFERENCES `Picture`(`picture_id`)
 );
@@ -98,10 +98,12 @@ CREATE TABLE `Message` (
 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
 );
 
-CREATE TABLE `RecipeComment` (
+CREATE TABLE `Comment` (
 	`comment_id` int(10) NOT NULL AUTO_INCREMENT,
 	`user_id` int(10) NOT NULL,
+	`comment_path` varchar(255) NOT NULL,
 	`comment_contents` varchar(255) NOT NULL,
+	`sent_at` int(10) NOT NULL,
 	PRIMARY KEY (`comment_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
 );
