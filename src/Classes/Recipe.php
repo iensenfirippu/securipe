@@ -5,7 +5,7 @@ if (defined('securipe') or exit(1))
 		
 		private $recipeId;
 		private $pictureId;
-		private $userId;
+		private $userId = 1;
 		private $typeId;
 		private $title;
 		private $description;
@@ -13,36 +13,55 @@ if (defined('securipe') or exit(1))
 		private $disable;
 		private $imagepath;
 		
-		public function __construct ($_userId = 1, $_title, $_type = 0, $_description, $_imagepath=0)
+		public function __construct ($_title, $_typeId = 0, $_description, $_imagepath)
 		{
-			$this->userId 		= $_userId;
-			$this->title 		= $_title;
-			$this->type 		= $_type;
-			$this->desription 	= $_description;
-			$this->imagepath 	= $_imagepath;
+		
+			$this->title 			  = $_title;
+			$this->typeId			  = $_typeId;//safty risk need serverside validation
+			$this->description 	= $_description;
+			$this->imagepath 		= $_imagepath;
+		//	vdd($_imagepath);
+			//vd(" pictureid " .$this->pictureId);
+			//vd(" userID " .$this->userId);
+			//vd(" typeId ".$this->typeId);
+			//vd(" title " .$this->title);
+			//vdd(" decription " .$this->description);
+			//
+			//
 			$this->insertPicture();
 	
 		}
 		
 		public function createRecipe ()
-		{	
+		{
+			$disable = 0;
 				if($stmt = Database::GetLink()->prepare('INSERT INTO `Recipe`(`picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_des`,`disable`) VALUES (?,?,?,?,?,?)'))
 				{
+					
+					echo "<br />--------------------------------";
+					echo "<br />pictureId: ". $this->pictureId;
+					echo "<br />userId: ". $this->userId;
+					echo "<br />typeId: ". $this->typeId;
+					echo "<br />title: ". $this->title;
+					echo "<br />description: ". $this->description;
+					echo "<br />disable: ". $disable;
+
 					$stmt->bindParam(1, $this->pictureId, PDO::PARAM_INT);
 					$stmt->bindParam(2, $this->userId, PDO::PARAM_INT);
 					$stmt->bindParam(3, $this->typeId, PDO::PARAM_INT);
 					$stmt->bindParam(4, $this->title, PDO::PARAM_STR, 255);
 					$stmt->bindParam(5, $this->description, PDO::PARAM_STR, 255);
-
-					$stmt->bindParam(7, 0, PDO::PARAM_INT);
+					$stmt->bindParam(6, $disable, PDO::PARAM_INT);
 					$stmt->execute();
 					$stmt->closeCursor();
-					echo "all good";
+					$errorMsg =$stmt->errorInfo();
+					
+					echo "<br /><br /><br /><br />all good createRecipe Error: " . $errorMsg[0];;
 				}
 		
 				else
 				{
-				echo "not good";
+				echo "<br /><br /><br /><br />not good";
 				}
 		}
 		public function insertPicture()
@@ -52,11 +71,11 @@ if (defined('securipe') or exit(1))
 					$stmt->bindParam(1, $this->imagepath, PDO::PARAM_STR, 255);
 					$stmt->execute();
 					$stmt->closeCursor();
-					$pictureId = Database::GetLink()->lastInsertId();
+					$this->pictureId = Database::GetLink()->lastInsertId();
 					$errorMsg =$stmt->errorInfo();
 					
-					echo "all good ". $errorMsg;
-					createRecipe ();
+					echo "<br /><br /><br /><br />all good insertPicture Error: " . $errorMsg[0];;
+					$this->createRecipe();
 				}
 		
 				else
@@ -64,9 +83,6 @@ if (defined('securipe') or exit(1))
 				echo "not good";
 				}
 		
-			
-			
-			
 		}
 		
 		Public function getRecipeId() { return $this->recipeId; }
