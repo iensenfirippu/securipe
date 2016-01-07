@@ -25,10 +25,51 @@ if (defined('securipe') or exit(1))
 		
 		public function __construct($id)
 		{
-			if (is_integer($id) && $id > 0) {
-				$this->_id = $id;
+			if (is_numeric($id)) {
+				$id = intval($id);
+				if ($id > 0) {
+					$this->_id = $id;
+				}
 				// Load from database
 			}
+		}
+		
+		public static function Insert($message, $recipe, $id=EMPTYSTRING)
+		{
+			$result = false;
+			if (Site::HasHttps() && Login::IsLoggedIn()) {
+				if (Value::SetAndNotEmpty($message) && Value::SetAndNotNull($recipe)) {
+					$path = 'R='.$recipe;
+					
+					if ($id != EMPTYSTRING) {
+						if ($stmt = Database::GetLink()->prepare('SELECT `comment_path` FROM `Comment` WHERE `comment_path` LIKE ?;')) {
+							$stmt->bindParam(1, $path, PDO::PARAM_STR, 255);
+							$stmt->execute();
+							$stmt->bindColumn(1, $result);
+							$stmt->fetch();
+							$stmt->closeCursor();
+							
+							if ($result != null && _string::StartsWith($result, $path)) { $path = $result.'>'.$id; }
+							else { $path = null; }
+						}
+					}
+					
+					if ($path != null) {
+						$userid = Login::GetId();
+						$timestamp = time();
+						
+						if ($stmt = Database::GetLink()->prepare('INSERT INTO `Comment` (`user_id`, `comment_path`, `comment_contents`, `sent_at`) VALUES (?, ?, ?, ?);')) {
+							$stmt->bindParam(1, $userid, PDO::PARAM_INT);
+							$stmt->bindParam(2, $path, PDO::PARAM_STR, 255);
+							$stmt->bindParam(3, $message, PDO::PARAM_STR, 255);
+							$stmt->bindParam(4, $timestamp, PDO::PARAM_INT);
+							$stmt->execute();
+							$stmt->closeCursor();
+						}
+					}
+				}
+			}
+			return $result;
 		}
 		
 		public static function LoadComments($id)

@@ -18,14 +18,31 @@ if (defined('RTK') or exit(1))
 			//if (is_a($recipe, 'Recipe')) {
 			
 			$this->AddChild(new RTK_Header('Comments'));
-			$form = new RTK_Form('CommentForm');
 			$comments = Comment::LoadComments('R='.$id);
-			$box = new RTK_Box(null, 'comments');
-			$this->TraverseComment($box, $comments);
-			$form->AddChild($box);
-			$form->AddChild(new HtmlElement('input', array('name' => 'commentmessage', 'id' => 'commentmessage','type' => 'text')));
-			$form->AddChild(new RTK_Box(null, 'clearfix'));
-			$this->AddChild($form);
+			$box = null;
+			
+			if (sizeof($comments) > 0) {
+				$box = new RTK_Box('Comments');
+				$this->TraverseComment($box, $comments);
+			} else {
+				if (Login::IsLoggedIn()) { $message = 'No comments yet, be the first to comment on this recipe!'; }
+				else { $message = 'No comments yet, log in and be the first to comment on this recipe!'; }
+				$box = new RTK_Textview($message, false, null, 'commentnone');
+			}
+			
+			if (Login::IsLoggedIn()) {
+				$form = new RTK_Form('CommentForm');
+				$form->AddChild($box);
+				$inputbox = new RTK_Box('NewComment');
+				$inputbox->AddChild(new HtmlElement('a', array('href' => '#', 'onclick' => 'SelectComment(\'\')'), 'New comment'));
+				$inputbox->AddChild(new HtmlElement('input', array('name' => 'CommentSelect', 'id' => 'CommentSelect','type' => 'hidden')));
+				$inputbox->AddChild(new HtmlElement('input', array('name' => 'CommentInput', 'id' => 'CommentInput','type' => 'text', 'autocomplete' => 'off')));
+				$inputbox->AddChild(new RTK_Button('submit', 'Send'));
+				$form->AddChild($inputbox);
+				$this->AddChild($form);
+			} else {
+				$this->AddChild($box);
+			}
 			
 			//} else {
 			//}
@@ -33,15 +50,26 @@ if (defined('RTK') or exit(1))
 		
 		private function TraverseComment(&$box, $comments)
 		{
-			foreach ($comments as $comment) {
-				if (is_a($comment, 'Comment')) {
-					$childbox = new RTK_Box(null, 'comment');
-					$childbox->AddChild(new RTK_Textview($comment->GetContents(), false, null, 'commentmessage'));
-					if (!empty($comment->GetComments())) { $this->TraverseComment($childbox, $comment->GetComments()); }
-					$box->AddChild($childbox);
+			if (sizeof($comments) > 0) {
+				foreach ($comments as $comment) {
+					if (is_a($comment, 'Comment')) {
+						$args = null;
+						if (Login::IsLoggedIn()) { $args = array('onclick' => 'SelectComment('.$comment->GetId().')'); }
+						$childbox = new RTK_Box($comment->GetId(), 'comment');
+						$infobox = new RTK_Box($comment->GetId(), 'commentinfo', $args);
+						$infobox->AddChild(new RTK_Textview(Login::GetUsername().':', true, null, 'commentposter'));
+						$infobox->AddChild(new RTK_Textview($comment->GetContents(), true, null, 'commentmessage'));
+						$infobox->AddChild(new RTK_Textview('Posted '. $comment->GetTime(), true, null, 'commenttime'));
+						$childbox->AddChild($infobox);
+						if (!empty($comment->GetComments())) { $this->TraverseComment($childbox, $comment->GetComments()); }
+						$box->AddChild($childbox);
+					}
 				}
-				else { vdd($comment); }
-			}
+			}/* else {
+				if (Login::IsLoggedIn()) { $message = 'No comments yet, be the first to comment on this recipe!'; }
+				else { $message = 'No comments yet, log in and be the first to comment on this recipe!'; }
+				$box->AddChild(new RTK_Textview($message, false, null, 'commentnone'));
+			}*/
 		}
 	}
 }
