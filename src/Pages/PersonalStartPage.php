@@ -46,7 +46,7 @@ if (sizeof($myRecipes) > 0)
 }else{
 	$RTK->AddElement(new RTK_Textview($string_nomyrecipes));
 }
-$RTK->AddElement($createRecipeLink);
+//$RTK->AddElement($createRecipeLink);
 
 
 // my favorite recipes

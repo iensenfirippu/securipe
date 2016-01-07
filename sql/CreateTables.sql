@@ -57,7 +57,7 @@ CREATE TABLE `Recipe` (
 	`recipe_title` varchar(255),
 	`recipe_description` blob,
 	`favorite_count` int(10),
-	`disable` bit NOT NULL,
+	`disabled` bit NOT NULL,
 	PRIMARY KEY (`recipe_id`),
 	FOREIGN KEY (`picture_id`) REFERENCES `Picture`(`picture_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`),

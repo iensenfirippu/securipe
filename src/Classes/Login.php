@@ -55,7 +55,8 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Returns the privelege level of the currently logged in user. (obfuscated in a UUID)
 		 **/
-		public static function GetPrivilege() {
+		public static function GetPrivilege()
+		{
 			$level = 0;
 			if (Value::SetAndNotNull($GLOBALS, LOGIN_PRIVILEGE)) {
 				$char = substr($_SESSION[LOGIN_PRIVILEGE],-1,1);

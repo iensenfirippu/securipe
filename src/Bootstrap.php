@@ -46,13 +46,17 @@ define("TODAYSTIME",	((date('G', STARTTIME) * ONEMINUTE) * ONEMINUTE) +
 						(date('i', STARTTIME) * ONEMINUTE) +
 						date('s', STARTTIME));
 
-foreach (glob("Classes/Types/*.php") as $datatype) { include_once($datatype); }
+include_once("Classes/Types/List.php");
+include_once("Classes/Types/UUID.php");
+
 include_once("Classes/Functions.php");
 include_once("Classes/RTK/RTK.php");
 include_once("Classes/Database.php");
 include_once("Classes/Login.php");
+
 include_once("Classes/CrudUserDB.php");
 include_once("Classes/Image.php");
 include_once("Classes/Recipe.php");
-
+include_once("Classes/RecipeStep.php");
+include_once("Classes/Comment.php");
 ?>

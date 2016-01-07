@@ -60,7 +60,7 @@ input {
 
 /* - Keyboard link/input highlighting - */
 a, input {
-	z-index: 0;
+	z-index: 10;
 }
 a:focus, input:focus {
 	z-index: 1000 !important;
@@ -94,6 +94,7 @@ a:focus, .hiddenlink a {
 	
 	box-shadow: 0 0 25px 10px rgba(0,0,0,0.25);
 	border-radius: 10px;
+	z-index: 10;
 }
 #main div {
 	margin-bottom: 10px;
@@ -293,6 +294,85 @@ ul.menu li {
 }
 /* - ListView styling - */
 
+/* - CommentView styling - */
+#CommentView {
+	width: 95%;
+	margin: -50px auto 0 auto;
+	padding: 40px 10px 10px 10px;
+	background-color: #999999;
+	z-index: 5;
+}
+#CommentView #Comments {
+	color: #000000;
+}
+#CommentView #Comments:hover {
+	color: #7f7f7f;
+}
+#CommentView .commentnone {
+	padding: 5px 10px 10px 10px;
+}
+#CommentView .comment .comment {
+	padding-left: 10px;
+}
+#CommentView .commentinfo {
+	padding: 5px;
+	clear: both;
+}
+#CommentView .commentposter {
+	padding-right: 5px;
+	color: #666666;
+	text-transform: capitalize;
+	font-weight: bold;
+}
+#CommentView .commenttime {
+	float: right;
+	padding-left: 10px;
+	color: #666666;
+}
+#CommentView .commentinfo:hover, #CommentView .selected {
+	color: #000000;
+	background-color: #cccccc;
+}
+#CommentView #NewComment {
+	padding: 0px;
+	letter-spacing: 0;
+	height: 24px;
+}
+#CommentView #NewComment:hover {
+	background-color: #cccccc;
+}
+#CommentView #NewComment a, #CommentView #NewComment input {
+	display: inline-block;
+	float: left;
+	height: 24px;
+	color: #000000;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1em;
+	text-align: left;
+	border: 1px solid #ffffff;
+	border-radius: 0px !important;
+	box-sizing: border-box;
+	background-color: #ffffff;
+	width: 74%;
+}
+#CommentView #NewComment a {
+	padding: 4px 3px 2px 3px;
+}
+#CommentView #NewComment a, #CommentView #NewComment input.submit {
+	color: #000000 !important;
+	background-color: #dddddd;
+	width: 13%;
+	text-align: center;
+	vertical-align: middle;
+}
+#CommentView #NewComment a:hover, #CommentView #NewComment input.submit:hover {
+	background-color: #eeeeee;
+}
+#CommentView #NewComment #CommentInput {
+}
+/* - CommentView styling - */
+
 /* - Pagination - */
 .pagination {
 	margin: 0px;
@@ -348,8 +428,6 @@ ul.menu li {
 /* - Recipe Page - */
 #recipebox {
 	text-align: center;
-	/*margin-right: auto;
-	margin-left: auto;*/
 }
 #recipebox .recipedescription {
 	margin-bottom: 20px;
