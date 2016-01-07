@@ -154,15 +154,6 @@ if (defined('securipe') or exit(1))
 		 * Sanitizes a string, by encoding potentially malicious characters. 
 		 * @param string, The string value to sanitize.
 		 * @param keephtml, Disables the HTML part of the sanitization (not reccomended).
-<<<<<<< HEAD
-		 */
-		public static function Sanitize($string, $keephtml = false)
-		{
-			//$string = addslashes($string);
-			//if ($keephtml == false) { htmlspecialchars($string); } // Changed to htmlentities
-			if ($keephtml == false) { $string = htmlentities($string); }
-			_string::EnforceProperLineEndings($string);
-=======
 		 **/
 		public static function Sanitize($string, $flag, $keephtml = false)
 		{
@@ -172,7 +163,6 @@ if (defined('securipe') or exit(1))
 				if ($keephtml == false) { $string = htmlentities($string); }
 				_string::EnforceProperLineEndings($string);
 			}
->>>>>>> develop
 			return $string;
 		}
 		
