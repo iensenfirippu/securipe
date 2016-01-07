@@ -39,7 +39,7 @@ CREATE TABLE `LoginAttempt` (
 
 CREATE TABLE `Picture` (
 	`picture_id` int(10) NOT NULL AUTO_INCREMENT,
-	`picture_name` int(50) NOT NULL,
+	`picture_name` varchar(50) NOT NULL,
 	PRIMARY KEY (`picture_id`)
 );
 
