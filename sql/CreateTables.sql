@@ -36,21 +36,10 @@ CREATE TABLE `LoginAttempt` (
 	`successful` boolean NOT NULL
 );
 
-CREATE TABLE `Administrator` (
-	`user_id` int(10) NOT NULL AUTO_INCREMENT,
-	`privilege_level` int(10),
-	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
-);
-
-CREATE TABLE `Moderator` (
-	`user_id` int(10) NOT NULL AUTO_INCREMENT,
-	`privilege_level` int(10),
-	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
-);
 
 CREATE TABLE `Picture` (
 	`picture_id` int(10) NOT NULL AUTO_INCREMENT,
-	`pic_path` int(50) NOT NULL,
+	`picture_name` varchar(50) NOT NULL,
 	PRIMARY KEY (`picture_id`)
 );
 
