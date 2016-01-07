@@ -9,7 +9,8 @@ CREATE TABLE `User` (
 	`telno` varchar(30),
 	`user_name` varchar(50) NOT NULL,
 	`privilege_level` int(2) NOT NULL,
-	PRIMARY KEY (`user_id`)
+	PRIMARY KEY (`user_id`),
+	UNIQUE (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Login` (
@@ -53,7 +54,7 @@ CREATE TABLE `Recipe` (
 	`recipe_id` int(10) NOT NULL AUTO_INCREMENT,
 	`picture_id` int(10) NULL,
 	`user_id` int(10) NOT NULL,
-	`type_id` int(50) NOT NULL,
+	`type_id` int(10) NOT NULL,
 	`recipe_title` varchar(255),
 	`recipe_description` blob,
 	`favorite_count` int(10),
