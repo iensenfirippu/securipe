@@ -1,70 +1,109 @@
 <?php
 class CRUD
 {
-		
-
-		public function sanatize($string, $type)
+		public static function serverSideHasing($userName, $password, $lastID)//$userName, $password
 		{
-				
-				$email_filter = FILTER_SANITIZE_EMAIL;
-				$string_filter = FILTER_SANITIZE_STRING;
-				$string_Strip_Low = FILTER_FLAG_STRIP_LOW;
-				$string_Strip_High = FILTER_FLAG_STRIP_HIGH;
-				
-				
-				if($type == "fname" || $type == "lname")
-				{
-						$sanatized_String= filter_var($string, $string_filter, $string_Strip_Low);
-				}
-				elseif($type = "email" )
-				{
-						$sanatized_String  = filter_var($string, $email_filter);
-						
-				}
-				else
-				{
-					$sanatized_String = filter_var($string, $string_filter, $string_Strip_Low);
-					
-				}
-	
-				return $sanatized_String;
-				//	Site::GetArgumentSafely('getvariablename');
+			$md5UserName = md5($userName);//$userName
+
+			$md5UserNameAndPassword =  md5($userName.$password);//$userName.$password
+
+			$userName_Hash = hash('sha512', $md5UserName); //userNameHash $sha512Ofmd5UserName
+			
+			$personal_Salt = hash("sha512", UUID::Create());// dynamic salt personal salt sha512OfUUID
+			
+			$password_Hash = hash("sha512", STATIC_SALT.$md5UserNameAndPassword.$personal_Salt.$userName_Hash);//password hash
+			
+			CRUD::insertHashToDB($userName_Hash,$password_Hash,$personal_Salt, $disabled= 0, $lastID);
+			
 		}
-		
+		public static function checkIfUserExits($userName)
+		{
+			$return;
+			
+				if($stmt = Database::GetLink()->prepare(" SELECT count(user_name) FROM User WHERE user_name = ? LIMIT 1"))
+				{				
+					$stmt->bindParam(1, $userName, PDO::PARAM_STR, 255);
+					$stmt->execute();
+					$result = $stmt->fetchColumn();
+					$stmt->closeCursor();
+					echo  "<br /> <br /> <br />All good checkIfUserExits <br />";
 	
-		public function InsertUser()
-		{	
-		
-		$v1 = "\tcafé\n";
-		$v2 = "testpasword";
-		$email = "'bogus - at - example dot org'";
-		$email2 = '(bogus@example.org)';
-
-		$v4 = "testTelno";
-		$v5 = "testUsername";
-		//$sv1 = CRUD::sanatize($v1, "fname");
-		$sv2 = CRUD::sanatize($v1, "user_name");
-		$semail = CRUD::sanatize($email, "email");
-		$semail2 = CRUD::sanatize($email2, "email");
-		$sv1 = CRUD::sanatize($semail, "user_name");
-		//echo CRUD::sanatize($v1, "fname");
-		//sanatize($testv1, "user_name");
-
-				if($stmt = Database::GetLink()->prepare('INSERT INTO `User`(`fname`, `lname`, `email`, `telno`, `user_name`) VALUES (?,?,?,?,?)'))
-				{
-					$stmt->bindParam(1, $sv1, PDO::PARAM_STR, 255);
-				    $stmt->bindParam(2, $semail, PDO::PARAM_STR, 255);
-					$stmt->bindParam(3, $semail2, PDO::PARAM_STR, 255);
-					$stmt->bindParam(4, $v4, PDO::PARAM_STR, 255);
-					$stmt->bindParam(5, $sv2,PDO::PARAM_STR, 255);
-				    $stmt->execute();
-				    $stmt->closeCursor();
-				    echo "all good";
 				}		
 				else
 				{
-                echo "not good";
+          echo  "<br /> <br /> <br />Not good checkIfUserExits <br />";
+				}
+				
+				if($result== 0)
+				{
+					echo  "<br /> <br /> <br />Username dosent exits<br />" . $result . "LOL";
+					$return = 0;
+				}
+				else
+				{
+					echo  "<br /> <br /> <br />Username exits already<br />" . $result . "LOL";
+					$return = 1;
+				}
+				return $return;
+		}
+		
+		public static function insertHashToDB($username_Hash, $password_Hash, $personal_Salt, $lastID)
+		{
+	//	vdd($lastID);
+				if($stmt = Database::GetLink()->prepare('INSERT INTO `Login`(`user_id`, `username_hash`, `password_hash`, `personal_salt`, `disabled`) VALUES (?,?,?,?,?)'))
+				{
+					$stmt->bindParam(1, $lastID, PDO::PARAM_INT);
+					$stmt->bindParam(2, $username_Hash, PDO::PARAM_STR, 255);
+				  $stmt->bindParam(3, $password_Hash, PDO::PARAM_STR, 255);
+					$stmt->bindParam(4, $personal_Salt, PDO::PARAM_STR, 255);
+					$stmt->bindParam(5, $disabled, PDO::PARAM_INT);
+				  $stmt->execute();
+					
+				  $stmt->closeCursor();
+					$arr1 = Database::GetLink()->errorInfo();
+						$arr2 = Database::GetLink()->errorInfo();
+							$arr3 = Database::GetLink()->errorInfo();
+				  echo  "<br /> <br /> <br />All good insertHashToDB Error: <br />. $arr1[0]. $arr2[2]. $arr3[3]";
+				}		
+				else
+				{
+         echo  "<br /> <br /> <br />Not good insertHashToDB <br />";
+				}	
+		
+		}
+		public static function insertUserDB($userName, $firstName,$lastName, $email, $telNo, $password)
+		{
+			$lastID;
+			
+				if($stmt = Database::GetLink()->prepare('INSERT INTO `User`(`fname`, `lname`, `email`, `telno`, `user_name`) VALUES (?,?,?,?,?)'))
+				{				
+					$stmt->bindParam(1, $firstName, PDO::PARAM_STR, 255);
+				  $stmt->bindParam(2, $lastName, PDO::PARAM_STR, 255);
+					$stmt->bindParam(3, $email, PDO::PARAM_STR, 255);
+					$stmt->bindParam(4, $telNo, PDO::PARAM_STR, 255);
+					$stmt->bindParam(5, $userName,PDO::PARAM_STR, 255);
+				
+				  $stmt->execute();
+					$lastID =  Database::GetLink()->lastInsertId();
+
+					CRUD::serverSideHasing($userName, $password, $lastID);
+				  echo  "<br /> <br /> <br />All good insertUserDB <br />";
+				}			
+				else
+				{
+         echo  "<br /> <br /> <br />Not good insertUserDB <br />";
 				}	
 		}
 }
+
 ?>
+
+
+
+
+
+
+
+
+
+

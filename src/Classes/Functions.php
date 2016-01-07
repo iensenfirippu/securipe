@@ -52,6 +52,7 @@ if (defined('securipe') or exit(1))
 			$return = EMPTYSTRING;
 			if (Value::SetAndNotEmpty($_POST, $id)) {
 				$return = _string::Sanitize($_POST[$id], $keephtml);
+			
 			}
 			return $return;
 		}
