@@ -3,35 +3,61 @@ if (defined('securipe') or exit(1))
 {
 	class Step{
 		
-		private $stepId = null;
-		private $recipeId = null;
-		private $pictureId = null;
-		private $number = null;
-		private $description = null;
+		private $stepId;
+		private $recipeId;
+		private $pictureId;
+		private $number;
+		private $description;
 		
-		public function __construct ()
+		public function __construct ($_recipeId, $_pictureId, $_number, $_description)
 		{
-		$stepId = "Use curry";
-		$recipeId = "";
-		$pictureId = "";
-		$number = "1";
-		$description = "step description";
+		$this->stepId = $_stepId;
+		$this->recipeId = $_recipeId;
+		$this->pictureId = $_pictureId;
+		$this->number = $_number;
+		$this->description = $_description;
+		$this->createStep();
 		}
 		
-		public function createRecipe()
+		public function createStep()
 		{	
-			if($stmt = Database::GetLink()->prepare('INSERT INTO `Step`(`step_id`, `recipe_id`, `picture_id`, `step_number`, `step_des`) VALUES (?,?,?,?,?)'))
+			if($stmt = Database::GetLink()->prepare('INSERT INTO `Step`(`recipe_id`, `picture_id`, `step_number`, `step_description`) VALUES (?,?,?,?)'))
 			{
-				$stmt->bindParam(1, $stepId, PDO::PARAM_STR, 255);
-				$stmt->bindParam(2, $recipeId, PDO::PARAM_STR, 255);
-				$stmt->bindParam(3, $pictureId, PDO::PARAM_STR, 255);
-				$stmt->bindParam(4, $number, PDO::PARAM_STR, 255);
-				$stmt->bindParam(5, $description,PDO::PARAM_STR, 255);
+				$stmt->bindParam(1, $this->recipeId, PDO::PARAM_STR, 255);
+				$stmt->bindParam(2, $this->pictureId, PDO::PARAM_STR, 255);
+				$stmt->bindParam(3, $this->number, PDO::PARAM_STR, 255);
+				$stmt->bindParam(4, $this->description,PDO::PARAM_STR, 255);
 				$stmt->execute();
 				$stmt->closeCursor();
+				$errorMsg =$stmt->errorInfo();
+							
 				echo "all good";
 			}
+			else
+			{
+			echo "<br /><br /><br /><br />all good createRecipe Error: " . $errorMsg[0];;	
+			}
 		}
+		
+		public function viewStep()
+		{
+			if($stmt = Database::GetLink()->prepare('SELECT FROM `Step`(`picture_id`, `step_number`, `step_description`) WHERE (`recipe_id = ?`) VALUES (?,?,?,?)'))
+			{
+				$stmt->bindParam(1, $this->pictureId, PDO::PARAM_STR, 255);
+				$stmt->bindParam(2, $this->number, PDO::PARAM_STR, 255);
+				$stmt->bindParam(3, $this->description,PDO::PARAM_STR, 255);
+				$stmt->bindParam(4, $this->recipeId, PDO::PARAM_STR, 255);
+				$stmt->execute();
+				$stmt->closeCursor();
+				$errorMsg =$stmt->errorInfo();
+				
+				echo "all good";
+			}
+			else 
+			{
+			echo "<br /><br /><br /><br />all good createRecipe Error: " . $errorMsg[0];;	
+			}
+	}
 	
 		Public function getStepId() { return $this->stepId; }
 		Public function getRecipeId() { return $this->recipeId; }
