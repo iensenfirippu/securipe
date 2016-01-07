@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS `Message`;
 DROP TABLE IF EXISTS `Moderator`; -- remove at next update --
 DROP TABLE IF EXISTS `Picture`;
 DROP TABLE IF EXISTS `Recipe`;
+DROP TABLE IF EXISTS `RecipeType`;
 DROP TABLE IF EXISTS `Comment`;
 DROP TABLE IF EXISTS `Report`;
 DROP TABLE IF EXISTS `Step`;
