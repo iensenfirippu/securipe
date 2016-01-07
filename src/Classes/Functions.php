@@ -50,7 +50,9 @@ if (defined('securipe') or exit(1))
 		public static function GetPostValueSafely($id, $keephtml = false)
 		{
 			$return = EMPTYSTRING;
-			if (isset($_POST[$id]) && !empty($_POST[$id]))
+			
+
+			if (isset($_POST[$id]) && $_POST[$id]!=NULL)
 			{
 			
 				$return = _string::Sanitize($_POST[$id], $keephtml);
@@ -58,6 +60,119 @@ if (defined('securipe') or exit(1))
 			}
 			return $return;
 		}
+		
+		public static function GetUnsafeValue($id, $keephtml = false)
+		{
+			$return = EMPTYSTRING;
+					//	echo "<br /><br /><br />ldflgjldfj" .$_POST[$id]; 
+
+			if (isset($_POST[$id]))
+			{
+			
+				$return = $_POST[$id];
+			
+			}
+			return $return;
+		}
+		
+		
+		
+		
+		
+		
+		
+	public static function validatePassword($pwd, &$error1Password, &$error2Password, &$error3Password, &$error4Password) {
+
+	 $return = true;
+	 
+		if(empty($pwd))
+		{
+			$error4Password = "Password field need to be filled out!";
+		}
+		else
+		{	
+			if (strlen($pwd) < 8) {
+        $error1Password= "Password too short!";
+					 $return = false;
+			}
+
+			if (!preg_match("#[0-9]+#", $pwd)) {
+        $error2Password = "Password must include at least one number!";
+				$return = false;
+			}
+
+			if (!preg_match("#[A-Z]+#", $pwd)) {
+        $error3Password = "Password must include at least a uppercase letter!";
+				$return = false;
+			}
+		}
+		return $return;
+	}
+		
+	public static function validateEmail($email, &$errorEmail) {
+		echo "<br /> <br />email" .$email ."fgf";
+		$return = true;
+		if(empty($email))
+		{
+				$errorEmail= "Email field need to be filled out!";
+				$return = false;
+		}
+		if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+			
+			$ErrorEmail = "Email adress is not valid!";
+			$return = false;
+		}
+		return $return;
+	}
+	
+		public static function validateUserName($userName, &$errorUserName) {
+			//	vdd("test2");
+		$return = true;
+			if(empty($userName))
+			{
+				$errorUserName= "Username need to be filled out!";
+				echo $errorUserName;
+				$return = false;
+			}
+			elseif (strlen($userName) < 5) {
+        $errorUserName= "Username too short!";
+				echo $errorUserName;
+				$return = false;
+			}
+
+		return $return;
+	}
+
+	public static function validatePhoneNo($telNo, &$errorTelNo) {
+		  
+		$return = true;
+			if(empty($telNo))
+			{
+				$errorTelNo= "Phonenumber is not filled out!";
+				$return = false;
+			}
+			elseif (!preg_match("#[0-9 \s ()+-]+#", $telNo)) {
+					
+        $errorTelNo= "Phonenumber is not valid!";
+				$return = false;
+			}
+			
+		return $return;
+	}
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		/**
 		 * Retrieve a FILES value as an image

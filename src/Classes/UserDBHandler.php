@@ -22,7 +22,8 @@ class UserDBHandler
 					$stmt->bindParam(1, $_userName, PDO::PARAM_STR, 255);
 					$stmt->execute();
 					$result = $stmt->fetchColumn();
-					$stmt->closeCursor();
+					
+					
 					echo  "<br /> <br /> <br />All good checkIfUserExits <br />";
 	
 				}		
