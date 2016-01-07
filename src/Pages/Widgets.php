@@ -2,6 +2,7 @@
 // Page Logic
 
 if (Value::SetAndNotNull($_POST, 'submit2')) {
+	vdd($_POST);
 	$image = Site::GetUploadedImage('pffile');
 }
 
