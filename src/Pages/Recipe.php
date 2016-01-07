@@ -6,6 +6,14 @@ $steps = array(	"Normally, both your asses would be dead as fucking fried chicke
 				"Your bones don&apos;t break, mine do. That&apos;s clear. Your cells react to bacteria and viruses differently than mine. You don&apos;t get sick, I do. That&apos;s also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We&apos;re on the same curve, just on opposite ends.",
 				"Now that we know who you are, I know who I am. I&apos;m not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain&apos;s going to be? He&apos;s the exact opposite of the hero. And most times they&apos;re friends, like you and me! I should&apos;ve known way back when... You know why, David? Because of the kids. They called me Mr Glass");
 
+if (Value::SetAndNotNull($_POST, 'CommentInput')) {
+	$message = Site::GetPostValueSafely('CommentInput');
+	$id = Site::GetPostValueSafely('CommentSelect');
+	if (!is_numeric($id)) { $id = EMPTYSTRING; }
+	Comment::Insert($message, 1, $id);
+	Site::Redirect('');
+}
+
 // Page Output
 include_once('Pages/OnAllPages.php');
 
@@ -43,4 +51,9 @@ foreach ($steps as $step) {
 if ($edit) { $recipebox->AddChild(new RTK_Link('CreateStep'.URLPAGEEXT.'?index='.($i+1), 'Add Step After')); }
 
 $RTK->AddElement($recipebox);
+
+if (!$edit) {
+	$commentbox = new RTK_CommentView(1);
+	$RTK->AddElement($commentbox, 'wrapper', 'comments');
+}
 ?>
