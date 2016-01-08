@@ -97,7 +97,7 @@ INSERT INTO `Recipe`(`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`
 INSERT INTO `Recipe`(`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`disabled`)
 	VALUES (2,2,3,2,'Teriyaki beef','My teriyaki beef is very tasty. I will recommend to all.',0,0);
 INSERT INTO `Recipe`(`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`disabled`)
-	VALUES (3,3,4,3,'Smørbrod med laks','Tradition danish food. Danish eats almost every day with other toppings.',0,0);
+	VALUES (3,3,4,3,'Sm&oslash;rbrod med laks','Tradition danish food. Danish eats almost every day with other toppings.',0,0);
 
 -- Step table
 INSERT INTO `Step`(`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_description`)
