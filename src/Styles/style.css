@@ -1,0 +1,511 @@
+/* - Basic default styling - */
+html, body, body * {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	box-sizing: content-box;
+}
+body {
+	background-color: #aaaaaa;
+	font-family: sans, sans-serif, arial;
+	font-size: 75%;
+	
+	/* Hack to force menu to top, find a better solution... */
+	border: 1px solid rgba(0,0,0,0);
+}
+div {
+	padding: 0;
+	margin: 0;
+}
+p {
+	display: block;
+	margin: 10px;
+}
+h1, h2, h3, h4, h5 {
+	display: block;
+	padding: 0;
+	margin: 0;
+	border: none;
+}
+h1 { font-size: 1.3em; }
+h2 { font-size: 1.2em; }
+h3 { font-size: 1.1em; }
+h4 { font-size: 1.0em; }
+h5 { font-size: 0.9em; }
+hr {
+	height: 1px;
+	border: 0px;
+	background-color: #cccccc;
+}
+a {
+	position: relative;
+	text-decoration: none;
+	color: #0000ff;
+	font-size: 1em;
+	outline: none;
+}
+input {
+	background-color: #ffffff;
+}
+.right {
+	float: right;
+}
+.left {
+	float: left;
+}
+.clearfix {
+	clear: both;
+}
+/* - Basic default styling - */
+
+/* - Keyboard link/input highlighting - */
+a, input {
+	z-index: 10;
+}
+a:focus, input:focus {
+	z-index: 1000 !important;
+}
+a:focus, .hiddenlink a, input:focus {
+	border-radius: 10px;
+	box-shadow: 0 0 10px 10px #666666 !important;
+}
+a:focus, .hiddenlink a {
+	color: #ffffff !important;
+	border-color: #666666;
+	background-color: #666666;
+}
+/* - Keyboard link/input highlighting - */
+
+/* - Default page layout - */
+#wrapper {
+	position: relative;
+	margin-top: 100px;
+	margin-right: auto;
+	margin-left: auto;
+	width: 800px;
+}
+#main {
+	position: relative;
+	padding: 20px;
+	margin-bottom: 30px;
+	
+	background-color: #8888aa;
+	border: 2px solid #ffffff;
+	
+	box-shadow: 0 0 25px 10px rgba(0,0,0,0.25);
+	border-radius: 10px;
+	z-index: 10;
+}
+#main div {
+	margin-bottom: 10px;
+}
+/* - Default page layout - */
+
+/* - Form styling - */
+.form {
+	padding-top: 60px;
+	clear: both;
+}
+.formline {
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 0px !important;
+	padding: 2px;
+	width: 80%;
+	height: 25px;
+	font-size: 1.3em;
+	clear: both;
+}
+.formline label {
+	float: left;
+	width: 30%;
+	padding-top: 3px;
+}
+.formline .formgroup {
+	margin-bottom: 0px !important;
+	float: right;
+	width: 60%;
+}
+.formgroup input {
+	height: 24px;
+}
+.formgroup input, .formgroup textarea, .formgroup select {
+	width: 100%;
+	padding: 4px;
+	margin-bottom: 3px;
+	color: #000000;
+	background-color: #cccccc;
+	border: 2px solid #ffffff;
+	border-radius: 5px;
+	box-sizing: border-box;
+	resize: none;
+}
+.formgroup input.filebox {
+	width: 100%;
+	padding: 0px;
+}
+.formgroup input.checkbox, .formgroup input.radiobox {
+	display: inline-block;
+	height: 10px;
+	width: auto;
+	float: none;
+}
+.formgroup span {
+	margin-right: 15px;
+}
+.formgroup input.submit {
+	float: none;
+	height: 24px;
+	padding: 0px;
+	width: auto;
+}
+.formgroup input.submit:hover {
+	background-color: #aaaaaa;
+}
+/* - Form styling - */
+
+/* - Menu styling - */
+ul.menu {
+	margin: 0px;
+	padding: 0px;
+	
+	list-style: none;
+}
+ul.menu li {
+	margin: 0px 5px 5px 0px;
+	padding: 0px;
+}
+#mainmenu {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 10px;
+	z-index: 10;
+}
+#mainmenu a {
+	display: inline-block;
+	width: 100px;
+	height: 20px;
+	
+	margin: 0px;
+	padding: 5px;
+	
+	color: #ffffff;
+	font-size: 1em;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform: Capitalize;
+	text-align: center;
+	vertical-align: top;
+	
+	background-color: #777799;
+	border: 2px solid #ffffff;
+	border-top: none;
+	
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-left-radius: 0px !important;
+}
+#mainmenu a.selected, #mainmenu a:hover {
+	padding-top: 15px;
+	
+	font-size: 1.1em;
+	background-color: #8888aa;
+}
+#mymenu {
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	z-index: 10;
+}
+#mymenu a {
+	display: inline-block;
+	width: 100px;
+	height: 20px;
+	
+	margin: 0px;
+	padding: 5px;
+	
+	color: #ffffff;
+	font-size: 1em;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform: Capitalize;
+	text-align: center;
+	vertical-align: top;
+	
+	background-color: #777799;
+	border: 2px solid #ffffff;
+	border-top: none;
+	
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-top-left-radius: 0px !important;
+}
+#mymenu a.selected, #mymenu a:hover {
+	padding-top: 15px;
+	
+	font-size: 1.1em;
+	background-color: #8888aa;
+}
+/* - Menu styling - */
+
+/* - ListView styling - */
+.listview {
+	border: 1px solid #555555;
+}
+.listview table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.listview .lv_row {
+	background-color: #aaaaaa;
+}
+.listview .lv_altrow {
+	background-color: #bbbbbb;
+}
+.listview .lv_cell {
+	padding: 3px;
+}
+.listview .lv_firstcell {}
+.listview .lv_lastcell {}
+.listview .lv_smallcell {
+   width: 1%;
+   white-space: nowrap;
+}
+.listview .lv_headercell {
+	background-color: #555555;
+	color: #ffffff;
+	font-weight: bold;
+}
+.listview .lv_altheadercell {
+	background-color: #4a4a4a;
+}
+.listview .lv_headerrow {
+}
+.listview input, .listview select {
+	width: 96%;
+	height: 20px;
+	margin: 2px 2% 2px 2%;
+	box-sizing: border-box;
+}
+/* - ListView styling - */
+
+/* - CommentView styling - */
+#CommentView {
+	width: 95%;
+	margin: -50px auto 0 auto;
+	padding: 40px 10px 10px 10px;
+	background-color: #999999;
+	z-index: 5;
+}
+#CommentView #Comments {
+	color: #000000;
+}
+#CommentView #Comments:hover {
+	color: #7f7f7f;
+}
+#CommentView .commentnone {
+	padding: 5px 10px 10px 10px;
+}
+#CommentView .comment .comment {
+	padding-left: 10px;
+}
+#CommentView .commentinfo {
+	padding: 5px;
+	clear: both;
+}
+#CommentView .commentposter {
+	padding-right: 5px;
+	color: #666666;
+	text-transform: capitalize;
+	font-weight: bold;
+}
+#CommentView .commenttime {
+	float: right;
+	padding-left: 10px;
+	color: #666666;
+}
+#CommentView .commentinfo:hover, #CommentView .selected {
+	color: #000000;
+	background-color: #cccccc;
+}
+#CommentView #NewComment {
+	padding: 0px;
+	letter-spacing: 0;
+	height: 24px;
+}
+#CommentView #NewComment:hover {
+	background-color: #cccccc;
+}
+#CommentView #NewComment a, #CommentView #NewComment input {
+	display: inline-block;
+	float: left;
+	height: 24px;
+	color: #000000;
+	margin: 0px;
+	padding: 0px;
+	font-size: 1em;
+	text-align: left;
+	border: 1px solid #ffffff;
+	border-radius: 0px !important;
+	box-sizing: border-box;
+	background-color: #ffffff;
+	width: 74%;
+}
+#CommentView #NewComment a {
+	padding: 4px 3px 2px 3px;
+}
+#CommentView #NewComment a, #CommentView #NewComment input.submit {
+	color: #000000 !important;
+	background-color: #dddddd;
+	width: 13%;
+	text-align: center;
+	vertical-align: middle;
+}
+#CommentView #NewComment a:hover, #CommentView #NewComment input.submit:hover {
+	background-color: #eeeeee;
+}
+#CommentView #NewComment #CommentInput {
+}
+/* - CommentView styling - */
+
+/* - Pagination - */
+.pagination {
+	margin: 0px;
+	padding: 5px 0px 5px 0px;
+	font-size: 10px;
+	text-align: center;
+}
+.pagination .current {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.pagination li {
+	display: inline-block;
+	width: 20px;
+}
+.pagination a {
+	display: block;
+	text-decoration: none;
+}
+.pagination a:hover {
+	/*color: #000000;*/
+}
+/* - Pagination - */
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* - Login Page - */
+#loginbox {
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	width: 400px;
+	padding: 75px 25px 75px 25px;
+	
+	background-color: #8888aa;
+	border: 2px solid #ffffff;
+	
+	box-shadow: 0 0 25px 10px rgba(0,0,0,0.25);
+	border-radius: 50%;
+}
+/* - Login Page - */
+
+/* - Recipe Page - */
+#recipebox {
+	text-align: center;
+}
+#recipebox .recipedescription {
+	margin-bottom: 20px;
+	text-align: left;
+}
+#recipebox img {
+	float: right;
+}
+#recipebox a {
+	display: inline-block;
+	margin: 0px;
+	padding: 5px;
+	
+	color: #ffffff;
+	font-size: 1em;
+	font-weight: bold;
+	text-decoration: none;
+	text-transform: Capitalize;
+	text-align: center;
+	vertical-align: middle;
+	
+	background-color: #777799;
+	border: 2px solid #ffffff;
+	
+	border-radius: 10px;
+}
+#recipebox a:hover {
+	background-color: #8888aa;
+}
+#recipebox .stepbox {
+	display: block;
+	position: relative;
+	margin-top: 10px;
+	padding: 5px;
+	border: 2px solid #ffffff;
+	border-radius: 10px;
+	text-align: left;
+}
+#recipebox .stepbox .optionbox {
+	display: block;
+	position: absolute;
+	bottom: -25px;
+	left: 20px;
+	margin: 0px;
+	padding: 2px;
+	text-align: left;
+}
+#recipebox .stepbox .optionbox a {
+	display: inline-block;
+	margin: 0px;
+	padding: 5px;
+	
+	color: #ffffff;
+	font-size: 0.9em;
+	text-decoration: none;
+	text-transform: Capitalize;
+	text-align: center;
+	vertical-align: middle;
+	
+	background-color: inherit;
+	
+	border: none;
+	border-radius: 0px;
+}
+#recipebox .stepbox .optionbox a:hover {
+	text-decoration: underline;
+}
+#recipebox .stepbox h1 {
+	float: left;
+	width: auto;
+	height: auto;
+	margin: 0 5px 5px 0;
+	padding: 2px 8px;
+	text-align: center;
+	font-size: 2em;
+	color: #ffffff;
+	background-color: #555555;
+	border: 1px solid #000000;
+	border-radius: 50%;
+}
+/* - Recipe Page - */
