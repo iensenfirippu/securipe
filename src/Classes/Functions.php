@@ -12,9 +12,10 @@ if (defined('securipe') or exit(1))
 		 * Redirects the page to the root of the website
 		 * @param logout, if set to true will also log out the user.
 		 */
-		public static function BackToHome()
+		public static function BackToHome($logout=false)
 		{
-			Site::Redirect(Site::GetBaseURL().'Home'.URLPAGEEXT);
+			if ($logout != false) { Site::Redirect(Site::GetBaseURL(true).'Logout'.URLPAGEEXT); }
+			else { Site::Redirect(Site::GetBaseURL().'Home'.URLPAGEEXT); }
 		}
 		
 		/**
