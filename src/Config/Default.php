@@ -6,6 +6,7 @@ if (defined('securipe') or exit(1))
 	if (!defined("ONELINEOUTPUT"))			define("ONELINEOUTPUT",			false);
 	
 	if (!defined("BASEURL"))				define("BASEURL",				"localhost/");
+	if (!defined("URLPAGEEXT"))				define("URLPAGEEXT",			".aspx");
 	
 	if (!defined("TIMEZONE"))				define("TIMEZONE",				"Asia/Tokyo");
 	

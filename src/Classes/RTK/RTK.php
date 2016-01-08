@@ -12,9 +12,25 @@
  */
 
 define("RTK", true);
+
+// Include general classes
 include_once("Classes/RTK/HtmlElement.php");
 include_once("Classes/RTK/HtmlAttributes.php");
-foreach (glob("Classes/RTK/Widgets/*.php") as $classfile) { include_once($classfile); }
+
+// Include widget classes
+include_once("Classes/RTK/Widgets/Box.php");
+include_once("Classes/RTK/Widgets/Button.php");
+include_once("Classes/RTK/Widgets/CommentView.php");
+include_once("Classes/RTK/Widgets/Dropdown.php");
+include_once("Classes/RTK/Widgets/Form.php");
+include_once("Classes/RTK/Widgets/Header.php");
+include_once("Classes/RTK/Widgets/Image.php");
+include_once("Classes/RTK/Widgets/Link.php");
+include_once("Classes/RTK/Widgets/List.php");
+include_once("Classes/RTK/Widgets/Listview.php");
+include_once("Classes/RTK/Widgets/Menu.php");
+include_once("Classes/RTK/Widgets/Pagination.php");
+include_once("Classes/RTK/Widgets/Textview.php");
 
 class RTK
 {

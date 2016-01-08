@@ -232,13 +232,15 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function AddChild($child, $index=null)
 		{
-			$child->_indent = $this->_indent + 1;
-			$child->UpdateChildren();
-			
-			if ($index !== null && $index >= 0 && $index < sizeof($this->_children)) {
-				array_splice($this->_children, $index, 0, array($child));
-			} else {
-				array_push($this->_children, $child);
+			if (is_a($child, 'HtmlElement')) {
+				$child->_indent = $this->_indent + 1;
+				$child->UpdateChildren();
+				
+				if ($index !== null && $index >= 0 && $index < sizeof($this->_children)) {
+					array_splice($this->_children, $index, 0, array($child));
+				} else {
+					array_push($this->_children, $child);
+				}
 			}
 		}
 		
@@ -270,7 +272,6 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function ToString(&$newline)
 		{
-			//if (is_a($this, 'RTK_Listview')) { vdd($this); } else { vd(gettype($this)); }
 			$return = EMPTYSTRING;
 			if ($this->_tag != EMPTYSTRING) {
 				if ($newline) { $return .= OUTPUTNEWLINE; } else { $newline = true; }

@@ -14,31 +14,56 @@ if (defined('securipe') or exit(1))
 	{
 		/**
 		 * Returns whether there is a user logged in or not.
-		 */
+		 **/
 		public static function IsLoggedIn() { return (Login::GetId() > 0); }
 		/**
 		 * Returns the id of the user logged in, if applicable.
-		 */
-		public static function GetId() { return $_SESSION[LOGIN_USERID]; }
+		 **/
+		public static function GetId()
+		{
+			$value = null;
+			if (Value::SetAndNotNull($_SESSION, LOGIN_USERID)) { $value = $_SESSION[LOGIN_USERID]; }
+			return $value;
+		}
 		/**
 		 * Returns the username of the user logged in, if applicable.
-		 */
-		public static function GetUsername() { return $_SESSION[LOGIN_USERNAME]; }
+		 **/
+		public static function GetUsername()
+		{
+			$value = null;
+			if (Value::SetAndNotNull($_SESSION, LOGIN_USERNAME)) { $value = $_SESSION[LOGIN_USERNAME]; }
+			return $value;
+		}
 		/**
 		 * Returns amount of failed login attempts, if applicable.
-		 */
-		public static function GetAttempts() { return $_SESSION[LOGIN_ATTEMPTS]; }
+		 **/
+		public static function GetAttempts()
+		{
+			$value = null;
+			if (Value::SetAndNotNull($_SESSION, LOGIN_ATTEMPTS)) { $value = $_SESSION[LOGIN_ATTEMPTS]; }
+			return $value;
+		}
 		/**
 		 * Returns error message that was generated during login, if applicable.
-		 */
-		public static function GetError() { return $GLOBALS[LOGIN_ERROR]; }
-		
-		public static function GetPrivilege() {
+		 **/
+		public static function GetError()
+		{
+			$value = null;
+			if (Value::SetAndNotNull($GLOBALS, LOGIN_ERROR)) { $value = $GLOBALS[LOGIN_ERROR]; }
+			return $value;
+		}
+		/**
+		 * Returns the privelege level of the currently logged in user. (obfuscated in a UUID)
+		 **/
+		public static function GetPrivilege()
+		{
 			$level = 0;
-			$char = substr($_SESSION[LOGIN_PRIVILEGE],-1,1);
-			if (is_numeric($char)) {
-				$int = intval($char);
-				if ($int >= 0 && $int < 4) { $level = $int; }
+			if (Value::SetAndNotNull($GLOBALS, LOGIN_PRIVILEGE)) {
+				$char = substr($_SESSION[LOGIN_PRIVILEGE],-1,1);
+				if (is_numeric($char)) {
+					$int = intval($char);
+					if ($int >= 0 && $int < 4) { $level = $int; }
+				}
 			}
 			return $level;
 		}
@@ -51,14 +76,14 @@ if (defined('securipe') or exit(1))
 		public static function SetPrivilege($level) {
 			// Obfuscates the privilege level by hiding it inside a random md5 hash
 			// "Security through obscurity"
-			$rand_str = md5(rand(0,100)."-asdf.".uniqid());
+			$rand_str = md5(rand(0,100)."-asDf.".uniqid());
 			$obfu_lvl = substr($rand_str,0,-2).$level.substr($rand_str,-1);
 			$_SESSION[LOGIN_PRIVILEGE] = $obfu_lvl;
 		}
 		
 		/**
 		 * Determines whether or not there is input from the login form.
-		 */
+		 **/
 		private static function HasLoginInput()
 		{
 			$hasuser = Value::SetAndNotNull($_POST, 'loginname');
@@ -68,7 +93,7 @@ if (defined('securipe') or exit(1))
 		
 		/**
 		 * Check in the database, if the current client is banned from the site.
-		 */
+		 **/
 		public static function FetchBanStatus()
 		{
 			$ip_adr = htmlentities($_SERVER['REMOTE_ADDR']);
@@ -95,7 +120,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Get the corresponding salt from the database, for a given username.
 		 * @param username, the username_hash for which to get the salt for.
-		 */
+		 **/
 		private static function FetchUserSalt($username)
 		{
 			$result = EMPTYSTRING;
@@ -115,7 +140,7 @@ if (defined('securipe') or exit(1))
 		 * @param string $username The username hash.
 		 * @param string $password (optional) The password hash
 		 * @return integer The ID for the requested username hash (or 0 if not found)
-		 */
+		 **/
 		private static function FetchUserId($username, $password=EMPTYSTRING)
 		{
 			$result = 0;
@@ -147,7 +172,7 @@ if (defined('securipe') or exit(1))
 		 * Get the actual username a user with a given id, from the database.
 		 * @param userid, the ID of the user for which to get the username.
 		 * @return string The username for the requested user ID (or false if not found)
-		 */
+		 **/
 		private static function FetchUsername($userid)
 		{
 			$result = false;
@@ -166,7 +191,7 @@ if (defined('securipe') or exit(1))
 		
 		/**
 		 * Tries to login, given that all the requirements are met.
-		 */
+		 **/
 		public static function TryToLogin()
 		{
 			$result = false;
@@ -199,7 +224,7 @@ if (defined('securipe') or exit(1))
 		
 		/**
 		 * Logs the user out.
-		 */
+		 **/
 		public static function LogOut()
 		{
 			// Clear the session and regenerate the id, on logout
@@ -214,7 +239,7 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Bans a client (browser), by IP, Proxy IP AND session ID.
 		 * @param username, the username that the client provided (in hashed form, but will be translated if possible).
-		 */
+		 **/
 		private static function BanClient()
 		{
 			$now = time();
@@ -245,7 +270,7 @@ if (defined('securipe') or exit(1))
 		 * Log a login attempt to the database (and ban if necessary).
 		 * @param string $username The username that the client provided (in hashed form, but will be translated if possible).
 		 * @param string $success Whether the login was successful or not.
-		 */
+		 **/
 		private static function LogAttempt($username, $success)
 		{
 			$now = time();
@@ -271,10 +296,10 @@ if (defined('securipe') or exit(1))
 				$tryleft = 3 - Login::GetAttempts();
 				
 				if ($tryleft <= 0) {
-					Login::SetError('You have been banned... have a nice day...');
+					Login::SetError('You have been banned.');
 					Login::BanClient();
 				} else {
-					Login::SetError('Oh noes, failed to log in... only '.$tryleft.' trys remaining...');
+					Login::SetError('Login failed, only '.$tryleft.' attempts left.');
 				}
 			}
 		}

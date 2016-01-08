@@ -1,77 +1,61 @@
 <?php
 // Page Logic
+if (!Site::HasHttps() || Login::IsLoggedIn()) { Site::BackToHome(); }
 
-	if (Value::SetAndNotNull($_POST, 'Submit'))
-	{
-		
-		$userName = Site::GetPostValueSafely("UserName");// need to be hashed client-side
-		$password =	Site::GetPostValueSafely("Password");// need to be hashed client-side
-		$firstName= Site::GetPostValueSafely("FirstName");
-		$lastName = Site::GetPostValueSafely("LastName");
-		$email    = Site::GetPostValueSafely("email");
-		$telNo    = Site::GetPostValueSafely("telNo");
-		
-		//echo "<br /><br /><br />ldflgjldfj" .$telNo;
-		//$acces = TRUE;
-		////vdd("test");
-		//	if(Site::validateUserName($userName, $errorUserName)){
-		//	$acces = FALSE;
-		//	
-		//		if((User::checkIfExits($userName))){
-		//			$errorUserName = "Username already exits!";
-		//			$acces = FALSE;
-		//		}
-		//	}
-		//	//vd("userName:" );
-		//	//vd($acces);
-		//	if(!Site::validatePassword($password, $error1Password, $error2Password,$error3Password, $error4Password)){ $acces = FALSE;	}
-		//	vd("Password");
-		//				vd($acces);
-		//	if(!Site::validateEmail($email, $errorEmail)){$acces = FALSE;}
-		//	//vd("Email: ");
-		//	//			vd($acces);
-		//	if(!Site::validatePhoneNo($telNo,$errorTelNo)){}
-		//	//vdd("phonenr: ");
-		//	//			vd($acces);
-			
+$errors = null;
+$userName = EMPTYSTRING;
+$firstName = EMPTYSTRING;
+$lastName = EMPTYSTRING;
+$email = EMPTYSTRING;
+$telNo = EMPTYSTRING;
 
-				$user = new User();
-				$user->create($userName, $password, $firstName, $lastName, $email, $telNo);
-				$user->save();
-				$userCreated = "User successfully created!";
-			
-
+if (Value::SetAndNotNull($_POST, 'Submit') && Site::CheckSecurityToken())
+{
+	$errors = array();
+	
+	$userName  = Site::GetPostValueSafely("UserName");// need to be hashed client-side
+	$password  = Site::GetPostValueSafely("Password");// need to be hashed client-side
+	$password2 = Site::GetPostValueSafely("Password2");// need to be hashed client-side
+	$firstName = Site::GetPostValueSafely("FirstName");
+	$lastName  = Site::GetPostValueSafely("LastName");
+	$email     = Site::GetPostValueSafely("email");
+	$telNo     = Site::GetPostValueSafely("telNo");
+	
+	Site::ValidateUserName($userName, $errors);
+	Site::ValidatePassword($password, $password2, $errors);
+	Site::ValidateEmail($email, $errors);
+	Site::ValidatePhoneNo($telNo, $errors);
+	
+	if (sizeof($errors) == 0) {
+		$user = new User();
+		$user->create($userName, $password, $firstName, $lastName, $email, $telNo);
+		$user->save();
+		Site::BackToHome();
+	} else  {
+		$errors = implode('<br />', $errors);
 	}
-$GLOBALS['LOGIN'] = new Login();
-if (Value::SetAndEqualTo('logout', $_GET, 'action')) { Login::LogOut(); }
-if (Login::GetUsername() == EMPTYSTRING) { Login::TryToLogin(); }
+}
 
 // Page Output
 include_once('Pages/OnAllPages.php');
 $RTK->AddJavascript('jquery-2.1.4.min.js');
 $RTK->AddJavascript('login.js');
 
-$box1= new RTK_Box("box1");
-$box1->AddChild(new RTK_Header("Create User"));
-
+$RTK->AddElement(new RTK_Header("Create User"));
+$RTK->AddElement(new RTK_Textview("Please fill out this form to recieve your very own user account at our magnificent site.\n".
+								  "Please note however that we have a few rules. For instance: Usernames have to be at least 5 characters long.\n".
+								  "Passwords have to be at least 8 characters long, and must contain numbers as well as both lower and upper case letters."));
 
 $form= new RTK_Form("createUserForm");
-
-$form->AddTextField("UserName", "User Name");
+$form->AddTextField("UserName", "User Name", $userName);
 $form->AddPasswordField("Password", "Password");
-$box2= new RTK_Box("box1");
-$box2->AddChild(new RTK_Textview($errorUserName."<br />".$error1Password ."<br />".$error2Password ."<br />".  $error3Password."<br />".$error4Password. "<br />".$errorEmail."<br />".$errorTelNo. "<br />" .$userCreated));
+$form->AddPasswordField("Password2", "Password repeat");
+$form->AddTextField("FirstName", "First Name", $firstName);
+$form->AddTextField("LastName", "Last Name", $lastName);
+$form->AddTextField("email", "Email", $email);
+$form->AddTextField("telNo", "Phone No", $telNo);
+$form->AddButton("Submit", "Create my user account");
+$RTK->AddElement($form);
 
-$form->AddTextField("FirstName", "First Name");
-$form->AddTextField("LastName", "Last Name");
-$form->AddTextField("email", "Email");
-$form->AddTextField("telNo", "Phone No");
-
-$form->AddButton("Submit", "Submit Form");
-
-$box1->AddChild($form);
-
-$RTK->AddElement($box1);
-$RTK->AddElement($box2);
-
+if ($errors != null) { $RTK->AddElement(new RTK_Textview($errors)); }
 ?>

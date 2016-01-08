@@ -9,7 +9,8 @@ CREATE TABLE `User` (
 	`telno` varchar(30),
 	`user_name` varchar(50) NOT NULL,
 	`privilege_level` int(2) NOT NULL,
-	PRIMARY KEY (`user_id`)
+	PRIMARY KEY (`user_id`),
+	UNIQUE (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Login` (
@@ -36,39 +37,28 @@ CREATE TABLE `LoginAttempt` (
 	`successful` boolean NOT NULL
 );
 
-CREATE TABLE `Administrator` (
-	`user_id` int(10) NOT NULL AUTO_INCREMENT,
-	`privilege_level` int(10),
-	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
-);
-
-CREATE TABLE `Moderator` (
-	`user_id` int(10) NOT NULL AUTO_INCREMENT,
-	`privilege_level` int(10),
-	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
-);
 
 CREATE TABLE `Picture` (
 	`picture_id` int(10) NOT NULL AUTO_INCREMENT,
-	`pic_path` int(50) NOT NULL,
+	`picture_name` varchar(50) NOT NULL,
 	PRIMARY KEY (`picture_id`)
 );
 
 CREATE TABLE `RecipeType` (
 	`type_id` int(10) NOT NULL AUTO_INCREMENT,
-	`typeName` varchar(255),
+	`type_name` varchar(255) NOT NULL,
 	PRIMARY KEY (`type_id`)
 );
 
 CREATE TABLE `Recipe` (
 	`recipe_id` int(10) NOT NULL AUTO_INCREMENT,
-	`picture_id` int(10) NOT NULL,
+	`picture_id` int(10) NULL,
 	`user_id` int(10) NOT NULL,
-	`type_id` int(50) NOT NULL,
+	`type_id` int(10) NOT NULL,
 	`recipe_title` varchar(255),
-	`recipe_des` blob,
+	`recipe_description` blob,
 	`favorite_count` int(10),
-	`disable` bit NOT NULL,
+	`disabled` bit NOT NULL,
 	PRIMARY KEY (`recipe_id`),
 	FOREIGN KEY (`picture_id`) REFERENCES `Picture`(`picture_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`),
@@ -83,9 +73,12 @@ CREATE TABLE `Favorite` (
 );
 
 CREATE TABLE `Step` (
+	`step_id` int(10) NOT NULL AUTO_INCREMENT,
 	`recipe_id` int(10),
-	`picture_id` int(10),
-	`step_des` blob,
+	`picture_id` int(10) NULL,
+	`step_number` int(10),
+	`step_description` blob,
+	PRIMARY KEY (`step_id`),
 	FOREIGN KEY (`recipe_id`) REFERENCES `Recipe`(`recipe_id`),
 	FOREIGN KEY (`picture_id`) REFERENCES `Picture`(`picture_id`)
 );
@@ -98,10 +91,12 @@ CREATE TABLE `Message` (
 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
 );
 
-CREATE TABLE `RecipeComment` (
+CREATE TABLE `Comment` (
 	`comment_id` int(10) NOT NULL AUTO_INCREMENT,
 	`user_id` int(10) NOT NULL,
+	`comment_path` varchar(255) NOT NULL,
 	`comment_contents` varchar(255) NOT NULL,
+	`sent_at` int(10) NOT NULL,
 	PRIMARY KEY (`comment_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
 );

@@ -10,29 +10,32 @@ if (defined('RTK') or exit(1))
 		 * A widget containing a menu
 		 * @param string $id The HTML #id of the element
 		 * @param string $class The HTML .class of element
-		 * @param string[] $links The links in the menu
-		 * @param string[] $titles The titles for the links
+		 * @param string[][] $links The links in the menu
 		 * @param string $selected The title of the selected item in the menu
 		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
 		 **/
-		public function __construct($id, $class, $links, $titles, $selected=null, $args=null)
+		public function __construct($id, $class, $links, $selected=null, $args=null)
 		{
 			HtmlAttributes::Assure($args);
 			$args->Add('id', $id);
 			$args->Add('class', $class);
 			
+			$url = $title = null;
 			$items = array();
-			if (sizeof($links) == sizeof($titles)) {
-				for ($i=0; $i<sizeof($links); $i++) {
-					$linkargs = null;
-					$forcehttps = false;
-					if (_string::StartsWith($titles[$i], '_')) {
-						$titles[$i] = _string::RemovePrefix($titles[$i], '_');
-						$forcehttps = true;
-					}
-					if ($selected != null && $selected == $titles[$i]) { $linkargs = array('selected' => true); }
-					$items[] = new RTK_Link($links[$i], $titles[$i], $forcehttps, $linkargs);
+			foreach ($links as $link) {
+				if (_array::IsLongerThan($link, 1)) {
+					$url = $link[0];
+					$title = $link[1];
+				} else { $url = $title = $link; }
+				
+				$linkargs = null;
+				$forcehttps = false;
+				if (_string::StartsWith($title, '_')) {
+					$title = _string::RemovePrefix($title, '_');
+					$forcehttps = true;
 				}
+				if ($selected != null && $selected == $title) { $linkargs = array('selected' => true); }
+				$items[] = new RTK_Link($url, $title, $forcehttps, $linkargs);
 			}
 			parent::__construct($items, $args);
 		}

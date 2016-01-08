@@ -4,12 +4,8 @@ RewriteRule ^([^/]*\.css)$ Styles/$1 [END]
 RewriteRule ^([^/]*\.js)$ Scripts/$1 [END]
 RewriteRule ^([^/]*\.(jpe?g|png))$ Images/$1 [END]
 
-# -- Rule to rename links like: "http://localhost/login/?get=value"
-RewriteRule ^([a-zA-Z]+)/ index.php?action=$1 [QSA]
-#RewriteRule ^([a-zA-Z]+)/(.+)/(.+)/$ &$2=$3
-
 # -- Rule to rename links like: "http://localhost/login.aspx?get=value"
-#RewriteRule ^([a-zA-Z]+).aspx index.php?action=$1 [QSA]
+RewriteRule ^([a-zA-Z]+).aspx(\?(.*))?$ index.php?action=$1 [QSA]
 
-# -- Rule to rename links like: "http://localhost/login.php?get=value"
-#RewriteRule ^([a-zA-Z]+).php index.php?action=$1 [QSA]
+# -- Rule to redirect anything else to index.php (and let PHP handle the actual redirect)
+RewriteRule ^(.*)$ index.php [L]

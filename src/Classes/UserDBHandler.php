@@ -1,5 +1,4 @@
 <?php
-echo "hej med dig ";
 class UserDBHandler
 {
 		private $userObject;
@@ -22,32 +21,15 @@ class UserDBHandler
 					$stmt->bindParam(1, $_userName, PDO::PARAM_STR, 255);
 					$stmt->execute();
 					$result = $stmt->fetchColumn();
-					
-					
-					echo  "<br /> <br /> <br />All good checkIfUserExits <br />";
-	
-				}		
-				else
-				{
-          echo  "<br /> <br /> <br />Not good checkIfUserExits <br />";
 				}
 				
-				if($result== 0)
-				{
-					echo  "<br /> <br /> <br />Username dosent exits<br />" . $result . "LOL";
-					$return = 0;
-				}
-				else
-				{
-					echo  "<br /> <br /> <br />Username exits already<br />" . $result . "LOL";
-					$return = 1;
-				}
+				if ($result== 0) { $return = 0; }
+				else { $return = 1; }
 				return $return;
 		}
 		
 		private function insertHashToDB()
 		{
-
 			$userName = $this->userObject->getUserNameHashed();
 			$passwordHashed = $this->userObject->getPasswordHashed();
 			$personalSalt = $this->userObject->getPersonalSalt();
@@ -67,11 +49,6 @@ class UserDBHandler
 					$arr1 = $stmt->errorInfo();
 						$arr2 = $stmt->errorInfo();
 							$arr3 = $stmt->errorInfo();
-				  echo  "<br /> <br /> <br />All good insertHashToDB Error: <br />". $arr1[0] .$arr2[2] .$arr3[2];
-				}		
-				else
-				{
-         echo  "<br /> <br /> <br />Not good insertHashToDB <br />";
 				}	
 		
 		}
@@ -93,11 +70,6 @@ class UserDBHandler
 					$stmt->bindParam(5, $userName,PDO::PARAM_STR, 255);
 				  $stmt->execute();
 					$this->userId =  Database::GetLink()->lastInsertId();
-				  echo  "<br /> <br /> <br />All good insertUserDB <br />";
-				}			
-				else
-				{
-         echo  "<br /> <br /> <br />Not good insertUserDB <br />";
 				}	
 		}
 }
