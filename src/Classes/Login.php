@@ -233,7 +233,7 @@ if (defined('securipe') or exit(1))
 			session_unset();
 			session_regenerate_id();
 			Login::SetAttempts($attempts);
-			Site::BackToHome();
+			Site::Redirect('http://'.BASEURL.'Home'.URLPAGEEXT);
 		}
 		
 		/**
@@ -304,5 +304,7 @@ if (defined('securipe') or exit(1))
 			}
 		}
 	}
+	
+	if (!Site::HasHttps() && Login::IsLoggedIn()) { Site::BackToHome(true); }
 }
 ?>
