@@ -29,7 +29,7 @@ if (defined('RTK') or exit(1))
 					$box = new RTK_Textview($message, false, null, 'commentnone');
 				}
 				
-				if (Login::IsLoggedIn()) {
+				if (Site::HasHttps() && Login::IsLoggedIn()) {
 					$form = new RTK_Form('CommentForm');
 					$form->AddChild($box);
 					$inputbox = new RTK_Box('NewComment');
