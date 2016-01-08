@@ -28,9 +28,11 @@ include_once("Classes/RTK/Widgets/Image.php");
 include_once("Classes/RTK/Widgets/Link.php");
 include_once("Classes/RTK/Widgets/List.php");
 include_once("Classes/RTK/Widgets/Listview.php");
-include_once("Classes/RTK/Widgets/Menu.php");
+/*include_once("Classes/RTK/Widgets/Menu.php");
 include_once("Classes/RTK/Widgets/Pagination.php");
-include_once("Classes/RTK/Widgets/Textview.php");
+include_once("Classes/RTK/Widgets/Textview.php");*/
+echo "1";
+die(1);
 
 class RTK
 {
