@@ -50,10 +50,67 @@ if (defined('securipe') or exit(1))
 		public static function GetPostValueSafely($id, $keephtml = false)
 		{
 			$return = EMPTYSTRING;
-			if (Value::SetAndNotEmpty($_POST, $id)) {
+			if (Value::SetAndNotNull($_POST, $id)) {
 				$return = _string::Sanitize($_POST[$id], $keephtml);
-			
 			}
+			return $return;
+		}
+		
+		public static function ValidatePassword($pwd, $pwd2, &$errors)
+		{
+			$return = false;
+			
+			if (Value::SetAndNotNull($pwd)) {
+				if (strlen($pwd) >= 8) {
+					if (preg_match("#[0-9]+#", $pwd) && preg_match("#[a-z]+#", $pwd) && preg_match("#[A-Z]+#", $pwd)) { // Not really good enough, what about special chars?
+						if ($pwd == $pwd2) {
+							$return = true;
+						} else { $errors[] = "Passwords did not match."; }
+					} else { $errors[] = "Password must include numbers and both lower and upper case letters."; }
+				} else { $errors[] = "Password too short!"; }
+			} else { $errors[] = "Password field need to be filled out!"; }
+			
+			return $return;
+		}
+		
+		public static function ValidateEmail($email, &$errors)
+		{
+			$return = true;
+			
+			if (Value::SetAndNotNull($email)) {
+				if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+					$return = true;
+				} else { $errors[] = "Email address is not valid!"; }
+			} else { $errors[] = "Email field need to be filled out!"; }
+			
+			return $return;
+		}
+	
+		public static function ValidateUserName($userName, &$errors)
+		{
+			$return = false;
+			
+			if (Value::SetAndNotNull($userName)) {
+				if (strlen($userName) >= 5) {
+					if (!User::CheckIfExits($userName)) {
+						$return = true;
+					} else { $errors[] = "Username already exits!"; }
+				} else { $errors[] = "Username is too short!"; }
+			} else { $errors[] = "Username need to be filled out!"; }
+			
+			return $return;
+		}
+
+		public static function ValidatePhoneNo($telNo, &$errors)
+		{
+			$return = true;
+			
+			if (Value::SetAndNotNull($telNo)) {
+				if (preg_match("#^[0-9 \s()+--]+$#", $telNo)) {
+					$return = true;
+				} else { $errors[] = "Phonenumber is not valid!"; }
+			} else { $errors[] = "Phonenumber is not filled out!"; }
+				
 			return $return;
 		}
 		
@@ -111,9 +168,10 @@ if (defined('securipe') or exit(1))
 		/**
 		 * Checks a Security token against the token stored in the users session.
 		 */
-		public static function CheckSecurityToken($token)
+		public static function CheckSecurityToken($token=null)
 		{
-			return Value::SetAndEquals($token, $_SESSION, SECURITY_TOKEN);
+			if ($token == null && Value::SetAndNotNull($_POST, 'securitytoken')) { $token = $_POST['securitytoken']; }
+			return Value::SetAndEqualTo($token, $_SESSION, SECURITY_TOKEN);
 		}
 		
 		/**

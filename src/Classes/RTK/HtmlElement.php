@@ -272,7 +272,6 @@ if (defined('RTK') or exit(1))
 		 **/
 		public function ToString(&$newline)
 		{
-			//if (is_a($this, 'RTK_Listview')) { vdd($this); } else { vd(gettype($this)); }
 			$return = EMPTYSTRING;
 			if ($this->_tag != EMPTYSTRING) {
 				if ($newline) { $return .= OUTPUTNEWLINE; } else { $newline = true; }

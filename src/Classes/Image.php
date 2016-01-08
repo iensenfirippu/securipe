@@ -50,7 +50,6 @@ if ((defined('securipe') && extension_loaded('gd')) or exit(1))
 			if (isset($_FILES[$id]) && !empty($_FILES[$id])) {
 				// Check file size (<10MiB)
 				if ($_FILES[$id]["size"] > 10485760) {
-					//echo "Sorry, your file is too large.";
 					$result = false;
 				}
 				
@@ -58,7 +57,6 @@ if ((defined('securipe') && extension_loaded('gd')) or exit(1))
 				$imageFileType = pathinfo($_FILES[$id]["name"], PATHINFO_EXTENSION);
 				if ($imageFileType != "jpg" && $imageFileType != "png" &&
 					$imageFileType != "jpeg" && $imageFileType != "gif" ) {
-					//echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
 					$result = false;
 				}
 			} else {
@@ -93,7 +91,6 @@ if ((defined('securipe') && extension_loaded('gd')) or exit(1))
 		{
 			if ($this->_image != null) {
 				$this->WriteImage($this->GetLocalFile(), FULLIMAGEWIDTH, FULLIMAGEHEIGHT);
-				vdd($this->GetLocalFile());
 			}
 		}
 		

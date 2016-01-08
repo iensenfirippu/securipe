@@ -296,10 +296,10 @@ if (defined('securipe') or exit(1))
 				$tryleft = 3 - Login::GetAttempts();
 				
 				if ($tryleft <= 0) {
-					Login::SetError('You have been banned... have a nice day...');
+					Login::SetError('You have been banned.');
 					Login::BanClient();
 				} else {
-					Login::SetError('Oh noes, failed to log in... only '.$tryleft.' trys remaining...');
+					Login::SetError('Login failed, only '.$tryleft.' attempts left.');
 				}
 			}
 		}

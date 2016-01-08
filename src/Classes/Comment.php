@@ -88,7 +88,7 @@ if (defined('securipe') or exit(1))
 				
 				while ($stmt->fetch()) {
 					$comment = new Comment($commentid);
-					$comment->_user = null; // = User::Load($userid);
+					$comment->_user = User::Load($userid);
 					$comment->_contents = $contents;
 					$comment->_timestamp = $timestamp;
 					$GLOBALS['COMMENTS'][$commentid] = $comment;

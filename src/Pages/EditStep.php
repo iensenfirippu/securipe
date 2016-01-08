@@ -42,26 +42,15 @@ $RTK->AddElement($box1);
 //$recipeId = "1";
 
 if (Value::SetAndNotNull($_POST, 'Submit')){
-	//echo "submit works";
-
-	//vdd(Site::GetPostValueSafely("imagepath"));
 	$imagepath = Site::GetPostValueSafely("imagepath");
 	$title = Site::GetPostValueSafely("title");
 	$type = Site::GetPostValueSafely("type");
 	$description = Site::GetPostValueSafely("description");
 	//$image = new Image($imagepath);
-	//echo "lkdfmgfklgklgfkkgjljklgjklgjklgjklgjklfgjklfgljkgkljgfkljkljgfkljgfkljgkljgfkljgfkjlfgkljgfjklgkjlgfklgjklgkjlgkljgfkljgf";
 	//$image->Save();
-	echo $imagepath;
-	//vdd($imagepath);
-	echo "<br /><br /><br /> ".$imagepath;
-	echo "<br /><br /><br /> Title ".$title;
-	echo "<br /><br /><br /> type ".$type;
-	echo "<br /><br /><br /> des ".$description;
 	
 	$recipe = new Recipe($title, $type,$description, $imagepath);
 	
 	//Recipe::createRecipe($imagepath, "1", "1", $title, $description, "9001", "0");
-	//echo "inserted succesfully";
 }
 ?>

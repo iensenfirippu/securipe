@@ -40,7 +40,7 @@ if (defined('securipe') or exit(1))
 				$stmt->closeCursor();
 				
 				if ($userId != null) {
-					$recipe = new Recipe();
+					$recipe = new Recipe($id);
 					//$recipe->_user = User::Load($userId);
 					//if ($pictureId != null) { $recipe->_picture = Image::Load($pictureId); }
 					//if ($typeId != null) { $recipe->_type = Recipe::GetTypeName($typeId); }
@@ -73,7 +73,7 @@ if (defined('securipe') or exit(1))
 				
 				while ($stmt->fetch()) {
 					$recipe = new Recipe($recipeId);
-					//$recipe->_user = User::Load($userId);
+					$recipe->_user = User::Load($userId);
 					//if ($pictureId != null) { $recipe->_picture = Image::Load($pictureId); }
 					//if ($typeId != null) { $recipe->_type = Recipe::GetTypeName($typeId); }
 					$recipe->_title = $title;
@@ -81,6 +81,24 @@ if (defined('securipe') or exit(1))
 					$recipe->_disabled = $disabled;
 					
 					$result[] = $recipe;
+				}
+				$stmt->closeCursor();
+			}
+			if (empty($result)) { $result = false; }
+			return $result;
+		}
+		
+		public static function GetTypes()
+		{
+			$result = array();
+			if($stmt = Database::GetLink()->prepare('SELECT `type_id`, `type_name` FROM `RecipeType`;'))
+			{
+				$stmt->execute();
+				$stmt->bindColumn(1, $id);
+				$stmt->bindColumn(2, $name);
+				
+				while ($stmt->fetch()) {
+					$result[] = array($id, $name);
 				}
 				$stmt->closeCursor();
 			}

@@ -9,7 +9,7 @@
 	if (!Value::SetAndNotNull($GLOBALS, LOGIN_ERROR)) { Login::SetError(EMPTYSTRING); }
 	
 	// Handle the login
-	if (!Login::IsLoggedIn()) { if (Login::TryToLogin()) { Site::BackToHome(); } }
+	if (!Login::IsLoggedIn() && Site::CheckSecurityToken()) { if (Login::TryToLogin()) { Site::BackToHome(); } }
 
 // Page Output
 include_once('Pages/OnAllPages.php');

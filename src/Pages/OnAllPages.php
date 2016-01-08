@@ -1,14 +1,13 @@
 <?php
 // Page Logic
 $pages = array(array('Home'.URLPAGEEXT, 'Home'));
-$pages[] = array('ViewRecipe'.URLPAGEEXT.'?id=1', 'Recipe');
-$pages[] = array('WidgetTest'.URLPAGEEXT, 'Test');
 
 $mymenu = array();
 if (Login::IsLoggedIn()) {
 	$mymenu[] = array('MyPage'.URLPAGEEXT, 'My Page');
 	$mymenu[] = array('Logout'.URLPAGEEXT, 'Logout');
 } else {
+	$mymenu[] = array('CreateUser'.URLPAGEEXT, '_New User');
 	$mymenu[] = array('Login'.URLPAGEEXT, '_Login');
 }
 

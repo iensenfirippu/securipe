@@ -53,8 +53,9 @@ include_once("Classes/Functions.php");
 include_once("Classes/RTK/RTK.php");
 include_once("Classes/Database.php");
 include_once("Classes/Login.php");
-
-include_once("Classes/CrudUserDB.php");
+include_once("Classes/User.php");
+//include_once("Classes/UserDBHandler.php");
+//include_once("Classes/UserSecurityHandler.php");
 include_once("Classes/Image.php");
 include_once("Classes/Recipe.php");
 include_once("Classes/RecipeStep.php");

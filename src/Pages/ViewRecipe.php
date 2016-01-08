@@ -9,11 +9,11 @@ if (Value::SetAndNotNull($id)) {
 		$recipe->LoadSteps();
 		$edit = false;//Value::SetAndEqualTo($recipe->GetUsertrue, $GLOBALS, 'EDIT', true);
 		
-		if (Value::SetAndNotNull($_POST, 'CommentInput')) {
+		if (Value::SetAndNotNull($_POST, 'CommentInput') && Site::CheckSecurityToken()) {
 			$message = Site::GetPostValueSafely('CommentInput');
-			$id = Site::GetPostValueSafely('CommentSelect');
-			if (!is_numeric($id)) { $id = EMPTYSTRING; }
-			Comment::Insert($message, 1, $id);
+			$commentid = Site::GetPostValueSafely('CommentSelect');
+			if (!is_numeric($commentid)) { $commentid = EMPTYSTRING; }
+			Comment::Insert($message, $id, $commentid);
 			Site::Redirect(EMPTYSTRING);
 		}
 	}
@@ -59,8 +59,8 @@ if ($edit) { $recipebox->AddChild(new RTK_Link('CreateStep'.URLPAGEEXT.'?index='
 
 $RTK->AddElement($recipebox);
 
-if (!$edit) {
-	$commentbox = new RTK_CommentView($recipe->GetId());
+if (!$edit && $recipe != null) {
+	$commentbox = new RTK_CommentView($recipe);
 	$RTK->AddElement($commentbox, 'wrapper', 'comments');
 }
 ?>
