@@ -28,18 +28,16 @@ include_once("Classes/RTK/Widgets/Image.php");
 include_once("Classes/RTK/Widgets/Link.php");
 include_once("Classes/RTK/Widgets/List.php");
 include_once("Classes/RTK/Widgets/Listview.php");
-/*include_once("Classes/RTK/Widgets/Menu.php");
+include_once("Classes/RTK/Widgets/Menu.php");
 include_once("Classes/RTK/Widgets/Pagination.php");
-include_once("Classes/RTK/Widgets/Textview.php");*/
-echo "1";
-die(1);
+include_once("Classes/RTK/Widgets/Textview.php");
 
 class RTK
 {
 	protected $_doctype = EMPTYSTRING;
 	protected $_stylesheets = array();
 	protected $_javascripts = array();
-	protected $_breadcrumbs = null;
+	protected $_popups = array();
 	protected $_elements = array();
 	protected $_references = array();
 	protected $_pointer = null;
@@ -61,8 +59,6 @@ class RTK
 		
 		$this->_pointer = $this->_references['BODY'];
 	}
-	
-	//public function GetBreadcrumbs()			{ return $this->_breadcrumbs; }
 	
 	/**
 	 * Adds a stylesheet to the HTML document
@@ -93,10 +89,29 @@ class RTK
 	}
 	
 	/**
+	 * Adds a Popup to the HTML document
+	 * @param HtmlElement $element The element to display
+	 **/
+	public function AddPopup($element)
+	{
+		$id = 'Popup-'.(sizeof($this->_popups)+1);
+		$popup = new RTK_Box($id, 'popup', array('onclick' => 'ClosePopup(\''.$id.'\')'));
+		if (is_a($element, 'HtmlElement')) { $popup->AddChild($element); }
+		elseif (is_string($element)) { $popup->SetContent($element); }
+		else { $popup = null; }
+		
+		if ($popup != null) {
+			$close = new RTK_Image('Close.png', 'X', array('class' => 'close'));
+			$popup->AddChild($close, 0);
+			$this->_popups[] = $popup;
+		}
+	}
+	
+	/**
 	 * Sets the "pointer" to a "reference"d name
 	 * @param string $name The name of the "reference"
 	 */
-	public function SetPointer($name)			{ $this->_pointer = $this->_references[$name]; }
+	public function SetPointer($name) { $this->_pointer = $this->_references[$name]; }
 	
 	/**
 	 * Adds an HtmlElement to the document
@@ -153,14 +168,26 @@ class RTK
 		// TODO: This wont always be the preferable solution so a "weight" or "importance" system might need to be implemented
 		sort($this->_stylesheets);
 		
+		if (file_exists('Images/favicon.png')) {
+			$this->_references['HEAD']->AddChild(
+				new HtmlElement('link', array('rel'=>'icon', 'type'=>'image/png', 'href'=>'http://'.BASEURL.'favicon.png'))
+			);
+		}
+		
 		foreach ($this->_stylesheets as $stylesheet) { $this->_references['HEAD']->AddChild($stylesheet); }
 		foreach ($this->_javascripts as $javascript) { $this->_references['HEAD']->AddChild($javascript); }
 		$this->_stylesheets = array();
 		$this->_javascripts = array();
 		
+		if (sizeof($this->_popups) > 0) {
+			$popups = new HtmlElement('div', array('id' => 'Popups'));
+			$popups->AddChild(new HtmlElement('script', array('language' => 'javascript'), 'function ClosePopup(divid) { var popups = document.getElementById(\'Popups\'); if (popups.children.length > 2) { var popup = document.getElementById(divid); popup.parentNode.removeChild(popup); } else { popups.parentNode.removeChild(popups); } }'));
+			foreach ($this->_popups as $popup) { $popups->AddChild($popup); }
+			$this->_references['BODY']->AddChild($popups, 0);
+		}
+		
 		$newline = false;
-		foreach ($this->_elements as $HtmlElement)
-		{
+		foreach ($this->_elements as $HtmlElement) {
 			if ($newline) { $html .= OUTPUTNEWLINE; } else { $newline = true; }
 			$html .= $HtmlElement;
 		}

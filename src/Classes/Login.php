@@ -243,7 +243,7 @@ if (defined('securipe') or exit(1))
 		private static function BanClient()
 		{
 			$now = time();
-			$until = $now + ONEDAY;
+			$until = $now + ONEHOUR;
 			$ip_adr = htmlentities($_SERVER['REMOTE_ADDR']);
 			$ip_prx = EMPTYSTRING;
 			if (Value::SetAndNotNull($_SERVER, 'HTTP_X_FORWARDED_FOR')) {

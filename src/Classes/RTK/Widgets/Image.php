@@ -13,10 +13,10 @@ if (defined('RTK') or exit(1))
 		 * @param boolean $forcehttps Specify if the link has to have https 
 		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
 		 **/
-		public function __construct($imgurl=EMPTYSTRING, $alttext=EMPTYSTRING, $args=null)
+		public function __construct($imgurl=EMPTYSTRING, $alttext='[IMG]', $args=null)
 		{
 			HtmlAttributes::Assure($args);
-			$args->Add('src', $imgurl, true);
+			$args->Add('src', Site::GetBaseURL().$imgurl, true);
 			$args->Add('alt', $alttext, true);
 			
 			parent::__construct();
@@ -29,7 +29,7 @@ if (defined('RTK') or exit(1))
 		 * @param HtmlAttributes $args Allows custom html tag arguments to be specified (not recommended)
 		 **/
 		public function AddLink($link, $args=null) {
-			$child = $this->GetFirstChild();
+			$child = &$this->_children[0];
 			if ($child != false && $child->GetTag() == 'img') {
 				$img = $child;
 				$child = new RTK_Link($link, EMPTYSTRING, $args, false);
@@ -42,7 +42,7 @@ if (defined('RTK') or exit(1))
 		 * Removes the link and reverts the image back into a regular image
 		 **/
 		public function RemoveLink() {
-			$child = $this->GetFirstChild();
+			$child = &$this->_children[0];
 			if ($child != false && $child->GetTag() == 'a') {
 				$grandchild = $child->GetFirstChild();
 				if ($child != false && $child->GetTag() == 'img') {

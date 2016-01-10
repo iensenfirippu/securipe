@@ -17,6 +17,7 @@ if (defined('RTK') or exit(1))
 		{
 			HtmlAttributes::Assure($args);
 			$args->Add('name', $name);
+			$args->Add('id', $name);
 			
 			parent::__construct('select', $args);
 			

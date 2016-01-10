@@ -54,7 +54,7 @@ if (defined('RTK') or exit(1))
 						if (Login::IsLoggedIn()) { $args = array('onclick' => 'SelectComment('.$comment->GetId().')'); }
 						$childbox = new RTK_Box($comment->GetId(), 'comment');
 						$infobox = new RTK_Box($comment->GetId(), 'commentinfo', $args);
-						$infobox->AddChild(new RTK_Textview($comment->GetUser()->getUserName().':', true, null, 'commentposter'));
+						$infobox->AddChild(new RTK_Textview($comment->GetUser()->GetUserName().':', true, null, 'commentposter'));
 						$infobox->AddChild(new RTK_Textview($comment->GetContents(), true, null, 'commentmessage'));
 						$infobox->AddChild(new RTK_Textview('Posted '. $comment->GetTime(), true, null, 'commenttime'));
 						$childbox->AddChild($infobox);

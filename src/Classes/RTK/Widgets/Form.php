@@ -93,14 +93,16 @@ if (defined('RTK') or exit(1))
 		 * Add a password input field to the form
 		 * @param string $name The HTML name (and #id) of the input field
 		 * @param string $title The text written next to the input field
+		 * @param string $value The predefined value in the input field (not recommended, use with caution)
 		 * @param HtmlElement $container (optional) The "container" to add it to
 		 **/
-		public function AddPasswordField($name, $title, $container=null)
+		public function AddPasswordField($name, $title, $value=null, $container=null)
 		{
 			$args = new HtmlAttributes();
 			$args->Add('type', 'password');
 			$args->Add('name', $name);
 			$args->Add('id', $name);
+			if (Value::SetAndNotNull($value)) { $args->Add('value', $value); }
 			
 			$line = new HtmlElement('div', array('class' => 'formline'));
 			$line->AddChild(new HtmlElement('label', array('for' => $name), $title));

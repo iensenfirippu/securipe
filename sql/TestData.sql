@@ -82,7 +82,7 @@ INSERT INTO `Picture` (`picture_id`,`picture_name`)
 INSERT INTO `RecipeType` (`type_id`,`type_name`)
 	VALUES (1,'Italian');	
 INSERT INTO `RecipeType` (`type_id`,`type_name`)
-	VALUES (2,'Japanses');	
+	VALUES (2,'Japanese');	
 INSERT INTO `RecipeType` (`type_id`,`type_name`)
 	VALUES (3,'Danish');
 
@@ -109,9 +109,9 @@ INSERT INTO `Step`(`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_descri
 
 -- Comment table
 INSERT INTO `Comment`(`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`)
-	VALUES (1,2,'','',3);
+	VALUES (1,2,'R=1','blah',3);
 INSERT INTO `Comment`(`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`)
-	VALUES (2,3,'','',2);
+	VALUES (2,3,'R=1','test',2);
 
 -- Favorite table
 INSERT INTO `Favorite`(`user_id`,`recipe_id`)

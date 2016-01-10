@@ -1,5 +1,5 @@
 <?php
-// Page Logic
+///// Page Logic /////
 $pages = array(array('Home'.URLPAGEEXT, 'Home'));
 
 $mymenu = array();
@@ -11,7 +11,7 @@ if (Login::IsLoggedIn()) {
 	$mymenu[] = array('Login'.URLPAGEEXT, '_Login');
 }
 
-// Page Output
+///// Page Output /////
 $RTK->AddStylesheet('/style.css');
 $wrapper = new RTK_Box('wrapper');
 $menu = new RTK_Menu('mainmenu', 'menu', $pages);
@@ -20,8 +20,6 @@ $RTK->AddElement($menu);
 $RTK->AddElement(new RTK_Menu('mymenu', 'menu', $mymenu));
 $RTK->AddElement($wrapper, null, 'wrapper');
 
-if ($currentpage != 'Login') {
-	$main = new RTK_Box('main');
-	$RTK->AddElement($main, 'wrapper', 'main');
-}
+$main = new RTK_Box('main');
+$RTK->AddElement($main, 'wrapper', 'main');
 ?>

@@ -57,80 +57,6 @@ if (defined('securipe') or exit(1))
 			return $return;
 		}
 		
-		public static function ValidatePassword($pwd, $pwd2, &$errors)
-		{
-			$return = false;
-			
-			if (Value::SetAndNotNull($pwd)) {
-				if (strlen($pwd) >= 8) {
-					if (preg_match("#[0-9]+#", $pwd) && preg_match("#[a-z]+#", $pwd) && preg_match("#[A-Z]+#", $pwd)) { // Not really good enough, what about special chars?
-						if ($pwd == $pwd2) {
-							$return = true;
-						} else { $errors[] = "Passwords did not match."; }
-					} else { $errors[] = "Password must include numbers and both lower and upper case letters."; }
-				} else { $errors[] = "Password too short!"; }
-			} else { $errors[] = "Password field need to be filled out!"; }
-			
-			return $return;
-		}
-		
-		public static function ValidateEmail($email, &$errors)
-		{
-			$return = true;
-			
-			if (Value::SetAndNotNull($email)) {
-				if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					$return = true;
-				} else { $errors[] = "Email address is not valid!"; }
-			} else { $errors[] = "Email field need to be filled out!"; }
-			
-			return $return;
-		}
-	
-		public static function ValidateUserName($userName, &$errors)
-		{
-			$return = false;
-			
-			if (Value::SetAndNotNull($userName)) {
-				if (strlen($userName) >= 5) {
-					if (!User::CheckIfExits($userName)) {
-						$return = true;
-					} else { $errors[] = "Username already exits!"; }
-				} else { $errors[] = "Username is too short!"; }
-			} else { $errors[] = "Username need to be filled out!"; }
-			
-			return $return;
-		}
-
-		public static function ValidatePhoneNo($telNo, &$errors)
-		{
-			$return = true;
-			
-			if (Value::SetAndNotNull($telNo)) {
-				if (preg_match("#^[0-9 \s()+--]+$#", $telNo)) {
-					$return = true;
-				} else { $errors[] = "Phonenumber is not valid!"; }
-			} else { $errors[] = "Phonenumber is not filled out!"; }
-				
-			return $return;
-		}
-		
-		/**
-		 * Retrieve a FILES value as an image
-		 * @param id, The name of the FILES value to retrieve.
-		 */
-		public static function GetUploadedImage($id)
-		{
-			$return = null;
-			$image = new Image();
-			$image->Load($id);
-			if (Value::SetAndNotNull($image->GetImage()))
-			{
-				$return = $image;
-			}
-			return $return;
-		}
-		
 		/**
 		 * Returns true if the client is connecting via HTTPS, otherwise it returns false.
 		 */
@@ -174,33 +100,72 @@ if (defined('securipe') or exit(1))
 			if ($token == null && Value::SetAndNotNull($_POST, 'securitytoken')) { $token = $_POST['securitytoken']; }
 			return Value::SetAndEqualTo($token, $_SESSION, SECURITY_TOKEN);
 		}
-		
-		/**
-		 * Creates a new session for the user.
-		 *
-		public static function NewSessionId()
+	}
+	
+	/**
+	 * Contains functions for validating certain types of data
+	 */
+	class Validate
+	{
+		public static function Password($pwd, $pwd2, &$errors)
 		{
-			vd(session_id());
-			vd($_SESSION);
+			$return = false;
 			
-			$_SESSION[md5('old_session')] = session_id();
-			session_regenerate_id();
+			if (Value::SetAndNotNull($pwd)) {
+				if (strlen($pwd) >= 8) {
+					if (preg_match("#[0-9]+#", $pwd) && preg_match("#[a-z]+#", $pwd) && preg_match("#[A-Z]+#", $pwd)) {
+						if (preg_match("#^[0-9a-zA-Z ,.]+$#", $pwd)) {
+							if ($pwd == $pwd2) {
+								$return = true;
+							} else { $errors[] = "Passwords did not match."; }
+						} else { $errors[] = "Password must only contain numbers, punctuation (space, comma and period), lower and upper case letters."; }
+					} else { $errors[] = "Password must include numbers and both lower and upper case letters."; }
+				} else { $errors[] = "Password too short!"; }
+			} else { $errors[] = "Password field need to be filled out!"; }
 			
-			
-			
-			vd(session_id());
-			vdd($_SESSION);
-		}*/
+			return $return;
+		}
 		
-		/**
-		 * Cleans up old session variables after a creating new sessionid .
-		 *
-		public static function CleanSession()
+		public static function Email($email, &$errors)
 		{
-			if (Value::SetAndNotNull($_SESSION, md5('old_session'))) {
-				if (Value::SetAndNotNull($_SESSION, '')
-			}
-		}*/
+			$return = true;
+			
+			if (Value::SetAndNotNull($email)) {
+				if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+					$return = true;
+				} else { $errors[] = "Email address is not valid!"; }
+			} else { $errors[] = "Email field need to be filled out!"; }
+			
+			return $return;
+		}
+	
+		public static function UserName($userName, &$errors)
+		{
+			$return = false;
+			
+			if (Value::SetAndNotNull($userName)) {
+				if (strlen($userName) >= 5) {
+					if (!User::CheckIfExits($userName)) {
+						$return = true;
+					} else { $errors[] = "Username already exits!"; }
+				} else { $errors[] = "Username is too short!"; }
+			} else { $errors[] = "Username need to be filled out!"; }
+			
+			return $return;
+		}
+
+		public static function PhoneNo($telNo, &$errors)
+		{
+			$return = true;
+			
+			if (Value::SetAndNotNull($telNo)) {
+				if (preg_match("#^[0-9 \s()+--]+$#", $telNo)) {
+					$return = true;
+				} else { $errors[] = "Phonenumber is not valid!"; }
+			} else { $errors[] = "Phonenumber need to be filled out!"; }
+				
+			return $return;
+		}
 	}
 	
 	/**

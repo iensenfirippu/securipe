@@ -74,16 +74,16 @@ if (defined('RTK') or exit(1))
 		 * Set the tag name of the element
 		 * @param string $value The new tag name to apply
 		 **/
-		public function SetTag($value)			{ if (is_string($value)) { $this->_tag = $value; } }
+		public function SetTag($value) { if (is_string($value)) { $this->_tag = $value; } }
 		/**
 		 * Set the content of the element
 		 * @param string $value The new content to apply
 		 **/
-		public function SetContent($value)		{ if (is_string($value)) { _string::EnforceProperLineEndings($this->_content = $value); } }
+		public function SetContent($value) { if (is_string($value)) { $this->_content = _string::EnforceProperLineEndings($value); } }
 		/**
 		 * Set if the element should be onelined
 		 **/
-		public function SetOneline()			{ $this->_oneline = 1; }
+		public function SetOneline() { $this->_oneline = 1; }
 		
 		/**
 		 * Object representing a single element in HTML
