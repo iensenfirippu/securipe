@@ -14,6 +14,7 @@ body {
 	background-color: #aaaaaa;
 	font-family: sans, sans-serif, arial;
 	font-size: 75%;
+	overflow-y: auto;
 }
 div {
 	padding: 0;
