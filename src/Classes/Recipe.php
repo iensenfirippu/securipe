@@ -20,7 +20,7 @@ if (defined('securipe') or exit(1))
 		Public function GetTitle() { return $this->_title; }
 		Public function GetDescription() { return $this->_description; }
 		Public function GetFavoriteCount() { return $this->_favoriteCount; }
-		Public function GetDisabled() { return $this->_disabled; }
+		Public function GetDisabled() { return ($this->_disabled == true); }
 		Public function GetSteps() { return $this->_steps; }
 		
 		public function SetId($value) { $this->_id = $value; }

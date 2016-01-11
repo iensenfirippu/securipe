@@ -478,7 +478,8 @@ if (defined('securipe') or exit(1))
 				$diff = STARTTIME - $timestamp;
 				
 				if (is_string($format) !== false) { $string .= date($format, $timestamp); }
-				elseif ($diff > (ONEDAY + TODAYSTIME)) { $string .= date('\t\h\e dS \o\f F, Y \a\t H:i', $timestamp); }
+				//elseif ($diff > (ONEDAY + TODAYSTIME)) { $string .= date('\t\h\e dS \o\f F, Y \a\t H:i', $timestamp); }
+				elseif ($diff > (ONEDAY + TODAYSTIME)) { $string .= date('d-m-y H:i', $timestamp); }
 				elseif ($diff > TODAYSTIME) { $string .= 'yesterday at '.date('H:i', $timestamp); }
 				elseif ($diff > ONEHOUR) { $string .= 'today at '.date('H:i', $timestamp); }
 				elseif ($diff > ONEMINUTE) {

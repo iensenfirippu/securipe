@@ -59,4 +59,10 @@ include_once("Classes/Recipe.php");
 include_once("Classes/RecipeStep.php");
 include_once("Classes/RecipeType.php");
 include_once("Classes/Comment.php");
+
+if (MAINTENANCEMODE) {
+	if ($_SERVER['REMOTE_ADDR'] != MAINTENANCEIP || !Site::HasHttps()) {
+		die("Undergoing maintenance");
+	}
+}
 ?>
