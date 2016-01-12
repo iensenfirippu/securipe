@@ -457,6 +457,13 @@ ul.menu li {
 #recipebox .recipedescription {
 	text-align: left;
 }
+#recipebox .recipedescription h2 {
+	margin: 2px 0 10px 20px;
+	font-size: 0.9em;
+	font-style: italic;
+	font-weight: normal;
+	color: #444444;
+}
 #recipebox .recipedescription a {
 	margin: 0 12px 5px 5px;
 	float: right;

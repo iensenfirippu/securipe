@@ -87,38 +87,38 @@ INSERT INTO `RecipeType` (`type_id`,`type_name`)
 	VALUES (3,'Danish');
 
 -- Recipe table
-INSERT INTO `Recipe`(`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`disabled`)
+INSERT INTO `Recipe` (`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`is_public`,`disabled`)
 	VALUES (1,1,2,1,'My bolognaise','This is my first recipe bolognaise. It is very easy and cheap.
 	1 onion,
 	1 garlic,
 	200g minsed beef,
 	a tableSp olive oile,
-	a tomato can',0,0);
-INSERT INTO `Recipe`(`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`disabled`)
-	VALUES (2,2,3,2,'Teriyaki beef','My teriyaki beef is very tasty. I will recommend to all.',0,0);
-INSERT INTO `Recipe`(`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`disabled`)
-	VALUES (3,3,4,3,'Sm&oslash;rbrod med laks','Tradition danish food. Danish eats almost every day with other toppings.',0,0);
+	a tomato can',0,1,0);
+INSERT INTO `Recipe` (`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`is_public`,`disabled`)
+	VALUES (2,2,3,2,'Teriyaki beef','My teriyaki beef is very tasty. I will recommend to all.',0,1,0);
+INSERT INTO `Recipe` (`recipe_id`,`picture_id`,`user_id`,`type_id`,`recipe_title`,`recipe_description`,`favorite_count`,`is_public`,`disabled`)
+	VALUES (3,3,4,3,'Sm&oslash;rbrod med laks','Tradition danish food. Danish eats almost every day with other toppings.',0,1,0);
 
 -- Step table
-INSERT INTO `Step`(`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_description`)
+INSERT INTO `Step` (`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_description`)
 	VALUES (1,1,1,1,'You choppes onion, garlic and put olive oile in a pan.');
-INSERT INTO `Step`(`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_description`)
+INSERT INTO `Step` (`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_description`)
 	VALUES (2,1,2,2,'Then put onion and garlic into the pan and put minsed beef in the pan');
-INSERT INTO `Step`(`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_description`)
+INSERT INTO `Step` (`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_description`)
 	VALUES (3,1,3,1,'Put tomat can into the pan and ');
 
 -- Comment table
-INSERT INTO `Comment`(`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`)
+INSERT INTO `Comment` (`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`,`disabled`)
 	VALUES (1,2,'R=1','blah',3);
-INSERT INTO `Comment`(`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`)
+INSERT INTO `Comment` (`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`,`disabled`)
 	VALUES (2,3,'R=1','test',2);
 
 -- Favorite table
-INSERT INTO `Favorite`(`user_id`,`recipe_id`)
+INSERT INTO `Favorite` (`user_id`,`recipe_id`)
 	VALUES (2,1);
-INSERT INTO `Favorite`(`user_id`,`recipe_id`)
+INSERT INTO `Favorite` (`user_id`,`recipe_id`)
 	VALUES (3,2);
-INSERT INTO `Favorite`(`user_id`,`recipe_id`)
+INSERT INTO `Favorite` (`user_id`,`recipe_id`)
 	VALUES (4,2);
 
 -- Message table
@@ -126,13 +126,13 @@ INSERT INTO `Message` (`message_id`,`user_id`,`message_contents`)
 	VALUES (1,3,'Hello user 2, I would like to add your recipe to my favorite!');
 
 -- Report table
-INSERT INTO `Report`(`banned_user_id`,`banned_by_user_id`,`report`)
+INSERT INTO `Report` (`banned_user_id`,`banned_by_user_id`,`report`)
 	VALUES(5,6,'It is not recipe!!!! You are banned, stupid!!!');
 
 -- Ban table
-INSERT INTO `Ban`(`banned_at`,`banned_until`,`ip_address`,`proxy_ip`,`session_id`)
+INSERT INTO `Ban` (`banned_at`,`banned_until`,`ip_address`,`proxy_ip`,`session_id`)
 	VALUES (1452086498,-1,'149.12.131.10',' ','h315gth71f8pirbpbumnauugq7');
 
 -- LoginAttempt
-INSERT INTO `LoginAttempt`(`occurred_at`,`username_input`,`successful`)
+INSERT INTO `LoginAttempt` (`occurred_at`,`username_input`,`successful`)
 	VALUES (1452087918,'admin',true);

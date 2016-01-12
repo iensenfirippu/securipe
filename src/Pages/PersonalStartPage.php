@@ -16,7 +16,7 @@ $headers_recipes = array("Title", "Type", "Is public", "_", "_", "_");
 $text_editecipe = "Edit";
 $text_viewrecipe = "View";
 $text_editsteps = "Edit steps";
-$text_deleteecipe = "Delete";
+$text_deleterecipe = "Delete";
 $text_newrecipe = "Create Recipe";
 $string_norecipes = "There are no recipes";
 
@@ -41,10 +41,10 @@ if ($recipes != false) {
 			$myrecipes->AddRow(array(
 				$recipe->GetTitle(),
 				$recipe->GetType()->GetName(),
-				_bool::Display(!$recipe->GetDisabled()),
+				_bool::Display($recipe->GetIsPublic()),
 				new RTK_Link('ViewRecipe'.URLPAGEEXT.'?id='.$recipe->GetId(), $text_viewrecipe),
 				new RTK_Link('EditRecipe'.URLPAGEEXT.'?id='.$recipe->GetId(), $text_editecipe),
-				new RTK_Link('DeleteRecipe'.URLPAGEEXT.'?id='.$recipe->GetId(), $text_deleteecipe)
+				new RTK_Link('DeleteRecipe'.URLPAGEEXT.'?id='.$recipe->GetId(), $text_deleterecipe)
 			));
 		}
 	}
@@ -90,5 +90,35 @@ if (sizeof($messages) > 0) {
 	$RTK->AddElement(new RTK_Textview($string_nomessages));
 }
 $RTK->AddElement(new RTK_Link('EditRecipe'.URLPAGEEXT.'?id=new', $text_newmessage));*/
+
+// Show a list of all the non-public (or disabled recipes if admin)
+if (($privilege = Login::GetPrivilege()) > 1) {
+	if ($admin = Recipe::LoadAllForAdmin(50, 0)) {
+		$title_admin = "My Administration";
+		$headers_admin = array("Title", "Is public", "Is disabled", "_", "_");
+		$text_viewrecipe_adm = "View";
+		$text_deleterecipe_adm = "Delete";
+		$string_noadmin = "There are no recipes to administrate";
+	
+		$RTK->AddElement(new RTK_Header($title_admin));
+		$myadministration = new RTK_Listview($headers_admin);
+		if (sizeof($admin) > 0) {
+			foreach ($admin as $recipe) {
+				if (is_a($recipe, 'Recipe')) {
+					$myadministration->AddRow(array(
+						$recipe->GetTitle(),
+						_bool::Display($recipe->GetIsPublic()),
+						_bool::Display($recipe->GetDisabled()),
+						new RTK_Link('ViewRecipe'.URLPAGEEXT.'?id='.$recipe->GetId(), $text_viewrecipe),
+						new RTK_Link('DeleteRecipe'.URLPAGEEXT.'?id='.$recipe->GetId(), $text_deleterecipe)
+					));
+				}
+			}
+			$RTK->AddElement($myadministration);
+		} else {
+			$RTK->AddElement(new RTK_Textview($string_noadmin));
+		}
+	}
+}
 
 ?>

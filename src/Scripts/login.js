@@ -10,3 +10,16 @@ $(function() {
 		return true;
 	});
 });
+
+$(function() {
+	$('#reathuenticateform').submit(function() {
+		$("#reathuenticateform").hide();
+		alert($("#username").val() + '\n' + $("#reauthentication").val());
+		var md5pass = md5($("#username").val() + $("#reauthentication").val());
+		var md5user = md5($("#username").val());
+		$("#username").val(md5user);
+		$("#reauthentication").val(md5pass);
+		alert($("#username").val() + '\n' + $("#reauthentication").val());
+		return true;
+	});
+});

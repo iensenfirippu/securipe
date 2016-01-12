@@ -43,19 +43,19 @@ if (Value::SetAndNotNull($_POST, 'submit') && Site::CheckSecurityToken()) {
 		// Set new values and save
 		$title = Site::GetPostValueSafely("title");
 		$description = Site::GetPostValueSafely("description");
-		$public = !Value::SetAndNotNull($_POST, 'public');
+		$public = Value::SetAndNotNull($_POST, 'public');
 		$recipe->SetTitle($title);
 		$recipe->SetDescription($description);
-		$recipe->SetDisabled($public);
+		$recipe->SetIsPublic($public);
 		if ($recipe->Save()) {
 			if ($oldimage != null) { $oldimage->Delete(); }
-			if ($recipe->GetDisabled()) { Site::Redirect('ViewRecipe'.URLPAGEEXT.'?id='.$recipe->GetId()); }
+			if ($recipe->GetIsPublic()) { Site::Redirect('ViewRecipe'.URLPAGEEXT.'?id='.$recipe->GetId()); }
 			else { Site::Redirect('MyPage'.URLPAGEEXT); }
 		}
 	}
 }
 
-$public = !$recipe->GetDisabled();
+$public = $recipe->GetIsPublic();
 $typeoptions = array();
 foreach ($types as $type) { $typeoptions[] = array($type->GetId(), $type->GetName()); }
 

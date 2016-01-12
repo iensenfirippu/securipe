@@ -58,8 +58,8 @@ if (defined('securipe') or exit(1))
 		public static function GetPrivilege()
 		{
 			$level = 0;
-			if (Value::SetAndNotNull($GLOBALS, LOGIN_PRIVILEGE)) {
-				$char = substr($_SESSION[LOGIN_PRIVILEGE],-1,1);
+			if (Value::SetAndNotNull($_SESSION, LOGIN_PRIVILEGE)) {
+				$char = substr($_SESSION[LOGIN_PRIVILEGE],-2,1);
 				if (is_numeric($char)) {
 					$int = intval($char);
 					if ($int >= 0 && $int < 4) { $level = $int; }
@@ -89,6 +89,14 @@ if (defined('securipe') or exit(1))
 			$hasuser = Value::SetAndNotNull($_POST, 'loginname');
 			$haspass = Value::SetAndNotNull($_POST, 'loginpass');
 			return ($hasuser && $haspass);
+		}
+		
+		/**
+		 * Determines whether or not there is input from the login form.
+		 **/
+		private static function HasAuthenticateInput()
+		{
+			return Value::SetAndNotNull($_POST, 'reauthentication');
 		}
 		
 		/**
@@ -169,21 +177,23 @@ if (defined('securipe') or exit(1))
 		}
 		
 		/**
-		 * Get the actual username a user with a given id, from the database.
+		 * Get the actual username (and "secretly" sets privilege) a user with a given id, from the database.
 		 * @param userid, the ID of the user for which to get the username.
 		 * @return string The username for the requested user ID (or false if not found)
 		 **/
 		private static function FetchUsername($userid)
 		{
 			$result = false;
-			if ($stmt = Database::GetLink()->prepare('SELECT user_name FROM User WHERE user_id=?;')) {
+			if ($stmt = Database::GetLink()->prepare('SELECT user_name, privilege_level FROM User WHERE user_id=?;')) {
 				$stmt->bindParam(1, $userid, PDO::PARAM_INT);
 				$stmt->execute();
 				$stmt->bindColumn(1, $username);
+				$stmt->bindColumn(2, $privilege);
 				$stmt->fetch();
 				$stmt->closeCursor();
 				if ($username != null) {
 					$result = $username;
+					Login::SetPrivilege($privilege);
 				}
 			}
 			return $result;
@@ -218,6 +228,25 @@ if (defined('securipe') or exit(1))
 				}
 				
 				Login::LogAttempt($username, $result);
+			}
+			return $result;
+		}
+		
+		/**
+		 * Tries to reauthenticate the logged in user, .
+		 **/
+		public static function Reauthenticate()
+		{
+			$result = false;
+			if (Site::HasHttps() && Login::HasAuthenticateInput()) {
+				$username = hash('sha512', md5(Login::GetUsername()));
+				$password = $_POST['reauthentication'];
+				$salt1 = STATIC_SALT; // Static salt
+				$salt2 = Login::FetchUserSalt($username); // Dynamic salt
+				if ($salt2 != EMPTYSTRING) {
+					$password = hash('sha512', $salt1.$password.$salt2.$username);
+					if (Login::FetchUserId($username, $password) > 0) { $result = true; }
+				}
 			}
 			return $result;
 		}

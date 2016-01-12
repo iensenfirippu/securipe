@@ -10,6 +10,7 @@ if (defined('securipe') or exit(1))
 		private $_title = EMPTYSTRING;
 		private $_description = EMPTYSTRING;
 		private $_favoriteCount = 0;
+		private $_public = false;
 		private $_disabled = false;
 		private $_steps = array();
 		
@@ -20,6 +21,7 @@ if (defined('securipe') or exit(1))
 		Public function GetTitle() { return $this->_title; }
 		Public function GetDescription() { return $this->_description; }
 		Public function GetFavoriteCount() { return $this->_favoriteCount; }
+		Public function GetIsPublic() { return ($this->_public == true); }
 		Public function GetDisabled() { return ($this->_disabled == true); }
 		Public function GetSteps() { return $this->_steps; }
 		
@@ -29,6 +31,7 @@ if (defined('securipe') or exit(1))
 		public function SetType($value) { $this->_type = $value; }
 		public function SetTitle($value) { $this->_title = $value; }
 		public function SetDescription($value) { $this->_description = $value; }
+		public function SetIsPublic($value) { $this->_public = $value; }
 		public function SetDisabled($value) { $this->_disabled = $value; }
 		
 		public function __construct($id=0)
@@ -52,7 +55,7 @@ if (defined('securipe') or exit(1))
 			$type_id = 0;
 			if ($this->_type != null && is_a($this->_type, 'RecipeType')) { $type_id = $this->_type->GetId() ; }
 			
-			if ($stmt = Database::GetLink()->prepare('INSERT INTO `Recipe`(`user_id`, `type_id`, `favorite_count`, `disabled`) VALUES (?,1,0,true)')) {
+			if ($stmt = Database::GetLink()->prepare('INSERT INTO `Recipe`(`user_id`, `type_id`, `favorite_count`, `is_public`, `disabled`) VALUES (?,1,0,false,false)')) {
 				$stmt->bindParam(1, $user_id, PDO::PARAM_INT);
 				
 				if ($stmt->execute()) {
@@ -74,12 +77,12 @@ if (defined('securipe') or exit(1))
 			$type_id = 1;
 			if ($this->_type != null && is_a($this->_type, 'RecipeType')) { $type_id = $this->_type->GetId() ; }
 			
-			if ($stmt = Database::GetLink()->prepare('UPDATE `Recipe` SET `picture_id`=?, `type_id`=?, `recipe_title`=?, `recipe_description`=?, `disabled`=? WHERE `recipe_id`=?;')) {
+			if ($stmt = Database::GetLink()->prepare('UPDATE `Recipe` SET `picture_id`=?, `type_id`=?, `recipe_title`=?, `recipe_description`=?, `is_public`=? WHERE `recipe_id`=?;')) {
 				$stmt->bindParam(1, $picture_id, PDO::PARAM_INT);
 				$stmt->bindParam(2, $type_id, PDO::PARAM_INT);
 				$stmt->bindParam(3, $this->_title, PDO::PARAM_STR, 255);
 				$stmt->bindParam(4, $this->_description, PDO::PARAM_LOB);
-				$stmt->bindParam(5, $this->_disabled, PDO::PARAM_BOOL);
+				$stmt->bindParam(5, $this->_public, PDO::PARAM_BOOL);
 				$stmt->bindParam(6, $this->_id, PDO::PARAM_INT);
 				
 				if ($stmt->execute()) {
@@ -95,7 +98,12 @@ if (defined('securipe') or exit(1))
 		public static function Load($id)
 		{
 			$result = false;
-			if ($stmt = Database::GetLink()->prepare('SELECT `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `disabled` FROM `Recipe` WHERE `recipe_id` = ?;'))
+			
+			$sql = null;
+			if (Login::GetPrivilege() == 3) { $sql = 'SELECT `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `is_public`, `disabled` FROM `Recipe` WHERE `recipe_id`=?;'; }
+			else { $sql = 'SELECT `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `is_public`, `disabled` FROM `Recipe` WHERE `recipe_id`=? AND `disabled`=false;'; }
+			
+			if ($stmt = Database::GetLink()->prepare($sql))
 			{
 				$stmt->bindParam(1, $id, PDO::PARAM_INT);
 				$stmt->execute();
@@ -104,7 +112,8 @@ if (defined('securipe') or exit(1))
 				$stmt->bindColumn(3, $typeId);
 				$stmt->bindColumn(4, $title);
 				$stmt->bindColumn(5, $description);
-				$stmt->bindColumn(6, $disabled);
+				$stmt->bindColumn(6, $public);
+				$stmt->bindColumn(7, $disabled);
 				$stmt->fetch();
 				$stmt->closeCursor();
 				
@@ -115,6 +124,7 @@ if (defined('securipe') or exit(1))
 					if ($typeId != null) { $recipe->_type = RecipeType::Load($typeId); }
 					$recipe->_title = $title;
 					$recipe->_description = $description;
+					$recipe->_public = $public;
 					$recipe->_disabled = $disabled;
 					
 					$result = $recipe;
@@ -127,7 +137,7 @@ if (defined('securipe') or exit(1))
 		{
 			$result = array();
 			$page = ($amount * $page);
-			if ($stmt = Database::GetLink()->prepare('SELECT `recipe_id`, `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `disabled` FROM `Recipe` WHERE `disabled`=false LIMIT ?,?;')) {
+			if ($stmt = Database::GetLink()->prepare('SELECT `recipe_id`, `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description` FROM `Recipe` WHERE `is_public`=true AND `disabled`=false LIMIT ?,?;')) {
 				$stmt->bindParam(1, $page, PDO::PARAM_INT);
 				$stmt->bindParam(2, $amount, PDO::PARAM_INT);
 				$stmt->execute();
@@ -137,7 +147,6 @@ if (defined('securipe') or exit(1))
 				$stmt->bindColumn(4, $typeId);
 				$stmt->bindColumn(5, $title);
 				$stmt->bindColumn(6, $description);
-				$stmt->bindColumn(7, $disabled);
 				
 				while ($stmt->fetch()) {
 					$recipe = new Recipe($recipeId);
@@ -146,7 +155,8 @@ if (defined('securipe') or exit(1))
 					if ($typeId != null) { $recipe->_type = new RecipeType($typeId); }
 					$recipe->_title = $title;
 					$recipe->_description = $description;
-					$recipe->_disabled = $disabled;
+					$recipe->_public = true;
+					$recipe->_disabled = false;
 					
 					$result[] = $recipe;
 				}
@@ -167,7 +177,7 @@ if (defined('securipe') or exit(1))
 			if (is_a($user, 'User') && $user->GetId() != 0) {
 				$userid = $user->GetId();
 				$page = ($amount * $page);
-				if ($stmt = Database::GetLink()->prepare('SELECT `recipe_id`, `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `disabled` FROM `Recipe` WHERE `user_id`=? LIMIT ?,?;')) {
+				if ($stmt = Database::GetLink()->prepare('SELECT `recipe_id`, `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `is_public` FROM `Recipe` WHERE `user_id`=? AND `disabled`=false LIMIT ?,?;')) {
 					$stmt->bindParam(1, $userid, PDO::PARAM_INT);
 					$stmt->bindParam(2, $page, PDO::PARAM_INT);
 					$stmt->bindParam(3, $amount, PDO::PARAM_INT);
@@ -178,7 +188,7 @@ if (defined('securipe') or exit(1))
 					$stmt->bindColumn(4, $typeid);
 					$stmt->bindColumn(5, $title);
 					$stmt->bindColumn(6, $description);
-					$stmt->bindColumn(7, $disabled);
+					$stmt->bindColumn(7, $public);
 					
 					while ($stmt->fetch()) {
 						$recipe = new Recipe($recipeid);
@@ -187,7 +197,8 @@ if (defined('securipe') or exit(1))
 						if ($typeid != null) { $recipe->_type = RecipeType::Load($typeid); }
 						$recipe->_title = $title;
 						$recipe->_description = $description;
-						$recipe->_disabled = $disabled;
+						$recipe->_public = $public;
+						$recipe->_disabled = false;
 						
 						$result[] = $recipe;
 					}
@@ -198,28 +209,90 @@ if (defined('securipe') or exit(1))
 			return $result;
 		}
 		
+		public static function LoadAllForAdmin($amount, $page)
+		{
+			$privilege = Login::GetPrivilege();
+			$sql = null;
+			// if user is admin
+			if ($privilege == 3) { $sql = 'SELECT `recipe_id`, `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `is_public`, `disabled` FROM `Recipe` WHERE `is_public`=false OR `disabled`=true LIMIT ?,?;'; }
+			// if user is moderator
+			elseif ($privilege == 2) { $sql = 'SELECT `recipe_id`, `picture_id`, `user_id`, `type_id`, `recipe_title`, `recipe_description`, `is_public`, `disabled` FROM `Recipe` WHERE `is_public`=false AND `disabled`=false LIMIT ?,?;'; }
+			else { Site::BackToHome(); }
+			
+			$result = false;
+			if ($sql != null) {
+				$result = array();
+				$page = ($amount * $page);
+				if ($stmt = Database::GetLink()->prepare($sql)) {
+					$stmt->bindParam(1, $page, PDO::PARAM_INT);
+					$stmt->bindParam(2, $amount, PDO::PARAM_INT);
+					$stmt->execute();
+					$stmt->bindColumn(1, $recipeId);
+					$stmt->bindColumn(2, $pictureId);
+					$stmt->bindColumn(3, $userId);
+					$stmt->bindColumn(4, $typeId);
+					$stmt->bindColumn(5, $title);
+					$stmt->bindColumn(6, $description);
+					$stmt->bindColumn(7, $public);
+					$stmt->bindColumn(8, $disabled);
+					
+					while ($stmt->fetch()) {
+						$recipe = new Recipe($recipeId);
+						$recipe->_user = User::Load($userId);
+						if ($pictureId != null) { $recipe->_picture = new Picture($pictureId); }
+						if ($typeId != null) { $recipe->_type = new RecipeType($typeId); }
+						$recipe->_title = $title;
+						$recipe->_description = $description;
+						$recipe->_public = $public;
+						$recipe->_disabled = $disabled;
+						
+						$result[] = $recipe;
+					}
+					$stmt->closeCursor();
+					
+					foreach ($result as $recipe) {
+						if ($recipe->_picture != null) { $recipe->_picture = Picture::Load($recipe->_picture->GetId()); }
+						if ($recipe->_type != null) { $recipe->_type = RecipeType::Load($recipe->_type->GetId()); }
+					}
+				}
+				if (empty($result)) { $result = false; }
+			}
+			return $result;
+		}
+		
 		public function Delete()
 		{
 			$result = 0;
 			
-			// First load and delete all steps
-			$this->LoadSteps();
-			foreach ($this->GetSteps() as $step) { if (!$step->Delete()) { $result++; } }
+			$sql = null;
+			if ($this->GetUser()->GetId() == Login::GetId()) { // is owner
+				$sql = 'DELETE FROM `Recipe` WHERE `recipe_id`=?';
+			} elseif (Login::GetPrivilege() == 2) {            // is moderator
+				$sql = 'UPDATE `Recipe` SET `disabled`=true WHERE `recipe_id`=?;';
+			} elseif (Login::GetPrivilege() == 3) {            // is admin
+				$sql = 'DELETE FROM `Recipe` WHERE `recipe_id`=?';
+			}
 			
-			// Continue if there were no errors
-			if ($result == 0) {
-				if ($stmt = Database::GetLink()->prepare('DELETE FROM `Recipe` WHERE `recipe_id`=?;')) {
-					$stmt->bindParam(1, $this->_id, PDO::PARAM_INT);
-					if ($stmt->execute()) {
-						if ($this->GetPicture() != null) {
-							if ($this->GetPicture()->Delete()) {
-								$result = true;
-							}
-						} else { $result = true; }
+			if ($sql != null) {
+				// First load and delete all steps
+				$this->LoadSteps();
+				foreach ($this->GetSteps() as $step) { if (!$step->Delete()) { $result++; } }
+				
+				// Continue if there were no errors
+				if ($result == 0) {
+					if ($stmt = Database::GetLink()->prepare($sql)) {
+						$stmt->bindParam(1, $this->_id, PDO::PARAM_INT);
+						if ($stmt->execute()) {
+							if ($this->GetPicture() != null) {
+								if ($this->GetPicture()->Delete()) {
+									$result = true;
+								}
+							} else { $result = true; }
+						}
+						$stmt->closeCursor();
 					}
-					$stmt->closeCursor();
-				}
-			} else { $result = false; }
+				} else { $result = false; }
+			}
 			return $result;
 		}
 		

@@ -524,7 +524,6 @@ if (defined('securipe') or exit(1))
 		 **/
 		public static function Display($boolean)
 		{
-			$value;
 			if ($boolean == true || $boolean == 1 || $boolean == '1') { $value = 'true'; }
 			elseif ($boolean == false || $boolean == 0 || $boolean == '0') { $value = 'false'; }
 			else { $value = $boolean; }

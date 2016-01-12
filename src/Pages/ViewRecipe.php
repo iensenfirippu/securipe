@@ -3,15 +3,22 @@
 
 $recipe = null;
 $edit = false;
+$showcomments = false;
 $id = Site::GetArgumentSafely('id');
 if (Value::SetAndNotNull($id)) {
 	$recipe = Recipe::Load($id);
 	if (Value::SetAndNotNull($recipe)) {
 		$recipe->LoadSteps();
-		if ($recipe->GetUser()->GetId() == Login::GetId()) {
-			// is owner
-			$edit = $recipe->GetDisabled();
-		} elseif ($recipe->GetDisabled()) { Site::BackToHome(); }
+		$privilege = Login::GetPrivilege();
+		
+		// if user is owner
+		if ($recipe->GetUser()->GetId() == Login::GetId()) { $edit = $recipe->GetDisabled(); $showcomments = !$edit; }
+		// if user is admin
+		elseif ($privilege == 3) { $showcomments = $recipe->GetIsPublic(); }
+		// if recipe is disabled
+		elseif ($recipe->GetDisabled()) { Site::BackToHome(); }
+		// if user is moderator
+		elseif ($privilege == 2) { $showcomments = $recipe->GetIsPublic(); }
 		
 		if (Value::SetAndNotNull($_POST, 'CommentInput') && Site::CheckSecurityToken()) {
 			$message = Site::GetPostValueSafely('CommentInput');
@@ -30,9 +37,10 @@ include_once('Pages/OnAllPages.php');
 
 $recipebox = new RTK_Box('recipebox');
 $recipedescription = new RTK_Box(null, 'recipedescription');
-$recipedescription->AddChild(new RTK_Header($recipe->GetTitle()));
+$recipedescription->AddChild(new RTK_Header($recipe->GetTitle(), 1));
+$recipedescription->AddChild(new RTK_Header('by '.$recipe->GetUser()->GetUsername(), 2));
 if ($recipe->GetPicture() != null) {
-	$image = new RTK_Image($recipe->GetPicture()->GetThumbnail(), '[IMG]');
+	$image = new RTK_Image($recipe->GetPicture()->GetThumbnail());
 	$image->AddLink($recipe->GetPicture()->GetFile());
 	$recipedescription->AddChild($image);
 }
@@ -45,7 +53,7 @@ foreach ($recipe->GetSteps() as $step) {
 	$stepbox = new RTK_Box(null, 'stepbox');
 	$stepbox->AddChild(new RTK_Header($i.EMPTYSTRING));
 	if ($step->GetPicture() != null) {
-		$image = new RTK_Image($step->GetPicture()->GetThumbnail(), '[IMG]');
+		$image = new RTK_Image($step->GetPicture()->GetThumbnail());
 		$image->AddLink($step->GetPicture()->GetFile());
 		$stepbox->AddChild($image);
 	}
@@ -63,12 +71,14 @@ foreach ($recipe->GetSteps() as $step) {
 if ($edit) {
 	$recipebox->AddChild(new RTK_Link('EditStep'.URLPAGEEXT.'?recipe='.$id, 'Add Step'));
 	$recipebox->AddChild(new RTK_Link('EditRecipe'.URLPAGEEXT.'?id='.$id, 'Edit Recipe'));
+}
+if ($edit || $privilege == 2 || $privilege == 3) {
 	$recipebox->AddChild(new RTK_Link('DeleteRecipe'.URLPAGEEXT.'?id='.$id, 'Delete Recipe'));
 }
 
 $RTK->AddElement($recipebox);
 
-if (!$edit && $recipe != null) {
+if ($showcomments) {
 	$commentbox = new RTK_CommentView($recipe);
 	$RTK->AddElement($commentbox, 'wrapper', 'comments');
 }

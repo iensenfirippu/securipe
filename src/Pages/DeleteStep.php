@@ -30,7 +30,7 @@ include_once('Pages/OnAllPages.php');
 $RTK->AddElement(new RTK_Header($page_title));
 $RTK->AddElement(new RTK_Textview($page_description));
 
-$form = new RTK_Form('deleterecipeform');
+$form = new RTK_Form('deletestepform');
 $form->AddButton('submit', 'Delete Forever');
 $RTK->AddElement($form);
 ?>
