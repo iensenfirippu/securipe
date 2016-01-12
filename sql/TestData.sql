@@ -109,9 +109,9 @@ INSERT INTO `Step` (`step_id`,`recipe_id`,`picture_id`,`step_number`,`step_descr
 
 -- Comment table
 INSERT INTO `Comment` (`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`,`disabled`)
-	VALUES (1,2,'R=1','blah',3);
+	VALUES (1,2,'R=1','blah',3,0);
 INSERT INTO `Comment` (`comment_id`,`user_id`,`comment_path`,`comment_contents`,`sent_at`,`disabled`)
-	VALUES (2,3,'R=1','test',2);
+	VALUES (2,3,'R=1','test',2,0);
 
 -- Favorite table
 INSERT INTO `Favorite` (`user_id`,`recipe_id`)

@@ -49,7 +49,7 @@ if (Value::SetAndNotNull($_POST, 'submit') && Site::CheckSecurityToken()) {
 		$recipe->SetIsPublic($public);
 		if ($recipe->Save()) {
 			if ($oldimage != null) { $oldimage->Delete(); }
-			if ($recipe->GetIsPublic()) { Site::Redirect('ViewRecipe'.URLPAGEEXT.'?id='.$recipe->GetId()); }
+			if (!$recipe->GetIsPublic()) { Site::Redirect('ViewRecipe'.URLPAGEEXT.'?id='.$recipe->GetId()); }
 			else { Site::Redirect('MyPage'.URLPAGEEXT); }
 		}
 	}

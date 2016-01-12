@@ -97,6 +97,7 @@ CREATE TABLE `Comment` (
 	`comment_path` varchar(255) NOT NULL,
 	`comment_contents` varchar(255) NOT NULL,
 	`sent_at` int(10) NOT NULL,
+	`disabled` boolean NOT NULL,
 	PRIMARY KEY (`comment_id`),
 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
 );

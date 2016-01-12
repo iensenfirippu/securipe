@@ -3,7 +3,6 @@
 
 $recipe = null;
 $edit = false;
-$showcomments = false;
 $id = Site::GetArgumentSafely('id');
 if (Value::SetAndNotNull($id)) {
 	$recipe = Recipe::Load($id);
@@ -12,13 +11,13 @@ if (Value::SetAndNotNull($id)) {
 		$privilege = Login::GetPrivilege();
 		
 		// if user is owner
-		if ($recipe->GetUser()->GetId() == Login::GetId()) { $edit = $recipe->GetDisabled(); $showcomments = !$edit; }
+		if ($recipe->GetUser()->GetId() == Login::GetId()) { $edit = !$recipe->GetIsPublic(); }
 		// if user is admin
-		elseif ($privilege == 3) { $showcomments = $recipe->GetIsPublic(); }
+		elseif ($privilege == 3) { }
 		// if recipe is disabled
 		elseif ($recipe->GetDisabled()) { Site::BackToHome(); }
 		// if user is moderator
-		elseif ($privilege == 2) { $showcomments = $recipe->GetIsPublic(); }
+		elseif ($privilege == 2) { }
 		
 		if (Value::SetAndNotNull($_POST, 'CommentInput') && Site::CheckSecurityToken()) {
 			$message = Site::GetPostValueSafely('CommentInput');
@@ -78,7 +77,7 @@ if ($edit || $privilege == 2 || $privilege == 3) {
 
 $RTK->AddElement($recipebox);
 
-if ($showcomments) {
+if (!$edit) {
 	$commentbox = new RTK_CommentView($recipe);
 	$RTK->AddElement($commentbox, 'wrapper', 'comments');
 }
